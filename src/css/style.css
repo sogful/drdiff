@@ -70,34 +70,38 @@ body {
 
 .topbar {
   flex: none;
-  background: linear-gradient(180deg,#16161f,#0d0d16);
+  background: #000000;
+  border-bottom: 1px solid var(--line);
 }
 
 .versionrail {
   display: flex;
+  flex-direction: column;
+}
+
+.erarow {
+  display: flex;
   align-items: stretch;
-  overflow-x: auto;
-  white-space: nowrap;
+  gap: 3px;
+  padding: 3px 6px;
+  overflow: hidden;
 }
 
 .eralabel {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   color: var(--text);
   font-size: 11px;
-  padding: 0 7px 0 4px;
-  border-right: 1px solid var(--line);
-  margin-right: 4px;
-  flex: none;
+  min-width: 48px;
 }
 
 .vchip {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   min-width: 0;
-  border: 1px solid var(--line);
+  border: none;
   background: var(--bar);
-  color: var(--dim);
-  border-radius: 4px;
+  color: var(--text);
   padding: 3px 7px;
   cursor: pointer;
   font-family: "deltarune", monospace;
@@ -106,22 +110,18 @@ body {
   text-align: center;
   line-height: 1.15;
 }
-.vchip:hover {background: var(--bar2); color: var(--text)}
-.vchip.active {
-  background: var(--yellow);
-  color: #000000;
-  border-color: var(--yellow);
-}
+.vchip:hover {background: var(--bar2)}
+.vchip.active {color: var(--yellow)}
 .vchip .vdate {
   display: block;
   font-size: 8px;
   color: var(--dimmer);
 }
-.vchip.active .vdate {color: #665500}
+.vchip.active .vdate {color: var(--yellow); opacity: 0.65}
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* chapter subbar */
 
+/* subbar */
 .chapterbar {
   flex: none;
   display: flex;
@@ -129,45 +129,59 @@ body {
   gap: 0;
   background: var(--bar);
   border-bottom: 1px solid var(--line);
-  padding: 0 12px;
-  overflow-x: auto;
+  padding: 0 6px;
+  overflow: hidden;
 }
 
 .ctab {
   border: 0;
   background: none;
-  color: var(--dim);
-  padding: 9px 16px;
+  color: var(--text);
+  padding: 4px 14px;
   cursor: pointer;
   font-family: "deltarune", sans-serif;
-  font-size: 14px;
   border-bottom: 2px solid transparent;
   white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 8px;
 }
-.ctab:hover {color: var(--text)}
+.ctab:hover {color: var(--yellow)}
 .ctab.active {
   color: var(--yellow);
   border-bottom-color: var(--yellow);
 }
-.ctab.empty {color: var(--dimmer); cursor: default}
-.ctab.empty:hover {color: var(--dimmer)}
+.ctab.locked {cursor: default}
+.ctab.locked:hover {color: var(--text)}
+
+.cicon {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  image-rendering: pixelated;
+  object-fit: contain;
+}
+
+.ctext {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.05;
+  gap: 1px;
+}
+.cname {font-size: 14px}
 
 .cbadge {
-  font-size: 10px;
-  background: var(--bar2);
-  color: var(--azure);
-  border-radius: 8px;
-  padding: 1px 7px;
+  font-size: 9px;
   font-family: "jbmono", monospace;
+  display: inline-flex;
+  gap: 5px;
 }
-.ctab.active .cbadge {background: #2b2b1a; color: var(--yellow)}
-.cbadge.newc {background: #3a1113; color: #ff9bb0}
+.cbadge .ba {color: #4bff7a}
+.cbadge .bm {color: var(--azure)}
+.cbadge .bd {color: #ff5b5b}
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* workspace: sidebar + content */
 
 .workspace {
   flex: 1;
@@ -189,52 +203,52 @@ body {
   flex: 1;
   overflow-y: auto;
   padding: 4px 0 8px;
+  scrollbar-width: none;
 }
+.filelist::-webkit-scrollbar {display: none}
 
 .content {
   flex: 1;
   min-width: 0;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: var(--code-bg);
+  scrollbar-width: none;
 }
+.content::-webkit-scrollbar {display: none}
 
 .hint {color: var(--dimmer); padding: 30px; text-align: center}
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* dense file list */
 
 .frow {
   display: flex;
-  align-items: center;
-  gap: 7px;
-  padding: 2px 10px;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 3px 12px;
   cursor: pointer;
-  border-left: 2px solid transparent;
-  line-height: 1.35;
+  line-height: 1.25;
 }
 .frow:hover {background: var(--faint)}
-.frow.active {
-  background: var(--bar2);
-  border-left-color: var(--yellow);
-}
+.frow.active {background: var(--bar2)}
 
 .fname {
   flex: 1;
   min-width: 0;
-  font-family: "jbmono", monospace;
-  font-size: 11.5px;
+  font-family: "deltarune", sans-serif;
+  font-size: 14px;
   color: var(--text);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  direction: rtl;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
+.frow.active .fname {color: var(--yellow)}
 .frow.add .fname {color: #4bff7a}
 .frow.del .fname {color: #ff5b5b}
+.frow.add.active .fname, .frow.del.active .fname {color: var(--yellow)}
 .fstat {
   flex: none;
-  font-family: "jbmono", monospace;
-  font-size: 10px;
+  font-family: "deltarune", sans-serif;
+  font-size: 12px;
 }
 .fstat .p {color: #4bff7a}
 .fstat .m {color: #ff5b5b}
@@ -248,7 +262,6 @@ body {
 }
 .fempty {color: var(--dimmer); padding: 16px; font-size: 12px; text-align: center}
 
-/* sticky changelog toggle */
 .changelogtoggle {
   flex: none;
   border: 0;
@@ -269,7 +282,6 @@ body {
 .cgicon {font-size: 13px}
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* code diff view */
 
 .difftop {
   position: sticky;
@@ -294,15 +306,17 @@ body {
   font-family: "jbmono", monospace;
   font-size: 12.5px;
   line-height: 1.55;
-  padding: 8px 0 60px;
-  white-space: pre;
-  min-width: max-content;
+  padding: 0 0 120px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   tab-size: 4;
 }
 .cline {
   display: block;
   padding: 0 16px 0 8px;
   border-left: 3px solid transparent;
+  text-indent: -1.5em;
+  padding-left: 2em;
 }
 .cline.add {background: var(--add); border-left-color: #2ea043}
 .cline.del {background: var(--del); border-left-color: #f85149}
@@ -321,7 +335,7 @@ body {
 
 .notecode {color: var(--dim); padding: 26px; font-family: "deltarune", sans-serif; font-size: 15px}
 
-/* gml token colors */
+/* gml tokens? */
 .t-com {color: var(--t-com); font-style: italic}
 .t-kw {color: var(--t-kw)}
 .t-cf {color: var(--t-cf)}
@@ -334,35 +348,48 @@ body {
 .t-punc {color: #d4d4d4}
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* changelog recreation (verdana, faithful to the patch-note images) */
 
 .changelog {
-  max-width: 860px;
-  margin: 0 auto;
-  background: #fbfbf7;
-  color: #1a1a1a;
+  position: relative;
+  max-width: 860px; margin: 0 auto;
+  background: white;
+  color: black;
   font-family: Verdana, Geneva, sans-serif;
   font-size: 14px;
   line-height: 1.5;
   padding: 40px 54px 60px;
   min-height: 100%;
 }
+
+.cl-dood {
+  position: absolute;
+  top: 22px;
+  width: 118px;
+  height: auto;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+.cl-dood.left {left: 26px}
+.cl-dood.right {right: 26px}
+.cl-dood.flip {transform: scaleX(-1)}
 .cl-title {
   text-align: center;
   font-weight: 700;
   font-size: 21px;
-  margin: 4px 0 6px;
+  margin: 4px auto 6px;
+  max-width: 560px;
 }
 .cl-sub {
   text-align: center;
   color: #333;
   font-size: 13px;
-  margin-bottom: 18px;
+  margin: 0 auto 18px;
+  max-width: 560px;
 }
 .cl-intro {
   text-align: center;
   margin: 0 auto 22px;
-  max-width: 620px;
+  max-width: 560px;
 }
 .cl-h {
   text-align: center;

@@ -1,57 +1,73 @@
 # drdiff
 
 deltarune's decompiled game code, diffed patch-to-patch, with each update's
-official changelog pinned next to the code that actually changed.
+official changelog re-typeset beside the code that changed.
 
 ## view it
 
-it's a static site that loads json, so it needs to be served (not opened as file://):
+static site that loads json, so serve it (don't open as file://):
 
 ```
 cd drdiff
-python -m http.server 8777
+python -m http.server 8791
 ```
 
-then open http://127.0.0.1:8777 . pick a version step on the left.
+open http://127.0.0.1:8791 .
 
-- green `ADD` / red `DEL` / blue `MOD` tag every changed code entry; click a modified one to expand its line diff.
-- the official changelog (image + OCR text) sits at the top of each step.
-- era boundaries (chapter 5 landing on the release era) are marked in red and collapse the brand-new chapter to a count instead of exploding thousands of new entries.
+- **top bar**: pick a version. two markers show where chapters 3 & 4 released and where chapter 5 released.
+- **chapter bar**: the chapters touched by that version, with change counts. a brand-new chapter shows `+N new`.
+- **left sidebar**: dense list of every changed code entry (`ADD`/`DEL`/`MOD` + line counts). click one to see it.
+- **main**: the gml diff, syntax-highlighted (custom tokenizer, vs code dark+ theme, jetbrains mono).
+- **changelog** (bottom-left): swaps the diff for that version's official patch notes, recreated in verdana.
 
-## what's covered
+## coverage
 
-14 pc builds across two eras:
+14 pc builds, 13 steps, two eras:
 
 - release: `1.00 1.01A 1.01B 1.01C 1.02 1.03 1.04`
 - chapter 5: `0.0.240 0.0.241 0.0.242 0.0.243 0.0.244 0.0.247 0.0.250`
 
-(`1.05` was a steam beta-branch build; `download_depot` can't fetch beta-branch
-manifests, so it's absent. grab it via the steam client console and re-run to slot it in.)
+(`1.05` is a steam beta-branch build; `download_depot` can't fetch beta-branch manifests. grab it
+via the steam client console and re-run to slot it in.)
 
-## how it's made
-
-everything is in `.claude/` (tools, findings) and `H:/drdiff_work` (builds, dumps).
-
-1. `H:/drdiff_work/run_all.sh` - pulls each depot manifest with steamcmd, copies
-   `data.win` out, decompiles to gml with `drdump` (a net10 fork of undertalemodtool),
-   identifies the build by its in-game `global.versionno`.
-2. `.claude/tools/identify.py` - orders builds by their real per-chapter versions.
-3. `.claude/tools/build_site.py` - hash-indexes each build, diffs consecutive ones,
-   writes `data/manifest.json` + `data/diffs/*.json`.
-4. `.claude/tools/fetch_ocr.py` - pulls the @UNDERTALE changelog images and OCRs them.
-
-regenerate the whole site after adding builds:
-
-```
-python .claude/tools/identify.py && python .claude/tools/build_site.py
-```
+when chapter 5 debuts (`1.04 -> 0.0.240`) its ~11.8k new entries are collapsed to a count rather
+than exploded, so the boundary step shows the real changes to the existing chapters + launcher.
 
 ## layout
 
-- `index.html` `style.css` `app.js` - the viewer
-- `data/manifest.json` - versions + per-transition summaries
-- `data/diffs/<from>__<to>.json` - full line diffs (lazy-loaded)
-- `data/notes.json` + `data/media/` - changelogs and their images
-- `.claude/FINDINGS.md` - the full build log / gotchas
+```
+index.html
+favicon.png
+assets/
+  fonts/    deltarune (8-bit operator) + jetbrains mono
+  images/   original changelog patch-note images
+  static/   manifest.json, notes.json, changelogs.json, diffs/*.json
+  svgs/
+src/
+  css/style.css
+  js/app.js      viewer
+  js/gml.js      gml syntax highlighter (prism has no gml grammar)
+.claude/
+  tools/    the whole pipeline (see below)
+  FINDINGS.md
+```
+
+## pipeline (.claude/tools)
+
+- `run_all.sh` (in `H:/drdiff_work`) - steamcmd pulls each manifest, decompiles data.win -> gml with `drdump`, ids each build by `global.versionno`.
+- `identify.py` - orders builds by real per-chapter versions -> `assets/static/builds_identified.json`.
+- `build_site.py` - hash-indexes builds, diffs consecutive ones -> `manifest.json` + `diffs/`.
+- `fetch_ocr.py` - pulls the @UNDERTALE changelog images.
+- `reocr.py` - upscales + thresholds each image and re-OCRs (much cleaner than the raw pass).
+- `changelog_parse.py` - structures the OCR into `changelogs.json` (title, version table, per-chapter items, platform tags).
+
+regenerate the diffs: `python .claude/tools/identify.py && python .claude/tools/build_site.py`
+regenerate the changelogs: `python .claude/tools/reocr.py && python .claude/tools/changelog_parse.py`
+
+## notes
+
+the changelog recreations are auto-parsed from ocr; some intros/titles still carry ocr artifacts and
+the toby fox illustrations are intentionally omitted (to be re-added later). refine `changelogs.json`
+directly or improve `changelog_parse.py`.
 
 not affiliated with toby fox. code shown for study and archival.

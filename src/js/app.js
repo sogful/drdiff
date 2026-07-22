@@ -2,11 +2,14 @@
 
 const PARTS = ["root", "ch1", "ch2", "ch3", "ch4", "ch5"];
 const PARTLABEL = {root: "launcher", ch1: "chapter 1", ch2: "chapter 2", ch3: "chapter 3", ch4: "chapter 4", ch5: "chapter 5"};
+const PARTICON = {ch1: "ch1.png", ch2: "ch2.png", ch3: "ch3tv.png", ch4: "ch4.png", ch5: "ch5.png"};
+const EXCLUDE = new Set(["1.00"]);
 const S = "/assets/static";
 
 let manifest = null;
 let notes = {};
 let changelogs = {};
+let doodles = {};
 const diffcache = {};
 const sel = {version: null, chapter: null, file: null, mode: "diff"};
 
@@ -16,14 +19,16 @@ const sel = {version: null, chapter: null, file: null, mode: "diff"};
 async function boot() {
   try {
     manifest = await fetchjson(S + "/manifest.json");
-    [notes, changelogs] = await Promise.all([
+    [notes, changelogs, doodles] = await Promise.all([
       fetchjson(S + "/notes.json").catch(() => ({})),
       fetchjson(S + "/changelogs.json").catch(() => ({})),
+      fetchjson(S + "/doodles.json").catch(() => ({})),
     ]);
   } catch (e) {
     document.querySelector(".content").innerHTML = "<div class=\"hint\">no data. run build_site.py.</div>";
     return;
   }
+  manifest.versions = manifest.versions.filter(v => !EXCLUDE.has(v.label));
   buildrail();
   document.querySelector(".changelogtoggle").addEventListener("click", () => {
     sel.mode = sel.mode === "changelog" ? "diff" : "changelog";
@@ -57,19 +62,25 @@ async function fetchjson(url) {
 function buildrail() {
   const rail = document.querySelector(".versionrail");
   rail.innerHTML = "";
-  let era = null;
+  const eras = [];
   for (const v of manifest.versions) {
-    if (v.era !== era) {
-      era = v.era;
-      const lab = el("div", "eralabel");
-      lab.textContent = era === "ch5" ? "ch5" : "ch3&4";
-      rail.appendChild(lab);
+    let g = eras.find(e => e.era === v.era);
+    if (!g) {g = {era: v.era, items: []}; eras.push(g);}
+    g.items.push(v);
+  }
+  for (const g of eras) {
+    const row = el("div", "erarow");
+    const lab = el("div", "eralabel");
+    lab.textContent = g.era === "ch5" ? "ch5" : "ch3&4";
+    row.appendChild(lab);
+    for (const v of g.items) {
+      const chip = el("button", "vchip");
+      chip.dataset.v = v.label;
+      chip.innerHTML = esc(v.label) + "<span class=\"vdate\">" + esc(v.date || "") + "</span>";
+      chip.addEventListener("click", () => selectversion(v.label));
+      row.appendChild(chip);
     }
-    const chip = el("button", "vchip");
-    chip.dataset.v = v.label;
-    chip.innerHTML = esc(v.label) + "<span class=\"vdate\">" + esc(v.date || "") + "</span>";
-    chip.addEventListener("click", () => selectversion(v.label));
-    rail.appendChild(chip);
+    rail.appendChild(row);
   }
 }
 
@@ -94,11 +105,11 @@ async function selectversion(label) {
   sel.diff = diff;
   sel.trans = t;
   buildchapters(diff);
-  // default: changelog if this version has one and no diff, else first changed chapter
-  const firstChanged = diff ? PARTS.find(p => diff.parts[p] && changedCount(diff.parts[p])) : null;
-  sel.chapter = firstChanged || (diff ? PARTS.find(p => diff.parts[p]) : null);
+  // always focus the first chapter that actually changed
+  sel.chapter = diff ? PARTS.find(p => diff.parts[p] && changedCount(diff.parts[p])) : null;
   sel.file = null;
-  if (!t) sel.mode = "changelog";
+  sel.mode = t ? "diff" : "changelog";
+  updatechangelogbtn();
   rendercontent();
   markchaptertab();
 }
@@ -119,13 +130,22 @@ function buildchapters(diff) {
     if (!d) continue;
     const n = changedCount(d);
     if (!n && !d.collapsed) continue;             // hide unchanged chapters
-    const tab = el("button", "ctab");
+    const locked = !!d.collapsed;                  // a freshly-added chapter isn't diffable
+    const tab = el("button", "ctab" + (locked ? " locked" : ""));
     tab.dataset.part = p;
-    let badge = "";
-    if (d.collapsed) badge = "<span class=\"cbadge newc\">+" + d.added_count + " new</span>";
-    else badge = "<span class=\"cbadge\">" + n + "</span>";
-    tab.innerHTML = esc(PARTLABEL[p]) + badge;
-    tab.addEventListener("click", () => {sel.chapter = p; sel.file = null; sel.mode = "diff"; rendercontent(); markchaptertab();});
+    let badge;
+    if (d.collapsed) {
+      badge = "<span class=\"cbadge\"><span class=\"ba\">+" + d.added_count + "</span></span>";
+    } else {
+      const bits = [];
+      if (d.added_count) bits.push("<span class=\"ba\">+" + d.added_count + "</span>");
+      if (d.modified_count) bits.push("<span class=\"bm\">~" + d.modified_count + "</span>");
+      if (d.removed_count) bits.push("<span class=\"bd\">-" + d.removed_count + "</span>");
+      badge = "<span class=\"cbadge\">" + bits.join("") + "</span>";
+    }
+    const icon = PARTICON[p] ? "<img class=\"cicon\" src=\"/assets/images/chapters/" + PARTICON[p] + "\" alt=\"\">" : "";
+    tab.innerHTML = icon + "<span class=\"ctext\"><span class=\"cname\">" + esc(PARTLABEL[p]) + "</span>" + badge + "</span>";
+    if (!locked) tab.addEventListener("click", () => {sel.chapter = p; sel.file = null; sel.mode = "diff"; rendercontent(); markchaptertab();});
     bar.appendChild(tab);
   }
 }
@@ -141,9 +161,20 @@ function markchaptertab() {
 
 function rendercontent() {
   markchaptertab();
-  if (sel.mode === "changelog") return renderchangelog();
+  if (sel.mode === "changelog" && changelogs[sel.version]) return renderchangelog();
+  if (!sel.trans) return renderbaseline();
   renderfilelist();
   renderdiffpane();
+}
+
+function renderbaseline() {
+  document.querySelector(".filelist").innerHTML = "<div class=\"fempty\">baseline build - nothing prior to diff against.</div>";
+  document.querySelector(".content").innerHTML = "<div class=\"notecode\">" + esc(sel.version) +
+    " is the earliest tracked build (chapters 3 &amp; 4 launch). there's no earlier version here to diff against - pick a later version above.</div>";
+}
+
+function updatechangelogbtn() {
+  document.querySelector(".changelogtoggle").style.display = changelogs[sel.version] ? "" : "none";
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
@@ -202,9 +233,7 @@ function renderdiffpane() {
   }
   const mod = (d.modified || []).find(m => m.file === sel.file);
   if (mod) {
-    c.innerHTML = "<div class=\"difftop\"><span class=\"dfile\">" + esc(shortname(mod.file)) +
-      "</span><span class=\"dstat\"><span class=\"p\">+" + mod.plus + "</span> <span class=\"m\">-" + mod.minus + "</span></span></div>" +
-      "<div class=\"code\">" + renderdiff(mod.diff) + "</div>";
+    c.innerHTML = "<div class=\"code\">" + renderdiff(mod.diff) + "</div>";
     c.scrollTop = 0;
     return;
   }
@@ -212,11 +241,7 @@ function renderdiffpane() {
   const del = (d.removed || []).find(r => r.file === sel.file);
   const whole = add || del;
   if (whole) {
-    const kind = add ? "add" : "del";
-    const label = add ? "<span class=\"p\">+" + whole.lines + " new file</span>" : "<span class=\"m\">-" + whole.lines + " deleted file</span>";
-    c.innerHTML = "<div class=\"difftop\"><span class=\"dfile " + kind + "\">" + esc(shortname(whole.file)) +
-      "</span><span class=\"dstat\">" + label + "</span></div>" +
-      "<div class=\"code\">" + renderfull(whole.content, kind) + "</div>";
+    c.innerHTML = "<div class=\"code\">" + renderfull(whole.content, add ? "add" : "del") + "</div>";
     c.scrollTop = 0;
     return;
   }
@@ -248,6 +273,18 @@ function renderdiff(txt) {
 /*//////////////////////////////////////////////////////////////////////*/
 /* changelog recreation (verdana) */
 
+function doodlehtml(version) {
+  const d = doodles[version];
+  if (!d) return "";
+  let h = "";
+  for (const side of ["left", "right"]) {
+    const p = d[side];
+    if (!p) continue;
+    h += "<img class=\"cl-dood " + side + (p.flip ? " flip" : "") + "\" src=\"/assets/images/" + esc(p.src) + "\" alt=\"\">";
+  }
+  return h;
+}
+
 function renderchangelog() {
   const c = document.querySelector(".content");
   const cl = changelogs[sel.version];
@@ -257,6 +294,7 @@ function renderchangelog() {
     return;
   }
   let h = "<div class=\"changelog\">";
+  h += doodlehtml(sel.version);
   h += "<div class=\"cl-title\">" + esc(cl.title) + "</div>";
   if (cl.subtitle) h += "<div class=\"cl-sub\">" + esc(cl.subtitle) + "</div>";
   if (cl.intro) h += "<div class=\"cl-intro\">" + esc(cl.intro) + "</div>";
@@ -282,7 +320,6 @@ function renderchangelog() {
     h += "</div>";
   }
   if (cl.footer) h += "<div class=\"cl-footer\">" + esc(cl.footer) + "</div>";
-  h += "<div class=\"cl-note\">recreated in verdana from the official patch-note image, illustrations omitted.</div>";
   h += "</div>";
   c.innerHTML = h;
   c.scrollTop = 0;

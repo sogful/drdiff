@@ -1,0 +1,112 @@
+{
+ "1.01A": {
+  "left": {
+   "src": "doodles/1.01A-both.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/1.01A-both.png",
+   "flip": false
+  }
+ },
+ "1.01B": {
+  "left": {
+   "src": "doodles/1.01B-both.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/1.01B-both.png",
+   "flip": true
+  }
+ },
+ "1.01C": {
+  "left": {
+   "src": "doodles/1.01C-both.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/1.01C-both.png",
+   "flip": false
+  }
+ },
+ "1.02": {
+  "left": {
+   "src": "doodles/1.02-both.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/1.02-both.png",
+   "flip": true
+  }
+ },
+ "1.03": {
+  "left": {
+   "src": "doodles/1.03-both.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/1.03-both.png",
+   "flip": false
+  }
+ },
+ "1.04": {
+  "left": {
+   "src": "doodles/1.04-left.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/1.04-right.png",
+   "flip": false
+  }
+ },
+ "0.0.241": {
+  "left": {
+   "src": "doodles/0.0.241-both.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/0.0.241-both.png",
+   "flip": true
+  }
+ },
+ "0.0.242": {
+  "left": {
+   "src": "doodles/0.0.242-both.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/0.0.242-both.png",
+   "flip": true
+  }
+ },
+ "0.0.243": {
+  "left": {
+   "src": "doodles/0.0.243-both.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/0.0.243-both.png",
+   "flip": true
+  }
+ },
+ "0.0.247": {
+  "left": {
+   "src": "doodles/0.0.247-left.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/0.0.247-right.png",
+   "flip": false
+  }
+ },
+ "0.0.250": {
+  "left": {
+   "src": "doodles/0.0.250-left.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/0.0.250-right.png",
+   "flip": false
+  }
+ }
+}
