@@ -3,36 +3,31 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>drdiff - deltarune code across versions</title>
-<link rel="stylesheet" href="style.css">
-<link rel="icon" href="favicon.png">
+<title>drdiff</title>
+<link rel="stylesheet" href="/src/css/style.css">
+<link rel="icon" href="/favicon.png">
 </head>
 <body>
 
-<header class="top">
-  <div class="brand">
-    <span class="brandmark">drdiff</span>
-    <span class="brandsub">deltarune code changes across versions</span>
-  </div>
-  <div class="topright">
-    <label class="eratog"><input type="checkbox" class="showunchanged"> show unchanged parts</label>
-    <a class="ghlink" href="about.html">about</a>
-  </div>
+<header class="topbar">
+  <div class="versionrail"></div>
 </header>
 
-<main class="layout">
+<div class="chapterbar"></div>
 
-  <nav class="rail">
-    <div class="railhead">versions</div>
-    <div class="timeline"></div>
-  </nav>
+<div class="workspace">
+  <aside class="sidebar">
+    <div class="filelist"></div>
+    <button class="changelogtoggle" type="button">
+      <span class="cgicon">&#9776;</span> changelog
+    </button>
+  </aside>
+  <main class="content">
+    <div class="hint">pick a version above.</div>
+  </main>
+</div>
 
-  <section class="stage">
-    <div class="empty">pick a version step on the left to see what changed.</div>
-  </section>
-
-</main>
-
-<script src="app.js"></script>
+<script src="/src/js/gml.js"></script>
+<script src="/src/js/app.js"></script>
 </body>
 </html>
