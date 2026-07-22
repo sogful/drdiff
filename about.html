@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>drdiff - about</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon.png">
+<style>
+.doc {max-width: 760px; margin: 0 auto; padding: 30px 24px 80px}
+.doc h1 {font-family: "dlfont", monospace; color: var(--yellow); font-size: 24px}
+.doc h2 {font-family: "dlfont", monospace; color: var(--text); font-size: 16px; margin-top: 28px}
+.doc p, .doc li {color: var(--dim); font-size: 14px}
+.doc code {background: var(--panel2); padding: 1px 5px; border-radius: 3px; color: var(--azure); font-family: ui-monospace, Consolas, monospace}
+.doc a {color: var(--azure)}
+.doc .back {display: inline-block; margin-bottom: 10px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="brandmark">drdiff</span><span class="brandsub">about</span></div>
+  <div class="topright"><a class="ghlink" href="index.html">back to diffs</a></div>
+</header>
+
+<div class="doc">
+  <h1>what this is</h1>
+  <p>a side-by-side of how deltarune's decompiled game code changed from patch to patch, with
+  each update's official changelog pinned next to the actual code that moved.</p>
+
+  <h2>how it was built</h2>
+  <ul>
+    <li>every patched build was pulled straight from steam's depots by manifest id (depot <code>1671212</code>).</li>
+    <li>each build's <code>data.win</code> per chapter was decompiled to gml with a fork of undertalemodtool (underanalyzer).</li>
+    <li>builds were identified by their in-game version string (<code>global.versionno</code> / <code>global.version</code>) rather than trusting file order.</li>
+    <li>consecutive builds were diffed file-by-file, line-by-line.</li>
+    <li>changelog notes were pulled from the official @UNDERTALE account and OCR'd from the patch-note images.</li>
+  </ul>
+
+  <h2>the two eras</h2>
+  <p>the tracked builds split into two shapes. the <b>release</b> era (chapters 1-4) and the
+  <b>chapter 5</b> era (chapters 1-5). each chapter ships its own <code>data.win</code>, so diffs are
+  clean within an era.</p>
+
+  <h2>exclusions</h2>
+  <p>when a whole chapter is introduced in a single update (chapter 5 landing on top of the
+  release era), thousands of brand-new code entries appear at once. that bulk addition is
+  <b>collapsed</b> to a count rather than exploded line-by-line, so the boundary step stays about
+  what actually changed in the existing chapters. these steps are marked <span style="color:var(--red)">era boundary</span>.</p>
+
+  <h2>reading a diff</h2>
+  <ul>
+    <li>pick a version step on the left. each shows the launcher plus every chapter.</li>
+    <li>green <code>ADD</code> / red <code>DEL</code> / blue <code>MOD</code> tag each changed code entry.</li>
+    <li>click a modified entry to expand its line diff.</li>
+    <li>the official changelog for that version sits at the top, image and all.</li>
+  </ul>
+
+  <p style="margin-top:30px;color:var(--dimmer)">not affiliated with toby fox. code shown for study and archival.</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,901 @@
+{
+ "versions": [
+  {
+   "label": "1.00",
+   "date": "2025-06-05",
+   "era": "release",
+   "manifest": "6530852604090871226",
+   "ver": {
+    "root": "v2",
+    "ch1": "1.36",
+    "ch2": "1.41",
+    "ch3": "v0.0.086",
+    "ch4": "v0.0.086"
+   }
+  },
+  {
+   "label": "1.01A",
+   "date": "2025-06-06",
+   "era": "release",
+   "manifest": "7360369116571903144",
+   "ver": {
+    "root": "v2",
+    "ch1": "1.36",
+    "ch2": "1.41",
+    "ch3": "v0.0.087",
+    "ch4": "v0.0.086"
+   }
+  },
+  {
+   "label": "1.01B",
+   "date": "2025-06-08",
+   "era": "release",
+   "manifest": "7730842116999772152",
+   "ver": {
+    "root": "v2",
+    "ch1": "1.36",
+    "ch2": "1.42",
+    "ch3": "v0.0.088",
+    "ch4": "v0.0.087"
+   }
+  },
+  {
+   "label": "1.01C",
+   "date": "2025-06-09",
+   "era": "release",
+   "manifest": "3006447521106301427",
+   "ver": {
+    "root": "v2",
+    "ch1": "1.36",
+    "ch2": "1.42",
+    "ch3": "v0.0.089",
+    "ch4": "v0.0.088"
+   }
+  },
+  {
+   "label": "1.02",
+   "date": "2025-07-08",
+   "era": "release",
+   "manifest": "1738457575886606060",
+   "ver": {
+    "root": "v2",
+    "ch1": "1.37",
+    "ch2": "1.43",
+    "ch3": "v0.0.091",
+    "ch4": "v0.0.090"
+   }
+  },
+  {
+   "label": "1.03",
+   "date": "2025-07-23",
+   "era": "release",
+   "manifest": "6956536201257221797",
+   "ver": {
+    "root": "v2",
+    "ch1": "1.38",
+    "ch2": "1.44",
+    "ch3": "v0.0.094",
+    "ch4": "v0.0.094"
+   }
+  },
+  {
+   "label": "1.04",
+   "date": "2025-08-05",
+   "era": "release",
+   "manifest": "5291565625263756968",
+   "ver": {
+    "root": "v2",
+    "ch1": "1.40",
+    "ch2": "1.46",
+    "ch3": "v0.0.098",
+    "ch4": "v0.0.098"
+   }
+  },
+  {
+   "label": "0.0.240",
+   "date": "2026-06-24",
+   "era": "ch5",
+   "manifest": "2856471167011435804",
+   "ver": {
+    "root": null,
+    "ch1": "1.43",
+    "ch2": "1.49",
+    "ch3": "v0.0.103",
+    "ch4": "v0.0.105",
+    "ch5": "v0.0.240"
+   }
+  },
+  {
+   "label": "0.0.241",
+   "date": "2026-06-25",
+   "era": "ch5",
+   "manifest": "4986929572195566736",
+   "ver": {
+    "root": null,
+    "ch1": "1.43",
+    "ch2": "1.49",
+    "ch3": "v0.0.103",
+    "ch4": "v0.0.105",
+    "ch5": "v0.0.241"
+   }
+  },
+  {
+   "label": "0.0.242",
+   "date": "2026-06-27",
+   "era": "ch5",
+   "manifest": "5668370237506127426",
+   "ver": {
+    "root": null,
+    "ch1": "1.43",
+    "ch2": "1.49",
+    "ch3": "v0.0.103",
+    "ch4": "v0.0.105",
+    "ch5": "v0.0.242"
+   }
+  },
+  {
+   "label": "0.0.243",
+   "date": "2026-06-29",
+   "era": "ch5",
+   "manifest": "1619878865915573883",
+   "ver": {
+    "root": null,
+    "ch1": "1.43",
+    "ch2": "1.49",
+    "ch3": "v0.0.103",
+    "ch4": "v0.0.105",
+    "ch5": "v0.0.243"
+   }
+  },
+  {
+   "label": "0.0.244",
+   "date": "2026-07-01",
+   "era": "ch5",
+   "manifest": "8959018571141829552",
+   "ver": {
+    "root": null,
+    "ch1": "1.43",
+    "ch2": "1.49",
+    "ch3": "v0.0.103",
+    "ch4": "v0.0.105",
+    "ch5": "v0.0.244"
+   }
+  },
+  {
+   "label": "0.0.247",
+   "date": "2026-07-09",
+   "era": "ch5",
+   "manifest": "7477373076840518223",
+   "ver": {
+    "root": null,
+    "ch1": "1.43",
+    "ch2": "1.49",
+    "ch3": "v0.0.103",
+    "ch4": "v0.0.105",
+    "ch5": "v0.0.247"
+   }
+  },
+  {
+   "label": "0.0.250",
+   "date": "2026-07-22",
+   "era": "ch5",
+   "manifest": "6988415462459025370",
+   "ver": {
+    "root": null,
+    "ch1": "1.43",
+    "ch2": "1.49",
+    "ch3": "v0.0.103",
+    "ch4": "v0.0.108",
+    "ch5": "v0.0.250"
+   }
+  }
+ ],
+ "transitions": [
+  {
+   "id": "1.00__1.01A",
+   "from": "1.00",
+   "to": "1.01A",
+   "date": "2025-06-06",
+   "era": "release",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 2,
+     "r": 0,
+     "m": 21,
+     "p": 496,
+     "mi": 665,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 6,
+     "p": 16,
+     "mi": 10,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "1.01A__1.01B",
+   "from": "1.01A",
+   "to": "1.01B",
+   "date": "2025-06-08",
+   "era": "release",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 2,
+     "p": 17,
+     "mi": 8,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 27,
+     "p": 270,
+     "mi": 90,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 22,
+     "p": 152,
+     "mi": 60,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "1.01B__1.01C",
+   "from": "1.01B",
+   "to": "1.01C",
+   "date": "2025-06-09",
+   "era": "release",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 2,
+     "p": 6,
+     "mi": 6,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 56,
+     "p": 104,
+     "mi": 106,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "1.01C__1.02",
+   "from": "1.01C",
+   "to": "1.02",
+   "date": "2025-07-08",
+   "era": "release",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 7,
+     "p": 200,
+     "mi": 34,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 1,
+     "r": 0,
+     "m": 3,
+     "p": 31,
+     "mi": 10,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 2,
+     "r": 3,
+     "m": 17,
+     "p": 160,
+     "mi": 54,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 4,
+     "r": 0,
+     "m": 32,
+     "p": 491,
+     "mi": 258,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 2,
+     "r": 0,
+     "m": 30,
+     "p": 229,
+     "mi": 69,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "1.02__1.03",
+   "from": "1.02",
+   "to": "1.03",
+   "date": "2025-07-23",
+   "era": "release",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 3,
+     "p": 10,
+     "mi": 3,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 7,
+     "p": 45,
+     "mi": 24,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 11,
+     "p": 182,
+     "mi": 99,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 3,
+     "r": 0,
+     "m": 180,
+     "p": 1420,
+     "mi": 1185,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 2,
+     "r": 0,
+     "m": 179,
+     "p": 804,
+     "mi": 573,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "1.03__1.04",
+   "from": "1.03",
+   "to": "1.04",
+   "date": "2025-08-05",
+   "era": "release",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 2,
+     "p": 9,
+     "mi": 2,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 4,
+     "p": 25,
+     "mi": 11,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 4,
+     "p": 69,
+     "mi": 9,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 28,
+     "p": 321,
+     "mi": 48,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 32,
+     "p": 513,
+     "mi": 269,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "1.04__0.0.240",
+   "from": "1.04",
+   "to": "0.0.240",
+   "date": "2026-06-24",
+   "era": "ch5",
+   "boundary": true,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 9,
+     "m": 9,
+     "p": 35,
+     "mi": 18,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 5,
+     "p": 18,
+     "mi": 6,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 9,
+     "p": 36,
+     "mi": 5,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 1,
+     "r": 0,
+     "m": 8,
+     "p": 68,
+     "mi": 19,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 5,
+     "r": 0,
+     "m": 314,
+     "p": 901,
+     "mi": 814,
+     "collapsed": false
+    },
+    "ch5": {
+     "a": 11843,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": true
+    }
+   }
+  },
+  {
+   "id": "0.0.240__0.0.241",
+   "from": "0.0.240",
+   "to": "0.0.241",
+   "date": "2026-06-25",
+   "era": "ch5",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch5": {
+     "a": 0,
+     "r": 0,
+     "m": 16,
+     "p": 251,
+     "mi": 134,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "0.0.241__0.0.242",
+   "from": "0.0.241",
+   "to": "0.0.242",
+   "date": "2026-06-27",
+   "era": "ch5",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch5": {
+     "a": 1,
+     "r": 0,
+     "m": 18,
+     "p": 110,
+     "mi": 37,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "0.0.242__0.0.243",
+   "from": "0.0.242",
+   "to": "0.0.243",
+   "date": "2026-06-29",
+   "era": "ch5",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch5": {
+     "a": 0,
+     "r": 0,
+     "m": 9,
+     "p": 31,
+     "mi": 19,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "0.0.243__0.0.244",
+   "from": "0.0.243",
+   "to": "0.0.244",
+   "date": "2026-07-01",
+   "era": "ch5",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch5": {
+     "a": 0,
+     "r": 0,
+     "m": 5,
+     "p": 35,
+     "mi": 16,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "0.0.244__0.0.247",
+   "from": "0.0.244",
+   "to": "0.0.247",
+   "date": "2026-07-09",
+   "era": "ch5",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch5": {
+     "a": 5,
+     "r": 0,
+     "m": 210,
+     "p": 1001,
+     "mi": 450,
+     "collapsed": false
+    }
+   }
+  },
+  {
+   "id": "0.0.247__0.0.250",
+   "from": "0.0.247",
+   "to": "0.0.250",
+   "date": "2026-07-22",
+   "era": "ch5",
+   "boundary": false,
+   "parts": {
+    "root": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch1": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch2": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch3": {
+     "a": 0,
+     "r": 0,
+     "m": 0,
+     "p": 0,
+     "mi": 0,
+     "collapsed": false
+    },
+    "ch4": {
+     "a": 0,
+     "r": 0,
+     "m": 197,
+     "p": 599,
+     "mi": 554,
+     "collapsed": false
+    },
+    "ch5": {
+     "a": 1,
+     "r": 3,
+     "m": 723,
+     "p": 3067,
+     "mi": 2328,
+     "collapsed": false
+    }
+   }
+  }
+ ]
+}
