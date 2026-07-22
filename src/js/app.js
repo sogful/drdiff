@@ -9,12 +9,13 @@ const S = "/assets/static";
 
 let manifest = null;
 let notes = {};
-let changelogSet = new Set();   // versions that have a changelog markdown file
+let changelogSet = new Set();   // versions with a twitter changelog .md
+let steamSet = new Set();       // versions with a steam changelog .md
 let doodles = {};
-let steam = {};                 // steam news bodies (accurate text) by version
 const diffcache = {};
-const clcache = {};             // parsed changelog markdown, by version
-const sel = {version: null, chapter: null, file: null, mode: "changelog"};
+const clcache = {};             // parsed twitter changelog markdown, by version
+const clraw = {};               // raw markdown text (twitter + steam) by "src/version"
+const sel = {version: null, chapter: null, file: null, mode: "changelog", clshow: {twitter: true, steam: false}};
 
 /*//////////////////////////////////////////////////////////////////////*/
 /* boot */
@@ -22,29 +23,38 @@ const sel = {version: null, chapter: null, file: null, mode: "changelog"};
 async function boot() {
   try {
     manifest = await fetchjson(S + "/manifest.json");
-    let clindex;
-    [notes, clindex, doodles, steam] = await Promise.all([
+    let clindex, stindex;
+    [notes, clindex, doodles, stindex] = await Promise.all([
       fetchjson(S + "/notes.json").catch(() => ({})),
       fetchjson(S + "/changelogs/index.json").catch(() => []),
       fetchjson(S + "/doodles.json").catch(() => ({})),
-      fetchjson(S + "/steam_changelogs.json").catch(() => ({})),
+      fetchjson(S + "/steamchangelogs/index.json").catch(() => []),
     ]);
     changelogSet = new Set(clindex);
+    steamSet = new Set(stindex);
   } catch (e) {
     document.querySelector(".content").innerHTML = "<div class=\"hint\">no data. run build_site.py.</div>";
     return;
   }
   manifest.versions = manifest.versions.filter(v => !EXCLUDE.has(v.label));
   buildrail();
-  document.querySelector(".changelogtoggle").addEventListener("click", () => {
-    sel.mode = sel.mode === "changelog" ? "diff" : "changelog";
-    rendercontent();
-  });
+  for (const b of document.querySelectorAll(".cswbtn")) {
+    b.addEventListener("click", () => {
+      sel.clshow[b.dataset.src] = !sel.clshow[b.dataset.src];
+      sel.mode = (sel.clshow.twitter || sel.clshow.steam) ? "changelog" : "diff";
+      rendercontent();
+    });
+  }
   const hash = decodeURIComponent(location.hash.slice(1));
   const start = manifest.versions.find(v => v.label === hash) || manifest.versions[manifest.versions.length - 1];
   await selectversion(start.label);
   const q = new URLSearchParams(location.search);
-  if (q.has("changelog")) {sel.mode = "changelog"; rendercontent();}
+  const cl = q.get("cl") || (q.has("changelog") ? "twitter" : "");
+  if (cl) {
+    sel.clshow = {twitter: cl === "twitter" || cl === "diff", steam: cl === "steam" || cl === "diff"};
+    sel.mode = "changelog";
+    rendercontent();
+  }
   const selp = q.get("sel");
   if (selp) {
     const i = selp.indexOf("/");
@@ -176,10 +186,12 @@ async function selectversion(label) {
   const diffable = changed.filter(p => !diff.parts[p].collapsed);
   sel.chapter = (diffable.length ? diffable : changed).slice(-1)[0] || null;
   sel.file = null;
-  // keep the changelog open across version switches; else show the diff (baseline -> changelog)
-  if (!t) sel.mode = "changelog";
-  else if (wasChangelog && changelogSet.has(label)) sel.mode = "changelog";
-  else sel.mode = "diff";
+  // keep the changelog open across version switches, clamped to sources this version has
+  sel.clshow.twitter = sel.clshow.twitter && changelogSet.has(label);
+  sel.clshow.steam = sel.clshow.steam && steamSet.has(label);
+  if (wasChangelog && !sel.clshow.twitter && !sel.clshow.steam && changelogSet.has(label))
+    sel.clshow.twitter = true;
+  sel.mode = (sel.clshow.twitter || sel.clshow.steam) ? "changelog" : "diff";
   updatechangelogbtn();
   rendercontent();
   markchaptertab();
@@ -229,7 +241,8 @@ function buildchapters(diff) {
 function markchaptertab() {
   for (const t of document.querySelectorAll(".ctab"))
     t.classList.toggle("active", sel.mode === "diff" && t.dataset.part === sel.chapter);
-  document.querySelector(".changelogtoggle").classList.toggle("active", sel.mode === "changelog");
+  for (const b of document.querySelectorAll(".cswbtn"))
+    b.classList.toggle("on", sel.mode === "changelog" && !!sel.clshow[b.dataset.src]);
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
@@ -239,7 +252,7 @@ function rendercontent() {
   markchaptertab();
   if (!sel.trans) return renderbaseline();
   renderfilelist();                       // keep the sidebar populated in either mode
-  if (sel.mode === "changelog" && changelogSet.has(sel.version)) renderchangelog();
+  if (sel.mode === "changelog") renderchangelog();
   else renderdiffpane();
 }
 
@@ -250,7 +263,11 @@ function renderbaseline() {
 }
 
 function updatechangelogbtn() {
-  document.querySelector(".changelogtoggle").style.display = changelogSet.has(sel.version) ? "" : "none";
+  const sw = document.querySelector(".changelogswitch");
+  const hasTw = changelogSet.has(sel.version), hasSt = steamSet.has(sel.version);
+  sw.style.display = (hasTw || hasSt) ? "" : "none";
+  sw.querySelector("[data-src=twitter]").style.display = hasTw ? "" : "none";
+  sw.querySelector("[data-src=steam]").style.display = hasSt ? "" : "none";
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
@@ -284,7 +301,7 @@ function renderfilelist() {
     else if (r.kind === "del") stat = "<span class=\"fstat\" fnt_small><span class=\"m\" red>-" + r.lines + "</span></span>";
     else stat = "<span class=\"fstat\" fnt_small><span class=\"p\" green>+" + r.mod.plus + "</span> <span class=\"m\" red>-" + r.mod.minus + "</span></span>";
     row.innerHTML = "<span class=\"fname\" title=\"" + esc(r.file) + "\">" + esc(shortname(r.file)) + "</span>" + stat;
-    row.addEventListener("click", () => {sel.file = r.file; sel.mode = "diff"; renderdiffpane(); highlightrow(); markchaptertab();});
+    row.addEventListener("click", () => {sel.file = r.file; sel.mode = "diff"; sel.clshow.twitter = sel.clshow.steam = false; renderdiffpane(); highlightrow(); markchaptertab();});
     list.appendChild(row);
   }
   if (!sel.file || !rows.some(r => r.file === sel.file)) sel.file = rows[0].file;
@@ -413,19 +430,41 @@ function parsemd(text) {
 async function renderchangelog() {
   const c = document.querySelector(".content");
   const version = sel.version;
-  const cl = await getcl(version);
-  if (version !== sel.version || sel.mode !== "changelog") return;   // user moved on
-  if (!cl) {
-    c.innerHTML = "<div class=\"changelog\"><div class=\"cl-title\">no changelog</div>" +
-      "<div class=\"cl-intro\">no official patch notes were posted for " + esc(version) + ".</div></div>";
-    return;
+  let body;
+  if (sel.clshow.twitter && sel.clshow.steam) {
+    body = await renderwordingdiff(version);                 // both toggled -> wording diff
+  } else if (sel.clshow.steam) {
+    const st = await getsteamcl(version);
+    body = st ? recreationhtml(st, version) : nochangeloghtml(version);
+  } else {
+    const cl = await getcl(version);
+    body = cl ? recreationhtml(cl, version) : nochangeloghtml(version);
   }
+  if (version !== sel.version || sel.mode !== "changelog") return;   // user moved on
+  c.innerHTML = body;
+  c.scrollTop = 0;
+}
+
+function nochangeloghtml(version) {
+  return "<div class=\"changelog\"><div class=\"cl-title\">no changelog</div>" +
+    "<div class=\"cl-intro\">no official patch notes were posted for " + esc(version) + ".</div></div>";
+}
+
+async function getsteamcl(version) {
+  const key = "st:" + version;
+  if (clcache[key]) return clcache[key];
+  const md = await fetchtext(S + "/steamchangelogs/" + version + ".md").catch(() => null);
+  clcache[key] = md == null ? null : parsemd(md);
+  return clcache[key];
+}
+
+function recreationhtml(cl, version) {
   let h = "<div class=\"changelog\">";
-  h += "<div class=\"cl-head\">" + doodlehtml(sel.version, "left") + "<div class=\"cl-headtext\">";
+  h += "<div class=\"cl-head\">" + doodlehtml(version, "left") + "<div class=\"cl-headtext\">";
   h += "<div class=\"cl-title\">" + esc(cl.title) + "</div>";
   if (cl.subtitle) h += "<div class=\"cl-sub\">" + esc(cl.subtitle) + "</div>";
   if (cl.intro) h += "<div class=\"cl-intro\">" + esc(cl.intro) + "</div>";
-  h += "</div>" + doodlehtml(sel.version, "right") + "</div>";
+  h += "</div>" + doodlehtml(version, "right") + "</div>";
   if (cl.table && cl.table.rows.length) {
     h += "<div class=\"cl-h\">Version Numbers</div><table class=\"cl-table\"><tr><th></th>";
     for (const col of cl.table.cols) h += "<th>" + esc(col) + "</th>";
@@ -449,32 +488,55 @@ async function renderchangelog() {
   }
   if (cl.footer) h += "<div class=\"cl-footer\">" + esc(cl.footer) + "</div>";
   h += "</div>";
-  h += steambox(version);
-  c.innerHTML = h;
-  c.scrollTop = 0;
+  return h;
 }
 
-// steam news body (accurate text) rendered steam-styled, under the recreated changelog
-function steambox(version) {
-  const s = steam[version];
-  if (!s) return "";
-  return "<div class=\"steambox\"><div class=\"steamhead\">" +
-    "<span class=\"steamlogo\">STEAM</span> official post &middot; " + esc(s.date) + "</div>" +
-    "<div class=\"steamtitle\">" + esc(s.headline) + "</div>" +
-    "<div class=\"steambody\">" + bbcode(s.body) + "</div></div>";
+async function getrawmd(src, version) {
+  const key = src + "/" + version;
+  if (clraw[key] != null) return clraw[key];
+  clraw[key] = await fetchtext(S + "/" + src + "/" + version + ".md").catch(() => "");
+  return clraw[key];
 }
 
-function bbcode(str) {
-  let s = esc(str);
-  s = s.replace(/\[\/?b\]/gi, m => m[1] === "/" ? "</b>" : "<b>");
-  s = s.replace(/\[\/?i\]/gi, m => m[1] === "/" ? "</i>" : "<i>");
-  s = s.replace(/\[\/?u\]/gi, m => m[1] === "/" ? "</u>" : "<u>");
-  s = s.replace(/\[h1\](.*?)\[\/h1\]/gis, "<h3>$1</h3>").replace(/\[h2\](.*?)\[\/h2\]/gis, "<h4>$1</h4>");
-  s = s.replace(/\[url=([^\]]+)\](.*?)\[\/url\]/gis, "<a href=\"$1\" target=\"_blank\" rel=\"noopener\">$2</a>");
-  s = s.replace(/\[list\]|\[\/list\]/gi, "").replace(/\[\*\]/gi, "・");
-  s = s.replace(/\[img\][^\[]*\[\/img\]/gi, "").replace(/\[\/?[a-z][^\]]*\]/gi, "");   // drop other tags
-  s = s.replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>");
-  return "<p>" + s + "</p>";
+function mdplain(md) {
+  return md.split("\n").map(l =>
+    l.replace(/^#{1,6}\s*/, "").replace(/^\s*[-*]\s*/, "").replace(/^>\s*/, "")
+     .replace(/^\[[^\]]+\]\s*/, "").replace(/\|/g, " ").replace(/\*\*/g, "").trim())
+    .filter(x => x && !/^-+$/.test(x)).join("\n");
+}
+
+async function renderwordingdiff(version) {
+  const [tw, st, cl] = await Promise.all([
+    getrawmd("changelogs", version), getrawmd("steamchangelogs", version), getcl(version)]);
+  let h = "<div class=\"changelog worddiff\">";
+  h += "<div class=\"cl-head\">" + doodlehtml(version, "left") + "<div class=\"cl-headtext\">";
+  h += "<div class=\"cl-title\">" + esc(cl ? cl.title : version) + "</div>";
+  h += "</div>" + doodlehtml(version, "right") + "</div>";
+  h += "<div class=\"wdbody\">" + worddiff(mdplain(tw), mdplain(st)) + "</div></div>";
+  return h;
+}
+
+// word-level LCS diff of the two wordings
+function worddiff(a, b) {
+  const A = a.split(/(\s+)/).filter(t => t.length);
+  const B = b.split(/(\s+)/).filter(t => t.length);
+  const n = A.length, m = B.length;
+  const dp = [];
+  for (let i = 0; i <= n; i++) dp.push(new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--)
+    for (let j = m - 1; j >= 0; j--)
+      dp[i][j] = A[i] === B[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const ws = t => /^\s+$/.test(t);
+  const emit = (cls, t) => ws(t) ? t.replace(/\n/g, "<br>") : "<span class=\"" + cls + "\">" + esc(t) + "</span>";
+  let i = 0, j = 0, out = "";
+  while (i < n && j < m) {
+    if (A[i] === B[j]) {out += ws(A[i]) ? A[i].replace(/\n/g, "<br>") : esc(A[i]); i++; j++;}
+    else if (dp[i + 1][j] >= dp[i][j + 1]) {out += emit("wdel", A[i]); i++;}
+    else {out += emit("wadd", B[j]); j++;}
+  }
+  while (i < n) out += emit("wdel", A[i++]);
+  while (j < m) out += emit("wadd", B[j++]);
+  return out;
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
