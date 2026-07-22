@@ -151,12 +151,12 @@ body {
 .chapterbar {
   flex: none;
   display: flex;
+  flex-wrap: wrap;
   align-items: stretch;
   gap: 0;
   background: black;
   border-bottom: 1px solid var(--line);
   padding: 0 6px;
-  overflow: hidden;
 }
 
 .ctab {
@@ -377,7 +377,6 @@ body {
   font-size: 14px;
   line-height: 1.5;
   padding: 40px 54px 60px;
-  min-height: 100%;
 }
 
 .cl-head {
@@ -468,7 +467,49 @@ body {
   font-style: italic;
 }
 
+/*//////////////////////////////////////////////////////////////////////*/
+/* steam-styled secondary changelog (accurate text from the steam news post) */
+
+.steambox {
+  max-width: 860px;
+  margin: 0 auto;
+  background: #1b2838;
+  color: #c6d4df;
+  font-family: "Motiva Sans", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 20px 40px 34px;
+  border-top: 3px solid #66c0f4;
+}
+.steamhead {
+  color: #66c0f4;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.steamlogo {
+  background: #66c0f4;
+  color: #1b2838;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 2px;
+  margin-right: 4px;
+}
+.steamtitle {
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.steambody b {color: #ffffff}
+.steambody p {margin: 10px 0}
+.steambody a {color: #66c0f4}
+.steambody h3 {color: #ffffff; font-size: 16px; margin: 16px 0 6px}
+.steambody h4 {color: #e5e5e5; font-size: 14px; margin: 12px 0 4px}
+
 @media (max-width: 900px) {
+  .steambox {padding: 18px 22px 30px}
   .sidebar {width: 240px}
   .changelog {padding: 28px 22px 50px}
 }

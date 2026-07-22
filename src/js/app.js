@@ -11,6 +11,7 @@ let manifest = null;
 let notes = {};
 let changelogSet = new Set();   // versions that have a changelog markdown file
 let doodles = {};
+let steam = {};                 // steam news bodies (accurate text) by version
 const diffcache = {};
 const clcache = {};             // parsed changelog markdown, by version
 const sel = {version: null, chapter: null, file: null, mode: "changelog"};
@@ -22,10 +23,11 @@ async function boot() {
   try {
     manifest = await fetchjson(S + "/manifest.json");
     let clindex;
-    [notes, clindex, doodles] = await Promise.all([
+    [notes, clindex, doodles, steam] = await Promise.all([
       fetchjson(S + "/notes.json").catch(() => ({})),
       fetchjson(S + "/changelogs/index.json").catch(() => []),
       fetchjson(S + "/doodles.json").catch(() => ({})),
+      fetchjson(S + "/steam_changelogs.json").catch(() => ({})),
     ]);
     changelogSet = new Set(clindex);
   } catch (e) {
@@ -81,7 +83,7 @@ window.addEventListener("fontready", () => {
 
 // parse the compact .drdiff text into the per-part shape, merged with the
 // manifest transition summary (which carries the counts + collapsed flag)
-const DIFF_RX = /^FILE (root|ch\d)\/(\S+) ([MAD]) (\d+) (\d+)$/;
+const DIFF_RX = /^FILE (root|ch\d|combined)\/(\S+) ([MAD]) (\d+) (\d+)$/;
 function parsediff(text, t) {
   const parsed = {};
   let cur = null, body = [];
@@ -447,8 +449,32 @@ async function renderchangelog() {
   }
   if (cl.footer) h += "<div class=\"cl-footer\">" + esc(cl.footer) + "</div>";
   h += "</div>";
+  h += steambox(version);
   c.innerHTML = h;
   c.scrollTop = 0;
+}
+
+// steam news body (accurate text) rendered steam-styled, under the recreated changelog
+function steambox(version) {
+  const s = steam[version];
+  if (!s) return "";
+  return "<div class=\"steambox\"><div class=\"steamhead\">" +
+    "<span class=\"steamlogo\">STEAM</span> official post &middot; " + esc(s.date) + "</div>" +
+    "<div class=\"steamtitle\">" + esc(s.headline) + "</div>" +
+    "<div class=\"steambody\">" + bbcode(s.body) + "</div></div>";
+}
+
+function bbcode(str) {
+  let s = esc(str);
+  s = s.replace(/\[\/?b\]/gi, m => m[1] === "/" ? "</b>" : "<b>");
+  s = s.replace(/\[\/?i\]/gi, m => m[1] === "/" ? "</i>" : "<i>");
+  s = s.replace(/\[\/?u\]/gi, m => m[1] === "/" ? "</u>" : "<u>");
+  s = s.replace(/\[h1\](.*?)\[\/h1\]/gis, "<h3>$1</h3>").replace(/\[h2\](.*?)\[\/h2\]/gis, "<h4>$1</h4>");
+  s = s.replace(/\[url=([^\]]+)\](.*?)\[\/url\]/gis, "<a href=\"$1\" target=\"_blank\" rel=\"noopener\">$2</a>");
+  s = s.replace(/\[list\]|\[\/list\]/gi, "").replace(/\[\*\]/gi, "・");
+  s = s.replace(/\[img\][^\[]*\[\/img\]/gi, "").replace(/\[\/?[a-z][^\]]*\]/gi, "");   // drop other tags
+  s = s.replace(/\n{2,}/g, "</p><p>").replace(/\n/g, "<br>");
+  return "<p>" + s + "</p>";
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
