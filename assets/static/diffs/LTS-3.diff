@@ -1,0 +1,1385 @@
+FILE ch1/gml_GlobalScript_scr_gamestart.gml M 1 0
+@@ -273,6 +273,7 @@
+     global.flag[15] = 1;
+     global.flag[16] = 0.85;
+     global.flag[17] = 0.6;
++    audio_set_master_gain(0, global.flag[17]);
+     for (i = 0; i < 10; i += 1)
+     {
+         global.input_pressed[i] = 0;
+FILE ch1/gml_GlobalScript_scr_init_launch_parameters.gml M 2 0
+@@ -25,6 +25,7 @@
+ {
+     is_launcher = false;
+     switch_id = -1;
++    returning = 0;
+ }
+ 
+ function get_chapter_switch_parameters()
+@@ -38,6 +39,7 @@
+     var parameters = [];
+     parameters[0] = "launcher";
+     parameters[1] = "switch_" + string(launch_data.switch_id);
++    parameters[2] = "returning_" + string(global.chapter);
+     var param_formatted = "";
+     for (var i = 0; i < array_length(parameters); i++)
+     {
+FILE ch1/gml_GlobalScript_scr_itemuse.gml M 4 1
+@@ -48,7 +48,10 @@
+             if (_gc == 2)
+             {
+                 scr_itemcomment(suspos, scr_84_get_lang_string("scr_itemuse_slash_scr_itemuse_gml_47_0"));
+-                scr_itemcomment(ralpos, scr_84_get_lang_string("scr_itemuse_slash_scr_itemuse_gml_48_0"));
++                if (scr_havechar(3))
++                {
++                    scr_itemcomment(ralpos, scr_84_get_lang_string("scr_itemuse_slash_scr_itemuse_gml_48_0"));
++                }
+             }
+             if (_gc == 3)
+             {
+FILE ch1/gml_GlobalScript_scr_save.gml M 1 0
+@@ -26,4 +26,5 @@
+     ini_write_string("G" + string(global.filechoice), "Version", global.version);
+     ossafe_ini_close();
+     ossafe_savedata_save();
++    scr_store_ura_result(global.chapter, global.filechoice, uraboss);
+ }
+FILE ch1/gml_Object_DEVICE_MENU_Draw_0.gml M 27 0
+@@ -308,6 +308,24 @@
+             draw_set_color(COL_B);
+         }
+         draw_text_shadow(204, 190, CHSELECTTEXT);
++        if (!global.is_console)
++        {
++            QUITTEXT = "End Program";
++            if (global.lang == "ja")
++            {
++                QUITTEXT = "終了";
++            }
++            if (TYPE == 0)
++            {
++                QUITTEXT = string_upper(QUITTEXT);
++            }
++            draw_set_color(COL_A);
++            if (MENUCOORD[0] == 7)
++            {
++                draw_set_color(COL_B);
++            }
++            draw_text_shadow(204, 210, QUITTEXT);
++        }
+         draw_set_color(COL_A);
+         if (MENUCOORD[0] == 6)
+         {
+@@ -393,6 +411,14 @@
+     draw_set_color(COL_B);
+     draw_text_shadow(40, 30, TEMPCOMMENT);
+     MESSAGETIMER -= 1;
++    if (MENU_NO == 0)
++    {
++        if (MENUCOORD[0] == 7)
++        {
++            HEARTX = 190;
++            HEARTY = 215;
++        }
++    }
+ }
+ if (abs(HEARTX - HEARTXCUR) <= 2)
+ {
+@@ -413,5 +439,6 @@
+ {
+     draw_set_color(COL_A);
+ }
++draw_set_font(fnt_main);
+ draw_text_shadow(__view_get(e__VW.XView, 0) + 8, __view_get(e__VW.YView, 0) + 4, "CHAPTER 1");
+ draw_set_color(c_white);
+FILE ch1/gml_Object_DEVICE_MENU_Other_15.gml M 4 1
+@@ -22,12 +22,15 @@
+ _NEWVERSION = ini_read_string("G" + string(MENUCOORD[2]), "Version", "0");
+ ini_write_string("G" + string(MENUCOORD[3]), "Name", _NEWNAME);
+ ini_write_real("G" + string(MENUCOORD[3]), "Time", _NEWTIME);
+-ini_write_real("G" + string(MENUCOORD[3]), "Room", _NEWROOM);
++ini_write_real("G" + string(MENUCOORD[3]), "Room", scr_get_id_by_room_index(_NEWROOM));
+ ini_write_real("G" + string(MENUCOORD[3]), "Level", _NEWLEVEL);
++ini_write_real("G" + string(MENUCOORD[3]), "Date", _NEWDATE);
+ ini_write_real("G" + string(MENUCOORD[3]), "InitLang", _NEWINITLANG);
+ ini_write_real("G" + string(MENUCOORD[3]), "UraBoss", _NEWURABOSS);
+ ini_write_string("G" + string(MENUCOORD[3]), "Version", _NEWVERSION);
+ ossafe_ini_close();
++var result = scr_get_ura_value(global.chapter, MENUCOORD[2]);
++scr_store_ura_result(global.chapter, MENUCOORD[3], result);
+ FILE[MENUCOORD[3]] = 1;
+ PLACE[MENUCOORD[3]] = PLACE[MENUCOORD[2]];
+ TIME[MENUCOORD[3]] = TIME[MENUCOORD[2]];
+FILE ch1/gml_Object_DEVICE_MENU_Step_0.gml M 56 7
+@@ -180,6 +180,9 @@
+                 ini_write_real("G" + string(MENUCOORD[5]), "Love", 0);
+                 ini_write_real("G" + string(MENUCOORD[5]), "Time", 0);
+                 ini_write_real("G" + string(MENUCOORD[5]), "Room", 0);
++                ini_write_real("G" + string(MENUCOORD[5]), "Date", 0);
++                ini_write_real("G" + string(MENUCOORD[5]), "UraBoss", 0);
++                ini_write_string("G" + string(MENUCOORD[5]), "Version", "0");
+                 ossafe_ini_close();
+                 ossafe_savedata_save();
+                 if (ossafe_file_exists("keyconfig_" + string(MENUCOORD[5]) + ".ini"))
+@@ -391,6 +394,7 @@
+ }
+ if (MENU_NO == 0)
+ {
++    var memloc = MENUCOORD[0];
+     if (down_p())
+     {
+         if (MENUCOORD[0] < 3)
+@@ -398,11 +402,16 @@
+             MENUCOORD[0] += 1;
+             MOVENOISE = 1;
+         }
+-        else if (MENUCOORD[0] != 6)
++        else if (MENUCOORD[0] == 3 || MENUCOORD[0] == 4)
+         {
+             MENUCOORD[0] = 6;
+             MOVENOISE = 1;
+         }
++        else if (MENUCOORD[0] == 5)
++        {
++            MENUCOORD[0] = 7;
++            MOVENOISE = 1;
++        }
+     }
+     if (up_p())
+     {
+@@ -418,21 +427,36 @@
+             }
+             else if (MENUCOORD[0] == 6)
+             {
+-                MENUCOORD[0] -= 2;
++                MENUCOORD[0] = 4;
++            }
++            else if (MENUCOORD[0] == 7)
++            {
++                MENUCOORD[0] = 5;
+             }
+             MOVENOISE = 1;
+         }
+     }
+     if (right_p())
+     {
+-        if (MENUCOORD[0] >= 3 && MENUCOORD[0] <= 5)
++        if (MENUCOORD[0] >= 3 && MENUCOORD[0] < 5)
+         {
+             MOVENOISE = 1;
+             MENUCOORD[0] += 1;
+-            if (MENUCOORD[0] > 5)
+-            {
+-                MENUCOORD[0] = 3;
+-            }
++        }
++        else if (MENUCOORD[0] == 5)
++        {
++            MOVENOISE = 1;
++            MENUCOORD[0] = 3;
++        }
++        else if (MENUCOORD[0] == 6)
++        {
++            MOVENOISE = 1;
++            MENUCOORD[0] = 7;
++        }
++        else if (MENUCOORD[0] == 7)
++        {
++            MOVENOISE = 1;
++            MENUCOORD[0] = 6;
+         }
+     }
+     if (left_p())
+@@ -445,6 +469,24 @@
+             {
+                 MENUCOORD[0] = 5;
+             }
++        }
++        else if (MENUCOORD[0] == 6)
++        {
++            MOVENOISE = 1;
++            MENUCOORD[0] = 7;
++        }
++        else if (MENUCOORD[0] == 7)
++        {
++            MOVENOISE = 1;
++            MENUCOORD[0] = 6;
++        }
++    }
++    if (global.is_console)
++    {
++        if (MENUCOORD[0] == 7)
++        {
++            MENUCOORD[0] = memloc;
++            MOVENOISE = false;
+         }
+     }
+     if (button1_p() && ONEBUFFER < 0)
+@@ -489,6 +531,13 @@
+             TWOBUFFER = 2;
+             SELNOISE = 1;
+         }
++        if (MENUCOORD[0] == 7)
++        {
++            ONEBUFFER = 2;
++            TWOBUFFER = 2;
++            SELNOISE = 1;
++            game_end();
++        }
+     }
+ }
+ if (OBMADE == 1)
+FILE ch1/gml_Object_obj_darkcontroller_Step_0.gml M 0 15
+@@ -1643,18 +1643,3 @@
+ threebuffer -= 1;
+ upbuffer -= 1;
+ downbuffer -= 1;
+-if (scr_debug())
+-{
+-    if (keyboard_check_pressed(ord("S")))
+-    {
+-        instance_create(0, 0, obj_savemenu);
+-    }
+-    if (keyboard_check_pressed(ord("L")))
+-    {
+-        ossafe_savedata_load();
+-    }
+-    if (keyboard_check_pressed(ord("R")))
+-    {
+-        game_restart_true();
+-    }
+-}
+FILE ch1/gml_Object_obj_debugcontroller_Create_0.gml M 1 0
+@@ -1 +1,2 @@
+ debug = false;
++god = false;
+FILE ch1/gml_Object_obj_gamecontroller_Other_75.gml M 12 1
+@@ -6,7 +6,18 @@
+         {
+             gamepad_active = 1;
+             gamepad_id = pad;
+-            gamepad_type = (gamepad_get_description(gamepad_id) == "Sony DualShock 4") ? 1 : 0;
++            var is_ps_controller = false;
++            var gamepad_description = gamepad_get_description(gamepad_id);
++            switch (gamepad_description)
++            {
++                case "Sony DualShock 4":
++                    is_ps_controller = true;
++                    break;
++                case "DualSense Wireless Controller":
++                    is_ps_controller = true;
++                    break;
++            }
++            gamepad_type = is_ps_controller ? 1 : 0;
+         }
+         break;
+     case "gamepad lost":
+FILE ch1/gml_Object_obj_initializer2_Create_0.gml M 10 8
+@@ -1,4 +1,8 @@
+ global.is_console = os_type == os_switch || os_type == os_ps4;
++if (!global.is_console)
++{
++    window_enable_borderless_fullscreen(true);
++}
+ var launch_data = scr_init_launch_parameters();
+ global.launcher = launch_data.is_launcher;
+ if (global.launcher)
+@@ -8,18 +12,16 @@
+         global.switchlogin = launch_data.switch_id;
+         if (global.switchlogin >= 0)
+         {
+-            if (switch_accounts_is_user_open(global.switchlogin))
+-            {
+-                switch_save_data_unmount();
+-                switch_accounts_close_user(global.switchlogin);
+-            }
++            switch_save_data_mount(global.switchlogin);
+         }
+         while (global.switchlogin < 0)
+         {
+             global.switchlogin = switch_accounts_select_account(true, false, false);
+         }
+-        switch_accounts_open_user(global.switchlogin);
+-        switch_save_data_mount(global.switchlogin);
++        if (!switch_accounts_is_user_open(global.switchlogin))
++        {
++            switch_accounts_open_user(global.switchlogin);
++        }
+     }
+ }
+ else if (os_type == os_switch && !variable_global_exists("switchlogin"))
+@@ -43,7 +45,7 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.17";
++global.version = "1.19";
+ if (os_type == os_switch)
+ {
+     global.version = "1.07";
+FILE ch1/gml_Object_obj_jokerbattleevent_Step_0.gml M 1 1
+@@ -418,7 +418,7 @@
+ {
+     con = 34;
+     snd_play(snd_joker_laugh0);
+-    global.typer = 35;
++    global.typer = 6;
+     global.fc = 0;
+     scr_keyitemget(13);
+     global.msg[0] = scr_84_get_lang_string("obj_jokerbattleevent_slash_Step_0_gml_362_0");
+FILE ch1/gml_Object_obj_lancerboss3_Step_0.gml M 4 0
+@@ -24,6 +24,10 @@
+                 {
+                     event_user(12);
+                     event_user(1);
++                    if (global.turntimer < 150)
++                    {
++                        global.turntimer = 150;
++                    }
+                 }
+                 global.monsterhp[0] = 40;
+                 snd_play(snd_power);
+FILE ch1/gml_Object_obj_starwalker_offswitch_Other_10.gml M 4 0
+@@ -9,6 +9,10 @@
+         {
+             active = 0;
+             instance_destroy();
++        }
++        with (obj_darkcontroller)
++        {
++            charcon = 0;
+         }
+         snd_play(snd_bell);
+         if (obj_starwalker_overworld.beatcon == 0)
+FILE ch1/gml_Object_obj_susieandlancer_event_Step_0.gml M 9 0
+@@ -464,6 +464,15 @@
+ }
+ if (con == 35)
+ {
++    var victory = false;
++    with (obj_battlecontroller)
++    {
++        victory = victoried;
++    }
++    if (victory && s.visible == 0)
++    {
++        s.visible = 1;
++    }
+     if (!instance_exists(obj_battlecontroller))
+     {
+         snd_free_all();
+FILE ch1/gml_Object_obj_time_Create_0.gml M 16 4
+@@ -3,6 +3,7 @@
+ axis_value = 0.4;
+ fullscreen_toggle = 0;
+ window_center_toggle = 0;
++isfullscreen = 0;
+ screenshot_number = 0;
+ border_fade_out = false;
+ border_fade_in = false;
+@@ -19,17 +20,28 @@
+ }
+ else
+ {
+-    display_height = display_get_height();
+-    display_width = display_get_width();
++    var setfull = false;
++    if (!global.is_console)
++    {
++        ini_open("true_config.ini");
++        setfull = ini_read_real("SCREEN", "FULLSCREEN", 0);
++        ini_close();
++        if (setfull)
++        {
++            window_set_fullscreen(true);
++        }
++    }
++    var display_height = display_get_height();
++    var display_width = display_get_width();
+     window_size_multiplier = 1;
+-    for (_ww = 2; _ww < 6; _ww += 1)
++    for (var _ww = 2; _ww < 12; _ww += 1)
+     {
+         if (display_width > (640 * _ww) && display_height > (480 * _ww))
+         {
+             window_size_multiplier = _ww;
+         }
+     }
+-    if (window_size_multiplier > 1)
++    if (window_size_multiplier > 1 && !setfull && !global.launcher)
+     {
+         window_set_size(640 * window_size_multiplier, 480 * window_size_multiplier);
+         window_center_toggle = 1;
+FILE ch1/gml_Object_obj_time_Draw_75.gml M 17 0
+@@ -12,3 +12,20 @@
+     audio_resume_all();
+     alarm[0] = 1;
+ }
++if (!global.is_console)
++{
++    var nowfullscreen = window_get_fullscreen();
++    if (nowfullscreen != isfullscreen)
++    {
++        ini_open("true_config.ini");
++        ini_write_real("SCREEN", "FULLSCREEN", nowfullscreen);
++        ini_close();
++        show_debug_message("fullscreen switched:" + string(nowfullscreen));
++        if (!nowfullscreen)
++        {
++            window_set_size(640 * window_size_multiplier, 480 * window_size_multiplier);
++            alarm[2] = 1;
++        }
++    }
++    isfullscreen = nowfullscreen;
++}
+FILE ch1/gml_GlobalScript_scr_chapter_save_file_exists.gml A 98 0
+function scr_chapter_save_file_exists(arg0)
+{
+    var _exists = false;
+    for (var i = 0; i < 3; i++)
+    {
+        _exists = ossafe_file_exists("filech" + string(arg0) + "_" + string(i));
+        if (_exists == true)
+        {
+            break;
+        }
+    }
+    return _exists;
+}
+
+function scr_chapter_save_file_exists_in_slot(arg0, arg1)
+{
+    var _exists = ossafe_file_exists("filech" + string(arg0) + "_" + string(arg1));
+    return _exists;
+}
+
+function scr_completed_chapter_any_slot(arg0)
+{
+    var _file_exists = false;
+    for (var i = 0; i < 3; i++)
+    {
+        if (ossafe_file_exists("filech" + string(arg0) + "_" + string(i + 3)))
+        {
+            _file_exists = true;
+            break;
+        }
+    }
+    return _file_exists;
+}
+
+function scr_completed_chapter_in_slot(arg0, arg1)
+{
+    var _file_exists = ossafe_file_exists("filech" + string(arg0) + "_" + string(arg1 + 3));
+    return _file_exists;
+}
+
+function scr_get_ini_value(arg0, arg1, arg2)
+{
+    var _ini_file = ossafe_ini_open("dr.ini");
+    var _ini_value = ini_read_real(scr_ini_chapter(arg0, arg1), arg2, 0);
+    ossafe_ini_close();
+    return _ini_value;
+}
+
+function scr_get_ini_value_all_slots(arg0, arg1)
+{
+    var _ini_file = ossafe_ini_open("dr.ini");
+    var _list = [];
+    for (var i = 0; i < 6; i++)
+    {
+        var _slot = i;
+        var _value = ini_read_real(scr_ini_chapter(arg0, _slot), arg1, 0);
+        _list[i][0] = _slot;
+        _list[i][1] = _value;
+    }
+    ossafe_ini_close();
+    return _list;
+}
+
+function scr_get_ura_value(arg0, arg1)
+{
+    var _ini_file = ossafe_ini_open("dr.ini");
+    var _ini_value = ini_read_real("URA", string(arg0) + "_" + string(arg1), 0);
+    ossafe_ini_close();
+    return _ini_value;
+}
+
+function scr_set_ura_value(arg0, arg1, arg2)
+{
+    var _ini_file = ossafe_ini_open("dr.ini");
+    var _ini_value = ini_write_real("URA", string(arg0) + "_" + string(arg1), arg2);
+    ossafe_ini_close();
+    return _ini_value;
+}
+
+function scr_store_ura_result(arg0, arg1, arg2)
+{
+    if (arg2 == 0)
+    {
+        exit;
+    }
+    var slot = arg1;
+    if (slot > 2)
+    {
+        slot -= 3;
+    }
+    var current_result = scr_get_ura_value(arg0, arg1);
+    var new_result = arg2;
+    if ((arg2 + current_result) == 3)
+    {
+        new_result = 3;
+    }
+    scr_set_ura_value(arg0, arg1, new_result);
+}
+FILE ch2/gml_GlobalScript_scr_chapterswitch.gml M 1 1
+@@ -6,7 +6,7 @@
+         switch (os_type)
+         {
+             case os_windows:
+-                game_change("/../", "-game data.win");
++                game_change("/../", "-game data.win" + parameters);
+                 break;
+             case os_switch:
+                 game_change("rom:/", parameters);
+FILE ch2/gml_GlobalScript_scr_init_launch_parameters.gml M 2 0
+@@ -25,6 +25,7 @@
+ {
+     is_launcher = false;
+     switch_id = -1;
++    returning = 0;
+ }
+ 
+ function get_chapter_switch_parameters()
+@@ -38,6 +39,7 @@
+     var parameters = [];
+     parameters[0] = "launcher";
+     parameters[1] = "switch_" + string(launch_data.switch_id);
++    parameters[2] = "returning_" + string(global.chapter);
+     var param_formatted = "";
+     for (var i = 0; i < array_length(parameters); i++)
+     {
+FILE ch2/gml_GlobalScript_scr_jevil_check.gml M 18 246
+@@ -2,257 +2,29 @@
+ {
+     var item_knife = false;
+     var item_tail = false;
+-    jevil_status[0] = 0;
+-    jevil_status[1] = 0;
+-    jevil_status[2] = 0;
+-    if (global.flag[241] >= 6)
++    var chapter = 1;
++    for (var i = 0; i < 3; i++)
+     {
+-        item_knife = global.flag[241] == 6;
+-        item_tail = global.flag[241] == 7;
+-    }
+-    else
+-    {
+-        for (var k = 0; k < 3; k++)
++        var result = scr_get_ura_value(chapter, i);
++        if (result == 0)
+         {
+-            if (ossafe_file_exists("filech1_" + string(k)))
++            continue;
++        }
++        if (result == 3)
++        {
++            item_knife = true;
++            item_tail = true;
++            break;
++        }
++        else
++        {
++            if (!item_knife)
+             {
+-                var file = "filech1_" + string(k);
+-                var myfileid = ossafe_file_text_open_read(file);
+-                ossafe_file_text_read_string(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                if (!global.is_console)
+-                {
+-                    for (var i = 0; i < 6; i += 1)
+-                    {
+-                        ossafe_file_text_read_string(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                    }
+-                }
+-                else
+-                {
+-                    var othername_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(othername_list);
+-                    ossafe_file_text_readln(myfileid);
+-                }
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                if (global.is_console)
+-                {
+-                    var hp_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(hp_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var maxhp_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(maxhp_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var at_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(at_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var df_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(df_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var mag_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(mag_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var guts_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(guts_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var charweapon_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(charweapon_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var chararmor1_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(chararmor1_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var chararmor2_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(chararmor2_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var weaponstyle_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(weaponstyle_list);
+-                    ossafe_file_text_readln(myfileid);
+-                }
+-                for (var i = 0; i < 4; i += 1)
+-                {
+-                    if (!global.is_console)
+-                    {
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                    }
+-                    for (var q = 0; q < 4; q += 1)
+-                    {
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                    }
+-                    for (var j = 0; j < 12; j += 1)
+-                    {
+-                        ossafe_file_text_read_real(myfileid);
+-                        ossafe_file_text_readln(myfileid);
+-                    }
+-                }
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                if (global.is_console)
+-                {
+-                    var item_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(item_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var keyitem_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(keyitem_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var weapon_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(weapon_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var armor_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(armor_list);
+-                    ossafe_file_text_readln(myfileid);
+-                }
+-                else
+-                {
+-                    for (var j = 0; j < 13; j += 1)
+-                    {
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                    }
+-                }
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                ossafe_file_text_read_real(myfileid);
+-                ossafe_file_text_readln(myfileid);
+-                if (global.is_console)
+-                {
+-                    var litem_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(litem_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var phone_list = scr_ds_list_read(myfileid);
+-                    ds_list_destroy(phone_list);
+-                    ossafe_file_text_readln(myfileid);
+-                    var flag_list = scr_ds_list_read(myfileid);
+-                    for (var i = 0; i < 242; i += 1)
+-                    {
+-                        if (i == 241)
+-                        {
+-                            jevil_status[k] = ds_list_find_value(flag_list, i);
+-                        }
+-                    }
+-                    ds_list_destroy(flag_list);
+-                    ossafe_file_text_readln(myfileid);
+-                }
+-                else
+-                {
+-                    for (var i = 0; i < 8; i += 1)
+-                    {
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                        file_text_read_real(myfileid);
+-                        file_text_readln(myfileid);
+-                    }
+-                    for (var i = 0; i < 242; i += 1)
+-                    {
+-                        if (i == 241)
+-                        {
+-                            jevil_status[k] = file_text_read_real(myfileid);
+-                            file_text_readln(myfileid);
+-                        }
+-                        else
+-                        {
+-                            file_text_read_real(myfileid);
+-                            file_text_readln(myfileid);
+-                        }
+-                    }
+-                }
+-                ossafe_file_text_close(myfileid);
++                item_knife = result == 1;
+             }
+-        }
+-        for (var i = 0; i < array_length_1d(jevil_status); i++)
+-        {
+-            if (jevil_status[i] >= 6)
++            if (!item_tail)
+             {
+-                if (!item_knife)
+-                {
+-                    item_knife = jevil_status[i] == 6;
+-                }
+-                if (!item_tail)
+-                {
+-                    item_tail = jevil_status[i] == 7;
+-                }
++                item_tail = result == 2;
+             }
+         }
+     }
+FILE ch2/gml_GlobalScript_scr_save.gml M 1 0
+@@ -40,4 +40,5 @@
+     ini_write_string(scr_ini_chapter(global.chapter, global.filechoice), "Version", global.version);
+     ossafe_ini_close();
+     ossafe_savedata_save();
++    scr_store_ura_result(global.chapter, global.filechoice, uraboss);
+ }
+FILE ch2/gml_Object_DEVICE_MENU_Other_15.gml M 3 1
+@@ -10,13 +10,15 @@
+ _NEWVERSION = ini_read_string(scr_ini_chapter(global.chapter, MENUCOORD[2]), "Version", "0");
+ ini_write_string(scr_ini_chapter(global.chapter, MENUCOORD[3]), "Name", _NEWNAME);
+ ini_write_real(scr_ini_chapter(global.chapter, MENUCOORD[3]), "Time", _NEWTIME);
+-ini_write_real(scr_ini_chapter(global.chapter, MENUCOORD[3]), "Room", _NEWROOM);
++ini_write_real(scr_ini_chapter(global.chapter, MENUCOORD[3]), "Room", scr_get_id_by_room_index(_NEWROOM));
+ ini_write_real(scr_ini_chapter(global.chapter, MENUCOORD[3]), "Level", _NEWLEVEL);
+ ini_write_real(scr_ini_chapter(global.chapter, MENUCOORD[3]), "Date", _NEWDATE);
+ ini_write_real(scr_ini_chapter(global.chapter, MENUCOORD[3]), "InitLang", _NEWINITLANG);
+ ini_write_real(scr_ini_chapter(global.chapter, MENUCOORD[3]), "UraBoss", _NEWURABOSS);
+ ini_write_string(scr_ini_chapter(global.chapter, MENUCOORD[3]), "Version", _NEWVERSION);
+ ossafe_ini_close();
++var result = scr_get_ura_value(global.chapter, MENUCOORD[2]);
++scr_store_ura_result(global.chapter, MENUCOORD[3], result);
+ FILE[MENUCOORD[3]] = 1;
+ PLACE[MENUCOORD[3]] = PLACE[MENUCOORD[2]];
+ TIME[MENUCOORD[3]] = TIME[MENUCOORD[2]];
+FILE ch2/gml_Object_o_boxingcontroller_Step_0.gml M 5 6
+@@ -596,8 +596,7 @@
+         friction = 2 * f;
+         punchcon = 2;
+         punchtimer = 0;
+-        snd_play(motor_upper_quick_high);
+-        snd_pitch(motor_upper_quick_high, 1.25);
++        snd_pitch(snd_play(motor_upper_quick_high), 1.25);
+     }
+     if (punchcon == 2)
+     {
+@@ -1199,13 +1198,13 @@
+                     {
+                         if (arcade)
+                         {
+-                            snd_pitch(snd_squeaky_bc, 0.75 + random(0.5));
+-                            snd_play(snd_squeaky_bc);
++                            var snd = snd_play(snd_squeaky_bc);
++                            snd_pitch(snd, 0.75 + random(0.5));
+                         }
+                         else
+                         {
+-                            snd_pitch(snd_squeaky, 0.75 + random(0.5));
+-                            snd_play(snd_squeaky);
++                            var snd = snd_play(snd_squeaky);
++                            snd_pitch(snd, 0.75 + random(0.5));
+                         }
+                         color_fade_alpha = 1;
+                         if (healoverride == 0)
+FILE ch2/gml_Object_o_boxingqueen_Step_0.gml M 4 8
+@@ -1233,13 +1233,11 @@
+             }
+             if (arcade)
+             {
+-                snd_play(motor_upper_2_bc);
+-                snd_pitch(motor_upper_2_bc, 0.9);
++                snd_pitch(snd_play(motor_upper_2_bc), 0.9);
+             }
+             else
+             {
+-                snd_play(snd_bell_bounce_short);
+-                snd_pitch(snd_bell_bounce_short, 1);
++                snd_pitch(snd_play(snd_bell_bounce_short), 1);
+             }
+             image_index = 3;
+             if (o_boxingcontroller.wireframe_boxing == 0)
+@@ -3643,8 +3641,7 @@
+                                 {
+                                     audio_stop_sound(snd_explosion_firework_bc);
+                                 }
+-                                snd_play(snd_explosion_firework_bc);
+-                                snd_pitch(snd_explosion_firework_bc, 0.7 + random(0.6));
++                                snd_pitch(snd_play(snd_explosion_firework_bc), 0.7 + random(0.6));
+                             }
+                             else
+                             {
+@@ -3652,8 +3649,7 @@
+                                 {
+                                     audio_stop_sound(snd_explosion_firework);
+                                 }
+-                                snd_play(snd_explosion_firework);
+-                                snd_pitch(snd_explosion_firework, 0.7 + random(0.6));
++                                snd_pitch(snd_play(snd_explosion_firework), 0.7 + random(0.6));
+                             }
+                         }
+                         if (crescent_explosion_timer == 6)
+FILE ch2/gml_Object_o_charge_ring_controller_Alarm_1.gml M 3 3
+@@ -1,7 +1,7 @@
+ instance_create(x, y, o_charge_ring);
+ frequency = frequencyD + irandom_range(-frequencyD / 3, frequencyD / 3);
+ alarm[1] = frequency;
+-snd_play(snd_boost);
+-snd_pitch(snd_boost, 0.7 + (ringcount / 5));
+-snd_volume(snd_boost, 0.5, 0);
++var snd = snd_play(snd_boost);
++snd_pitch(snd, 0.7 + (ringcount / 5));
++snd_volume(snd, 0.5, 0);
+ ringcount++;
+FILE ch2/gml_Object_obj_bq_baseball_Collision_o_boxingcontroller_fist_hitbox.gml M 2 4
+@@ -46,13 +46,11 @@
+         {
+             if (arcade == 1)
+             {
+-                snd_pitch(snd_squeaky_bc, 0.75 + random(0.5));
+-                snd_play(snd_squeaky_bc);
++                snd_pitch(snd_play(snd_squeaky_bc), 0.75 + random(0.5));
+             }
+             else
+             {
+-                snd_pitch(snd_squeaky, 0.75 + random(0.5));
+-                snd_play(snd_squeaky);
++                snd_pitch(snd_play(snd_squeaky), 0.75 + random(0.5));
+             }
+             color_fade_alpha = 1;
+             global.hp[1] += 4;
+FILE ch2/gml_Object_obj_bq_baseball_final_Collision_o_boxingcontroller_fist_hitbox.gml M 1 2
+@@ -41,8 +41,7 @@
+     {
+         if (duckactive == 1)
+         {
+-            snd_pitch(snd_squeaky, 0.75 + random(0.5));
+-            snd_play(snd_squeaky);
++            snd_pitch(snd_play(snd_squeaky), 0.75 + random(0.5));
+             color_fade_alpha = 1;
+             global.hp[1] += 4;
+             if (global.hp[1] > global.maxhp[1])
+FILE ch2/gml_Object_obj_bq_baseball_final_Step_0.gml M 3 6
+@@ -56,18 +56,15 @@
+     }
+     if (hit_timer == (90 / f))
+     {
+-        snd_play(snd_wing);
+-        snd_pitch(snd_wing, 0.7);
++        snd_pitch(snd_play(snd_wing), 0.7);
+     }
+     if (hit_timer == (160 / f))
+     {
+-        snd_play(snd_wing);
+-        snd_pitch(snd_wing, 1);
++        snd_pitch(snd_play(snd_wing), 1);
+     }
+     if (hit_timer == (220 / f))
+     {
+-        snd_play(snd_wing);
+-        snd_pitch(snd_wing, 1.3);
++        snd_pitch(snd_play(snd_wing), 1.3);
+     }
+     if (hit_timer > 0 && hit_timer < (40 / f))
+     {
+FILE ch2/gml_Object_obj_controller_city_mice2_Draw_0.gml M 6 4
+@@ -1,3 +1,5 @@
++var _cx = camerax();
++var _cy = cameray();
+ if (instance_exists(obj_controller_city_mice2))
+ {
+     goalHit = obj_controller_city_mice2.victory;
+@@ -32,10 +34,10 @@
+     scr_84_set_draw_font("mainbig");
+     draw_set_halign(fa_left);
+     draw_set_color(c_white);
+-    scr_84_draw_text_outline((camerax() - 80) + (_easedLerp * 100), cameray() + 400, stringsetloc("[Left / Right]", "obj_controller_city_mice2_slash_Draw_0_gml_28_0"));
+-    scr_84_draw_text_outline((camerax() - 80) + (_easedLerp * 100), cameray() + 432, stringsetloc("Rotate", "obj_controller_city_mice2_slash_Draw_0_gml_29_0"));
++    scr_84_draw_text_outline((_cx - 80) + (_easedLerp * 100), _cy + 400, stringsetloc("[Left / Right]", "obj_controller_city_mice2_slash_Draw_0_gml_28_0"));
++    scr_84_draw_text_outline((_cx - 80) + (_easedLerp * 100), _cy + 432, stringsetloc("Rotate", "obj_controller_city_mice2_slash_Draw_0_gml_29_0"));
+     draw_set_halign(fa_right);
+-    scr_84_draw_text_outline((camerax() + 720) - (_easedLerp * 100), cameray() + 400, stringsetloc("[Down]", "obj_controller_city_mice2_slash_Draw_0_gml_32_0"));
+-    scr_84_draw_text_outline((camerax() + 720) - (_easedLerp * 100), cameray() + 432, stringsetloc("Mice", "obj_controller_city_mice2_slash_Draw_0_gml_33_0"));
++    scr_84_draw_text_outline((_cx + 720) - (_easedLerp * 100), _cy + 400, stringsetloc("[Down]", "obj_controller_city_mice2_slash_Draw_0_gml_32_0"));
++    scr_84_draw_text_outline((_cx + 720) - (_easedLerp * 100), _cy + 432, stringsetloc("Mice", "obj_controller_city_mice2_slash_Draw_0_gml_33_0"));
+     draw_set_halign(fa_left);
+ }
+FILE ch2/gml_Object_obj_cyber_music_battleBullets_Create_0.gml M 3 0
+@@ -7,3 +7,6 @@
+ con = 0;
+ seq = 0;
+ modifier = 0;
++musLoad = -4;
++musSeq = -4;
++safetime = 0;
+FILE ch2/gml_Object_obj_cyber_music_battleBullets_Step_0.gml M 22 6
+@@ -18,14 +18,29 @@
+ if (timer == 60)
+ {
+     snd_stop(global.currentsong[1]);
+-    global.currentsong[0] = snd_init("cyber_battle_prelude.ogg");
+-    global.currentsong[1] = mus_loop_ext(global.currentsong[0], 1, 1);
++    musLoad = snd_init("cyber_battle_prelude.ogg");
++    musSeq = snd_play(musLoad);
+     sndinit = 1;
+ }
+ if (sndinit == 1)
+ {
+-    trackpos = audio_sound_get_track_position(global.currentsong[1]);
+-    sndlength = audio_sound_length(global.currentsong[1]);
++    trackpos = audio_sound_get_track_position(musSeq);
++    sndlength = audio_sound_length(musSeq);
++    var endme = false;
++    safetime++;
++    if (safetime > 150)
++    {
++        if (!audio_is_playing(musSeq))
++        {
++            debug_message("safety: moving on");
++            endme = true;
++        }
++    }
++    if (safetime > 540)
++    {
++        debug_message("safety quit...");
++        endme = true;
++    }
+     modifier = 0.5333333333333333;
+     if (scr_bullbattle_muspos(1.848))
+     {
+@@ -79,10 +94,11 @@
+         down = instance_create(xx + 204, yy, obj_beatbullet_simple);
+         seq++;
+     }
+-    if (trackpos >= 16.290000000000003)
++    if (trackpos >= 16.290000000000003 || endme)
+     {
+         con = 2;
+-        snd_stop(global.currentsong[1]);
++        snd_stop(musSeq);
++        snd_free(musLoad);
+         sndinit = 2;
+         active = 0;
+     }
+FILE ch2/gml_Object_obj_dw_cyber_maze_tasque_controller_Create_0.gml M 5 0
+@@ -32,5 +32,10 @@
+         enem1.pacetype = 21;
+         enem2 = instance_create(564, 586, obj_chaseenemy);
+         enem2.pacetype = 22;
++        with (obj_chaseenemy)
++        {
++            touchflag = 539;
++            eraser = 1;
++        }
+     }
+ }
+FILE ch2/gml_Object_obj_fluffyguard_Step_2.gml M 1 2
+@@ -2,8 +2,7 @@
+ {
+     if (active == 1)
+     {
+-        snd_play(snd_hurt1);
+-        snd_pitch(snd_hurt1, 2);
++        snd_pitch(snd_play(snd_hurt1), 2);
+     }
+     active = 0;
+     image_alpha -= 0.05;
+FILE ch2/gml_Object_obj_gamecontroller_Other_75.gml M 12 1
+@@ -6,7 +6,18 @@
+         {
+             gamepad_active = 1;
+             gamepad_id = pad;
+-            gamepad_type = (gamepad_get_description(gamepad_id) == "Sony DualShock 4") ? 1 : 0;
++            var is_ps_controller = false;
++            var gamepad_description = gamepad_get_description(gamepad_id);
++            switch (gamepad_description)
++            {
++                case "Sony DualShock 4":
++                    is_ps_controller = true;
++                    break;
++                case "DualSense Wireless Controller":
++                    is_ps_controller = true;
++                    break;
++            }
++            gamepad_type = is_ps_controller ? 1 : 0;
+         }
+         break;
+     case "gamepad lost":
+FILE ch2/gml_Object_obj_initializer2_Create_0.gml M 10 6
+@@ -1,5 +1,8 @@
+ global.is_console = os_type == os_switch || os_type == os_ps4 || os_type == os_ps5;
+-window_enable_borderless_fullscreen(true);
++if (!global.is_console)
++{
++    window_enable_borderless_fullscreen(true);
++}
+ var launch_data = scr_init_launch_parameters();
+ global.launcher = launch_data.is_launcher;
+ textures_loaded = false;
+@@ -16,15 +19,16 @@
+         global.switchlogin = launch_data.switch_id;
+         if (global.switchlogin >= 0)
+         {
+-            switch_save_data_unmount();
+-            switch_accounts_close_user(global.switchlogin);
++            switch_save_data_mount(global.switchlogin);
+         }
+         while (global.switchlogin < 0)
+         {
+             global.switchlogin = switch_accounts_select_account(true, false, false);
+         }
+-        switch_accounts_open_user(global.switchlogin);
+-        switch_save_data_mount(global.switchlogin);
++        if (!switch_accounts_is_user_open(global.switchlogin))
++        {
++            switch_accounts_open_user(global.switchlogin);
++        }
+     }
+ }
+ else if (os_type == os_switch && !variable_global_exists("switchlogin"))
+@@ -47,7 +51,7 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.17";
++global.version = "1.19";
+ if (os_type == os_switch)
+ {
+     global.version = "1.07";
+FILE ch2/gml_Object_obj_maus_split_basket_Collision_obj_maus_liddle.gml M 1 2
+@@ -23,6 +23,5 @@
+         actfailure = 0;
+     }
+     snd_stop(snd_squeaky);
+-    snd_play(snd_squeaky);
+-    snd_volume(snd_squeaky, noisevol, 0);
++    snd_volume(snd_play(snd_squeaky), noisevol, 0);
+ }
+FILE ch2/gml_Object_obj_readable_room1_Other_10.gml M 1 1
+@@ -1560,7 +1560,7 @@
+         msgsetloc(0, "* (It looks like a normal basket of fruit^1, but when you reach in...)/", "obj_readable_room1_slash_Other_10_gml_1651_0");
+         msgnextloc("* (..^1. It's incredibly deep and holds all sorts of things.)/%", "obj_readable_room1_slash_Other_10_gml_1652_0");
+     }
+-    if (x > 200 && y < 80)
++    if (x > 200 && x < 210 && y < 80)
+     {
+         scr_speaker("no_name");
+         msgsetloc(0, "* LOOSE EGGS $1/", "obj_readable_room1_slash_Other_10_gml_1659_0");
+FILE ch2/gml_Object_obj_spamton_neo_enemy_Step_0.gml M 2 4
+@@ -1280,8 +1280,7 @@
+                 krs = scr_act_charsprite("kris", spr_krisb_attack, 0.25, 1);
+                 krs.depth = obj_herokris.depth + 1;
+                 alarm[4] = 14;
+-                snd_play(snd_scytheburst);
+-                snd_pitch(snd_scytheburst, 1.2);
++                snd_pitch(snd_play(snd_scytheburst), 1.2);
+                 att = instance_create(x + 57, y + 76, obj_basicattack);
+                 att.image_xscale = 2;
+                 att.image_yscale = 2;
+@@ -1301,8 +1300,7 @@
+                 krs = scr_act_charsprite("kris", spr_krisb_attack, 0.25, 1);
+                 krs.depth = obj_herokris.depth + 1;
+                 alarm[4] = 14;
+-                snd_play(snd_scytheburst);
+-                snd_pitch(snd_scytheburst, 0.8);
++                snd_pitch(snd_play(snd_scytheburst), 0.8);
+                 att = instance_create(x + 57, y + 76, obj_basicattack);
+                 att.image_xscale = -2;
+                 att.image_yscale = 2;
+FILE ch2/gml_Object_obj_thrash_bodyhitbox_Step_2.gml M 1 2
+@@ -18,8 +18,7 @@
+     var thrashcon = obj_rouxls_enemy.thrashcon;
+     if ((thrashcon == 3 || thrashcon == 5) && thrash.stomp != 0)
+     {
+-        snd_pitch(snd_squeaky, (thrash.stomp == 1) ? 1.25 : 1);
+-        snd_play(snd_squeaky);
++        snd_pitch(snd_play(snd_squeaky), (thrash.stomp == 1) ? 1.25 : 1);
+     }
+ }
+ thrash.stomp = 0;
+FILE ch2/gml_Object_obj_time_Create_0.gml M 16 4
+@@ -5,6 +5,7 @@
+ gamepad_id = 0;
+ axis_value = 0.4;
+ fullscreen_toggle = 0;
++isfullscreen = 0;
+ quicksaved = 0;
+ window_center_toggle = 0;
+ if (global.is_console)
+@@ -35,17 +36,28 @@
+ }
+ else
+ {
+-    display_height = display_get_height();
+-    display_width = display_get_width();
++    var setfull = false;
++    if (!global.is_console)
++    {
++        ini_open("true_config.ini");
++        setfull = ini_read_real("SCREEN", "FULLSCREEN", 0);
++        ini_close();
++        if (setfull)
++        {
++            window_set_fullscreen(true);
++        }
++    }
++    var display_height = display_get_height();
++    var display_width = display_get_width();
+     window_size_multiplier = 1;
+-    for (_ww = 2; _ww < 6; _ww += 1)
++    for (var _ww = 2; _ww < 12; _ww += 1)
+     {
+         if (display_width > (640 * _ww) && display_height > (480 * _ww))
+         {
+             window_size_multiplier = _ww;
+         }
+     }
+-    if (window_size_multiplier > 1)
++    if (window_size_multiplier > 1 && !setfull && !global.launcher)
+     {
+         window_set_size(640 * window_size_multiplier, 480 * window_size_multiplier);
+         alarm[2] = 1;
+FILE ch2/gml_Object_obj_time_Draw_77.gml M 17 0
+@@ -1,3 +1,20 @@
+ if (scr_debug())
+ {
+ }
++if (!global.is_console)
++{
++    var nowfullscreen = window_get_fullscreen();
++    if (nowfullscreen != isfullscreen)
++    {
++        ini_open("true_config.ini");
++        ini_write_real("SCREEN", "FULLSCREEN", nowfullscreen);
++        ini_close();
++        show_debug_message("fullscreen switched:" + string(nowfullscreen));
++        if (!nowfullscreen)
++        {
++            window_set_size(640 * window_size_multiplier, 480 * window_size_multiplier);
++            alarm[2] = 1;
++        }
++    }
++    isfullscreen = nowfullscreen;
++}
+FILE ch2/gml_GlobalScript_scr_chapter_save_file_exists.gml A 114 0
+function scr_chapter_save_file_exists(arg0)
+{
+    var _exists = false;
+    for (var i = 0; i < 3; i++)
+    {
+        _exists = ossafe_file_exists("filech" + string(arg0) + "_" + string(i));
+        if (_exists == true)
+        {
+            break;
+        }
+    }
+    return _exists;
+}
+
+function scr_chapter_save_file_exists_in_slot(arg0, arg1)
+{
+    var _exists = ossafe_file_exists("filech" + string(arg0) + "_" + string(arg1));
+    return _exists;
+}
+
+function scr_completed_chapter_any_slot(arg0)
+{
+    var _file_exists = false;
+    for (var i = 0; i < 3; i++)
+    {
+        if (ossafe_file_exists("filech" + string(arg0) + "_" + string(i + 3)))
+        {
+            _file_exists = true;
+            break;
+        }
+    }
+    return _file_exists;
+}
+
+function scr_completed_chapter_in_slot(arg0, arg1)
+{
+    var _file_exists = ossafe_file_exists("filech" + string(arg0) + "_" + string(arg1 + 3));
+    return _file_exists;
+}
+
+function scr_fought_secret_boss_any_slot(arg0)
+{
+    var _fought = false;
+    for (var i = 0; i < 3; i++)
+    {
+        var _slot = i;
+        var _result = scr_get_ura_value(arg0, _slot);
+        if (_result > 0)
+        {
+            _fought = true;
+            break;
+        }
+    }
+    return _fought;
+}
+
+function scr_get_ini_value(arg0, arg1, arg2)
+{
+    var _ini_file = ossafe_ini_open("dr.ini");
+    var _ini_value = ini_read_real(scr_ini_chapter(arg0, arg1), arg2, 0);
+    ossafe_ini_close();
+    return _ini_value;
+}
+
+function scr_get_ini_value_all_slots(arg0, arg1)
+{
+    var _ini_file = ossafe_ini_open("dr.ini");
+    var _list = [];
+    for (var i = 0; i < 6; i++)
+    {
+        var _slot = i;
+        var _value = ini_read_real(scr_ini_chapter(arg0, _slot), arg1, 0);
+        _list[i][0] = _slot;
+        _list[i][1] = _value;
+    }
+    ossafe_ini_close();
+    return _list;
+}
+
+function scr_get_ura_value(arg0, arg1)
+{
+    var _ini_file = ossafe_ini_open("dr.ini");
+    var _ini_value = ini_read_real("URA", string(arg0) + "_" + string(arg1), 0);
+    ossafe_ini_close();
+    return _ini_value;
+}
+
+function scr_set_ura_value(arg0, arg1, arg2)
+{
+    var _ini_file = ossafe_ini_open("dr.ini");
+    var _ini_value = ini_write_real("URA", string(arg0) + "_" + string(arg1), arg2);
+    ossafe_ini_close();
+    return _ini_value;
+}
+
+function scr_store_ura_result(arg0, arg1, arg2)
+{
+    if (arg2 == 0)
+    {
+        exit;
+    }
+    var slot = arg1;
+    if (slot > 2)
+    {
+        slot -= 3;
+    }
+    var current_result = scr_get_ura_value(arg0, arg1);
+    var new_result = arg2;
+    if ((arg2 + current_result) == 3)
+    {
+        new_result = 3;
+    }
+    scr_set_ura_value(arg0, arg1, new_result);
+}

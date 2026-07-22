@@ -1,0 +1,784 @@
+FILE ch3/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -65,14 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.088";
++global.versionno = "v0.0.089";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.084";
++    global.versionno = "v0.0.085";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.086";
++    global.versionno = "v0.0.087";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch3/gml_Object_obj_shadowman_sharpshoot_target_Draw_0.gml M 3 3
+@@ -21,7 +21,7 @@
+     d3d_set_fog(true, c_black, 0, 1);
+     draw_sprite_ext(sprite_index, image_index, x + shakex, y + shakey, image_xscale, image_yscale, image_angle, image_blend, _alpha);
+     d3d_set_fog(false, c_black, 0, 0);
+-    if ((global.mercymod[parentid.myself] + parentid.sharpshootmercy) < 100 || spare == true)
++    if ((i_ex(parentid) && (global.mercymod[parentid.myself] + parentid.sharpshootmercy) < 100) || spare == true)
+     {
+         if (sprite_index == spr_zapper_sharpshoot)
+         {
+@@ -49,7 +49,7 @@
+     d3d_set_fog(true, c_black, 0, 1);
+     draw_sprite_ext(spr_pippins_sharpshoot4, image_index, x + shakex, y + shakey, image_xscale, image_yscale, image_angle, image_blend, _alpha);
+     d3d_set_fog(false, c_black, 0, 0);
+-    if ((global.mercymod[parentid.myself] + parentid.sharpshootmercy) < 100 || spare == true)
++    if ((i_ex(parentid) && (global.mercymod[parentid.myself] + parentid.sharpshootmercy) < 100) || spare == true)
+     {
+         draw_sprite_ext(sprite_index, image_index, x + shakex, y + shakey, image_xscale, image_yscale, image_angle, image_blend, 1);
+     }
+@@ -68,7 +68,7 @@
+     d3d_set_fog(true, c_black, 0, 1);
+     draw_sprite_ext(spr_shutta_sharpshoot, image_index, x + shakex, y + shakey, image_xscale, image_yscale, image_angle, image_blend, _alpha);
+     d3d_set_fog(false, c_black, 0, 0);
+-    if ((spare == false && (global.mercymod[parentid.myself] + parentid.sharpshootmercy) < 100) || (spare == true && sparehp > 0))
++    if ((spare == false && i_ex(parentid) && (global.mercymod[parentid.myself] + parentid.sharpshootmercy) < 100) || (spare == true && sparehp > 0))
+     {
+         draw_sprite_ext(spr_shutta_sharpshoot2, image_index, x + shakex, y + shakey, image_xscale, image_yscale, image_angle, image_blend, 1);
+     }
+FILE ch4/gml_GlobalScript_scr_rhythmgame_song_load.gml M 1 1
+@@ -436,7 +436,7 @@
+                 scr_music_event_add(162.16, "shakeamt", 10, true);
+                 scr_music_event_add(162.16, "animspeed", 1, true);
+                 scr_music_event_add(165.4, "mid", 956, true);
+-                scr_music_event_add(165.4, "idle", 738, true);
++                scr_music_event_add(165.4, "idle", 739, true);
+                 scr_music_event_add(165.4, "sprite_index", spr_ralsei_sing_clap, true);
+             }
+         }
+FILE ch4/gml_Object_obj_bookshelf_destructable_Step_0.gml M 1 1
+@@ -131,7 +131,7 @@
+     else
+     {
+         var thisID = floor((x / 80) + (y / 80));
+-        var scatter = 790;
++        var scatter = 791;
+         if ((thisID % 2) == 1)
+         {
+             scatter = 4200;
+FILE ch4/gml_Object_obj_ch4_DCA08D_Step_0.gml M 1 1
+@@ -219,7 +219,7 @@
+     c_var_instance(id, "darkencon", 1);
+     c_wait(20);
+     c_snd_play(snd_wallclaw);
+-    c_var_instance(jackenstein, "current_eyes_sprite", 823);
++    c_var_instance(jackenstein, "current_eyes_sprite", 824);
+     if (global.tempflag[98] == 0)
+     {
+         c_var_lerp_instance(jackenstein, "eyes_alpha", 0, 1, 30);
+FILE ch4/gml_Object_obj_ch4_DCA09_Create_0.gml M 1 1
+@@ -15,7 +15,7 @@
+         }
+         door_marker.depth = layer_get_depth("Tiles_new_main") - 10;
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 624)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 625)
+     {
+         book_marker = scr_marker_fromasset(spritesArray[i]);
+         book_marker.depth = layer_get_depth("Tiles_new_main") - 10;
+FILE ch4/gml_Object_obj_ch4_DCC00_cupstack_Create_0.gml M 1 1
+@@ -66,7 +66,7 @@
+ }
+ if (array_length(recruited_list) > 0 && scr_flag_get(254) > 0)
+ {
+-    var recruit_sprite = 265;
++    var recruit_sprite = 266;
+     recruited_sprites[array_length(recruited_sprites)] = recruit_sprite;
+     var height = (sprite_get_height(recruit_sprite) * 2) - 20;
+     height -= 10;
+FILE ch4/gml_Object_obj_ch4_PDC01D_Step_0.gml M 1 1
+@@ -58,7 +58,7 @@
+     c_walkdirect_wait(113, 80, 10);
+     c_halt();
+     c_autowalk(0);
+-    var kick_sprite = church_clothes ? 5470 : 478;
++    var kick_sprite = church_clothes ? 5470 : 479;
+     c_sprite(kick_sprite);
+     c_imagespeed(0.3);
+     c_wait(6);
+FILE ch4/gml_Object_obj_ch4_PDC14A_noelle_Create_0.gml M 1 1
+@@ -55,7 +55,7 @@
+ drip_marker.image_xscale = 1;
+ drip_marker.image_yscale = 1;
+ drip_marker.visible = 0;
+-drip_timestamps = [200, 60, 60, 60, 60, 60, 100, 100, 100, 660, 100, 100, 100, 100, 100, 60, 100, 100, 100, 60, 60, 60, 200];
++drip_timestamps = [1000, 100, 50, 200, 1000];
+ drip_modifier = 30;
+ drip_index = 0;
+ drip_timer = 0;
+FILE ch4/gml_Object_obj_ch4_PDC14A_noelle_Step_0.gml M 2 1
+@@ -1369,7 +1369,7 @@
+     {
+         with (drip_marker)
+         {
+-            setxy(camerax() + 201 + 4, (cameray() + 113) - 10);
++            setxy(camerax() + 146, cameray() + 50);
+         }
+         drip_marker.visible = 1;
+     }
+@@ -1388,6 +1388,7 @@
+         else
+         {
+             blood_drip = false;
++            scr_lerp_var_instance(drip_marker, "image_alpha", 1, 0, 60);
+         }
+     }
+ }
+FILE ch4/gml_Object_obj_church_old_man_ripple_Create_0.gml M 1 1
+@@ -37,7 +37,7 @@
+ susie_x = x - 300;
+ distance = 90;
+ step_sound = -4;
+-susie_sprite = 432;
++susie_sprite = 433;
+ kris_sprite = spr_susie_right_dw;
+ shiner = -1;
+ loop = 0;
+FILE ch4/gml_Object_obj_climb_destructableclimbarea_Draw_0.gml M 0 4
+@@ -1,7 +1,3 @@
+-if (keyboard_check_pressed(ord("V")))
+-{
+-    dodraw = !dodraw;
+-}
+ if (dodraw == false)
+ {
+     exit;
+FILE ch4/gml_Object_obj_climb_enemykiller_Draw_0.gml M 0 4
+@@ -1,7 +1,3 @@
+-if (keyboard_check_pressed(ord("V")))
+-{
+-    dodraw = !dodraw;
+-}
+ if (dodraw)
+ {
+     draw_self();
+FILE ch4/gml_Object_obj_climb_enemyspawner_Draw_0.gml M 0 4
+@@ -1,7 +1,3 @@
+-if (keyboard_check_pressed(ord("V")))
+-{
+-    dodraw = !dodraw;
+-}
+ if (dodraw)
+ {
+     draw_self();
+FILE ch4/gml_Object_obj_climb_evilgrowth_Draw_0.gml M 1 1
+@@ -1,4 +1,4 @@
+-if (keyboard_check_pressed(ord("V")))
++if (scr_debug() && keyboard_check_pressed(ord("V")))
+ {
+     dodraw = !dodraw;
+ }
+FILE ch4/gml_Object_obj_climb_eyewaterenemy_Draw_0.gml M 0 4
+@@ -1,7 +1,3 @@
+-if (keyboard_check_pressed(ord("V")))
+-{
+-    dodraw = !dodraw;
+-}
+ if (dodraw == false)
+ {
+     exit;
+FILE ch4/gml_Object_obj_climb_immobileeye_Draw_0.gml M 1 1
+@@ -1,4 +1,4 @@
+-if (keyboard_check_pressed(ord("V")))
++if (scr_debug() && keyboard_check_pressed(ord("V")))
+ {
+     dodraw = !dodraw;
+ }
+FILE ch4/gml_Object_obj_climb_setpathenemy_Draw_0.gml M 1 2
+@@ -2,9 +2,8 @@
+ {
+     dodraw = obj_climb_enemyspawner.dodraw;
+ }
+-else if (keyboard_check_pressed(ord("V")))
++else
+ {
+-    dodraw = !dodraw;
+ }
+ if (dodraw)
+ {
+FILE ch4/gml_Object_obj_climb_waterbucket_Step_0.gml M 1 1
+@@ -20,7 +20,7 @@
+     }
+     else
+     {
+-        var spr = 278;
++        var spr = 279;
+         var spd = round(3 * sprite_get_number(spr));
+         with (scr_marker_ext(x, y, spr, 2, 2, 0, undefined, c_white, depth - 10, undefined, spd))
+         {
+FILE ch4/gml_Object_obj_climb_watergenerator_Draw_0.gml M 1 1
+@@ -1,4 +1,4 @@
+-if (keyboard_check_pressed(ord("V")))
++if (scr_debug() && keyboard_check_pressed(ord("V")))
+ {
+     dodraw = !dodraw;
+ }
+FILE ch4/gml_Object_obj_climb_watergenerator_Other_20.gml M 1 1
+@@ -4,7 +4,7 @@
+ }
+ else
+ {
+-    var spr = 278;
++    var spr = 279;
+     var spd = round(3 * sprite_get_number(spr));
+     with (scr_marker_ext(x, y, spr, 2, 2, 0, undefined, c_white, depth - 10, undefined, spd))
+     {
+FILE ch4/gml_Object_obj_dw_church_arena_bg_Create_0.gml M 1 1
+@@ -56,7 +56,7 @@
+ cityobj = create_object_to_draw(0, 0, 3078);
+ cityobj.image_alpha = 0;
+ cityobj.image_blend = c_black;
+-hammerobj = create_object_to_draw(100, 10, 529);
++hammerobj = create_object_to_draw(100, 10, 530);
+ hammerobj.image_alpha = 0;
+ hammerobj.timer = 0;
+ with (hammerobj)
+FILE ch4/gml_Object_obj_dw_church_bookshelfpuzzle_Create_0.gml M 1 1
+@@ -120,7 +120,7 @@
+ {
+     for (var i = 0; i < array_length(spritesArray); i++)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 782)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 783)
+         {
+             if (layer_sprite_get_blend(spritesArray[i]) == 16056319)
+             {
+FILE ch4/gml_Object_obj_dw_church_bookshelfpuzzle_Step_0.gml M 2 2
+@@ -13,10 +13,10 @@
+     sunpc = instance_create(sumark[0], sumark[1], obj_trigger_interact);
+     sunpc.talked = 0;
+     sunpc.strict = true;
+-    sunpc.susprite = 435;
++    sunpc.susprite = 436;
+     if (global.flag[710] >= 2)
+     {
+-        sunpc.susprite = 432;
++        sunpc.susprite = 433;
+     }
+     sunpc.marker = scr_marker_ext(sumark[0], sumark[1], sunpc.susprite, 2, 2, 0, undefined, undefined, undefined, 1);
+     scr_sizeexact(sumark[2].bbox_right - sumark[2].bbox_left, sumark[2].bbox_bottom - sumark[2].bbox_top, sunpc);
+FILE ch4/gml_Object_obj_dw_church_cupstack_Step_0.gml M 3 3
+@@ -137,7 +137,7 @@
+         {
+             fun = 1;
+             scr_jump_to_point(other.x - 10, height - 84, jumpheight, jumptime, true);
+-            scr_delay_var("sprite_index", 430, jumptime);
++            scr_delay_var("sprite_index", 431, jumptime);
+             ignoredepth = true;
+             scr_delay_var("depth", other.depth - 3, jumptime);
+         }
+@@ -148,7 +148,7 @@
+         {
+             fun = 1;
+             scr_jump_to_point((other.x - 10) + 6, height - 142, jumpheight * 2, jumptime, true);
+-            scr_delay_var("sprite_index", 253, jumptime);
++            scr_delay_var("sprite_index", 254, jumptime);
+             ignoredepth = true;
+             scr_delay_var("depth", other.depth - 2, jumptime);
+         }
+@@ -159,7 +159,7 @@
+         {
+             fun = 1;
+             scr_jump_to_point((other.x - 10) + 4, height - 214, jumpheight * 3, jumptime, true);
+-            scr_delay_var("sprite_index", 360, jumptime);
++            scr_delay_var("sprite_index", 361, jumptime);
+             scr_delay_var("depth", other.depth - 1, jumptime);
+             ignoredepth = true;
+         }
+FILE ch4/gml_Object_obj_dw_church_intro_gerson_Create_0.gml M 1 1
+@@ -36,7 +36,7 @@
+     {
+         npc = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 782)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 783)
+     {
+         tres = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_church_intro_guei_Create_0.gml M 1 1
+@@ -65,7 +65,7 @@
+     var spritesArray = layer_get_all_elements("debug_assets");
+     for (var i = 0; i < array_length(spritesArray); i++)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 384)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 385)
+         {
+             bibliox = scr_makenpc_fromasset(spritesArray[i]);
+         }
+FILE ch4/gml_Object_obj_dw_church_lantern_hallway_Step_0.gml M 2 2
+@@ -128,10 +128,10 @@
+         with (susie)
+         {
+             fun = 1;
+-            var newsprite = 716;
++            var newsprite = 717;
+             if (x < 1350)
+             {
+-                newsprite = 718;
++                newsprite = 719;
+             }
+             scr_delay_var("sprite_index", newsprite, susiedelay);
+             scr_script_delayed(scr_shakeobj, susiedelay);
+FILE ch4/gml_Object_obj_dw_church_pianopiece_right_Step_1.gml M 1 1
+@@ -15,7 +15,7 @@
+     sunpc = instance_create(sumark[0], sumark[1], obj_trigger_interact);
+     sunpc.talked = 0;
+     sunpc.strict = true;
+-    sunpc.susprite = 435;
++    sunpc.susprite = 436;
+     sunpc.marker = scr_marker_ext(sumark[0], sumark[1], sunpc.susprite, 2, 2, 0, undefined, undefined, undefined, 1);
+     sunpc.sitting = false;
+     scr_sizeexact(sumark[2].bbox_right - sumark[2].bbox_left, sumark[2].bbox_bottom - sumark[2].bbox_top, sunpc);
+FILE ch4/gml_Object_obj_dw_church_prophecy_Draw_0.gml M 0 4
+@@ -244,10 +244,6 @@
+             space = 36;
+             count = 0;
+             var sol = [];
+-            if (keyboard_check_pressed(ord("B")))
+-            {
+-                debug_message(sol);
+-            }
+             sol = [0, 13, 0, 9, 4, 6, 2, 0, 0, 13, 0, 8, 2];
+             for (var i = 0; i < array_length(sol); i++)
+             {
+FILE ch4/gml_Object_obj_dw_church_remotepianomove_Step_0.gml M 18 15
+@@ -288,21 +288,24 @@
+ if (con == 2 && version == 1)
+ {
+     var dir = -1;
+-    if (keyboard_check_pressed(vk_numpad2))
+-    {
+-        dir = 0;
+-    }
+-    if (keyboard_check_pressed(vk_numpad6))
+-    {
+-        dir = 1;
+-    }
+-    if (keyboard_check_pressed(vk_numpad8))
+-    {
+-        dir = 2;
+-    }
+-    if (keyboard_check_pressed(vk_numpad4))
+-    {
+-        dir = 3;
++    if (scr_debug())
++    {
++        if (keyboard_check_pressed(vk_numpad2))
++        {
++            dir = 0;
++        }
++        if (keyboard_check_pressed(vk_numpad6))
++        {
++            dir = 1;
++        }
++        if (keyboard_check_pressed(vk_numpad8))
++        {
++            dir = 2;
++        }
++        if (keyboard_check_pressed(vk_numpad4))
++        {
++            dir = 3;
++        }
+     }
+     if (xbuff && !final)
+     {
+FILE ch4/gml_Object_obj_dw_church_trueclimbadventure_Step_0.gml M 0 4
+@@ -83,10 +83,6 @@
+             }
+         }
+     }
+-    if (keyboard_check_pressed(ord("E")))
+-    {
+-        trig = 1;
+-    }
+     if (trig)
+     {
+         global.flag[1571] = 1;
+FILE ch4/gml_Object_obj_dw_churchb_bellroom_Step_0.gml M 2 2
+@@ -73,7 +73,7 @@
+             scr_delay_var("con", 1, movewait + 1);
+             scr_delay_var("image_speed", 0, movewait + 1);
+             scr_delay_var("image_index", 0, movewait + 1);
+-            scr_delay_var("sprite_index", 429, movewait + 1);
++            scr_delay_var("sprite_index", 430, movewait + 1);
+             global.flag[1572] = 1;
+         }
+     }
+@@ -90,7 +90,7 @@
+             scr_delay_var("con", 2, movewait + 1);
+             scr_delay_var("image_speed", 0, movewait + 1);
+             scr_delay_var("image_index", 0, movewait + 1);
+-            scr_delay_var("sprite_index", 429, movewait + 1);
++            scr_delay_var("sprite_index", 430, movewait + 1);
+             global.flag[1572] = 2;
+         }
+     }
+FILE ch4/gml_Object_obj_dw_churchb_darkclimb_Step_0.gml M 1 1
+@@ -570,7 +570,7 @@
+         snd_play_delay(snd_noise, jumptime);
+         var pos = scr_heromarker("susie", "top");
+         scr_jump_to_point(pos[0], pos[1], 12, jumptime, true);
+-        scr_delay_var("sprite_index", 421, jumptime + 1);
++        scr_delay_var("sprite_index", 422, jumptime + 1);
+         scr_delay_var("image_index", 0, jumptime + 1);
+         scr_delay_var("image_speed", 0, jumptime + 1);
+     }
+FILE ch4/gml_Object_obj_dw_churchb_extinguisher_Step_0.gml M 1 1
+@@ -374,7 +374,7 @@
+         global.interact = 0;
+     }
+ }
+-if (blockit == true || keyboard_check_pressed(ord("B")))
++if (blockit == true)
+ {
+     layer_set_visible("TILES_ENTRANCEBLOCK", false);
+     with (obj_genmarker)
+FILE ch4/gml_Object_obj_dw_churchb_gallery_Create_0.gml M 2 2
+@@ -67,7 +67,7 @@
+         gueiadmirer.marker.image_blend = c_white;
+         gueiadmirer.marker.sprite_index = spr_npc_organik_3;
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 752)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 753)
+     {
+         cupadmirer = scr_makenpc_fromasset(spritesArray[i]);
+     }
+@@ -92,7 +92,7 @@
+             }
+         }
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 426)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 427)
+     {
+         if (layer_sprite_get_blend(spritesArray[i]) == 255)
+         {
+FILE ch4/gml_Object_obj_dw_churchb_gallery_Step_0.gml M 5 5
+@@ -203,20 +203,20 @@
+                     break;
+             }
+             image_speed = 0.25;
+-            var targsprite = 409;
++            var targsprite = 410;
+             switch (spos[ind].image_index)
+             {
+                 case 0:
+-                    targsprite = 409;
++                    targsprite = 410;
+                     break;
+                 case 1:
+-                    targsprite = 427;
++                    targsprite = 428;
+                     break;
+                 case 2:
+-                    targsprite = 429;
++                    targsprite = 430;
+                     break;
+                 case 3:
+-                    targsprite = 421;
++                    targsprite = 422;
+                     break;
+             }
+             scr_delay_var("sprite_index", targsprite, movewait + 1);
+FILE ch4/gml_Object_obj_dw_churchb_rotatingtower_Step_0.gml M 1 1
+@@ -217,7 +217,7 @@
+             scr_lerpvar("y", y, pos[1], waittime);
+             sprite_index = spr_susie_run_excited_left;
+             image_speed = 0.25;
+-            scr_delay_var("sprite_index", 429, waittime + 1);
++            scr_delay_var("sprite_index", 430, waittime + 1);
+             scr_delay_var("image_speed", 0, waittime + 1);
+             scr_delay_var("image_index", 0, waittime + 1);
+         }
+FILE ch4/gml_Object_obj_dw_churchc_finalclimb_Create_0.gml M 1 1
+@@ -140,7 +140,7 @@
+                 case 0:
+                 case 6:
+                 default:
+-                    _shatter_sprite = 585;
++                    _shatter_sprite = 586;
+                     break;
+                 case 1:
+                 case 7:
+FILE ch4/gml_Object_obj_elnina_lanino_rematch_controller_Step_0.gml M 3 3
+@@ -87,7 +87,7 @@
+         }
+         with (obj_lanino_rematch_enemy)
+         {
+-            head = 734;
++            head = 735;
+         }
+         with (obj_elnina_rematch_enemy)
+         {
+@@ -812,11 +812,11 @@
+             scr_enemyblcon(elnina.x - 40, global.monstery[elnina.myself] - 10, 10);
+             with (obj_lanino_rematch_enemy)
+             {
+-                head = 734;
++                head = 735;
+             }
+             with (obj_elnina_rematch_enemy)
+             {
+-                head = 554;
++                head = 555;
+             }
+             ballooncon = 3;
+         }
+FILE ch4/gml_Object_obj_elnina_mascotattack_Step_0.gml M 1 1
+@@ -317,7 +317,7 @@
+                             {
+                                 mybullet.sprite_index = bs[5];
+                             }
+-                            if (elninabullesprite == 822)
++                            if (elninabullesprite == 823)
+                             {
+                                 mybullet.sprite_index = bs[1];
+                             }
+FILE ch4/gml_Object_obj_elnina_rematch_enemy_Create_0.gml M 1 1
+@@ -16,7 +16,7 @@
+ laughtimer = 0;
+ hairtufts = 1176;
+ waist = 1638;
+-rightarm = 812;
++rightarm = 813;
+ rightarmindex = 0;
+ head = 1066;
+ leftarm = 5850;
+FILE ch4/gml_Object_obj_example_cutscene_old_Step_0.gml M 1 1
+@@ -2,7 +2,7 @@
+ {
+     with (obj_mainchara)
+     {
+-        scr_jump_to_point_sprite(x + random_range(-200, 200), y + random_range(-30, 30), 10, 15, 252, 248);
++        scr_jump_to_point_sprite(x + random_range(-200, 200), y + random_range(-30, 30), 10, 15, 253, 249);
+     }
+ }
+ if (con == 0 && obj_mainchara.x >= x && global.interact == 0)
+FILE ch4/gml_Object_obj_face_Draw_0.gml M 2 2
+@@ -157,10 +157,10 @@
+     }
+     if (global.fc == 4)
+     {
+-        var tbody_sprite = 238;
++        var tbody_sprite = 239;
+         if (global.chapter == 4 && global.plot >= 15 && global.plot < 40)
+         {
+-            tbody_sprite = 243;
++            tbody_sprite = 244;
+             draw_sprite_ext(tbody_sprite, 0, x - 7 - 1, y + 29, f, f, 0, c_white, 1);
+         }
+         else
+FILE ch4/gml_Object_obj_homealone_kitchen_Step_0.gml M 1 1
+@@ -44,7 +44,7 @@
+             image_speed = 0;
+             image_index = 0;
+             sprite_index = spr_noellehouse_kitchen_kris_choco_put_down;
+-            scr_animate(670, 2, 0.15);
++            scr_animate(671, 2, 0.15);
+         }
+     }
+     if (drink_make_timer == (64 + drink_start_pause))
+FILE ch4/gml_Object_obj_initializer2_Create_0.gml M 2 2
+@@ -66,10 +66,10 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.087";
++global.versionno = "v0.0.088";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.086";
++    global.versionno = "v0.0.085";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+FILE ch4/gml_Object_obj_lanino_rematch_enemy_Create_0.gml M 1 1
+@@ -20,7 +20,7 @@
+ chest = 4590;
+ chestindex = 0;
+ head = 5232;
+-leftarm = 365;
++leftarm = 366;
+ lefthand = 5749;
+ flashcolor = c_white;
+ telescope_count = 0;
+FILE ch4/gml_Object_obj_lw_rain_effect_Create_0.gml M 2 2
+@@ -1,10 +1,10 @@
+ rain_style = 1;
+ rain_letters = "ABCDEF";
+-rain_sprite[0] = 626;
++rain_sprite[0] = 627;
+ rain_sprite[1] = 4515;
+ rain_sprite[2] = 1874;
+ rain_sprite[3] = 3146;
+-rain_sprite[4] = 846;
++rain_sprite[4] = 847;
+ rain_sprite[5] = 2912;
+ xdir = -1;
+ xspeed = 1;
+FILE ch4/gml_Object_obj_movingBookshelf_Create_0.gml M 2 2
+@@ -20,10 +20,10 @@
+ pantarg = 0;
+ krisland = 60;
+ susieland = 71;
+-ralseiland = 370;
++ralseiland = 371;
+ krisball = 67;
+ susieball = 64;
+-ralseiball = 349;
++ralseiball = 350;
+ kriscling = 3707;
+ susiecling = 2649;
+ ralseicling = 4836;
+FILE ch4/gml_Object_obj_noellehouse_dess_Step_0.gml M 2 3
+@@ -31,7 +31,6 @@
+         if (can_move)
+         {
+             kris_move_timer++;
+-            show_debug_message("test");
+         }
+         if (kris_move_timer >= 5)
+         {
+@@ -875,7 +874,7 @@
+ {
+     con = 52;
+     anim_player.reset();
+-    anim_player.init(kr_actor, 769, heart_in_timestamps);
++    anim_player.init(kr_actor, 770, heart_in_timestamps);
+     anim_player.event_connect("frame_change", heart_burst_event, 6);
+     anim_player.event_connect("anim_end", cutscene_end);
+     anim_player.start();
+@@ -926,7 +925,7 @@
+     fall_trigger[2] = instance_create(110, 148, obj_trigger);
+     with (fall_trigger[2])
+     {
+-        image_xscale = 5;
++        image_xscale = 4;
+         image_yscale = 8;
+     }
+     with (kris_bed_marker)
+FILE ch4/gml_Object_obj_npc_jackenstein_Create_0.gml M 1 1
+@@ -11,7 +11,7 @@
+ anim_speed = 0;
+ base_alpha = 0;
+ eyes_alpha = 0;
+-current_eyes_sprite = 267;
++current_eyes_sprite = 268;
+ eyes_anim = 0;
+ is_laughing = false;
+ grief = false;
+FILE ch4/gml_Object_obj_npc_jackenstein_Draw_0.gml M 1 1
+@@ -24,7 +24,7 @@
+         {
+             eyes_anim += 0.2;
+         }
+-        if (current_eyes_sprite == 823)
++        if (current_eyes_sprite == 824)
+         {
+             eyes_anim += 0.16666666666666666;
+         }
+FILE ch4/gml_Object_obj_roomglow_Step_0.gml M 1 1
+@@ -18,7 +18,7 @@
+         }
+     }
+ }
+-if (keyboard_check_pressed(vk_add))
++if (scr_debug() && keyboard_check_pressed(vk_add))
+ {
+     falling = true;
+     fall_timer = 0;
+FILE ch4/gml_Object_obj_rotating_tower_controller_Create_0.gml M 1 1
+@@ -58,7 +58,7 @@
+ }
+ if (wide_tower == true)
+ {
+-    _towersprite = 860;
++    _towersprite = 861;
+ }
+ for (i = 0; i < towerpiececount; i++)
+ {
+FILE ch4/gml_Object_obj_rotating_tower_controller_new_Draw_0.gml M 2 2
+@@ -370,7 +370,7 @@
+             draw_sprite_ext(sprite_index, image_index, other.tower_x + other.tile_x[_tilex], y, (other.tile_xscale[_tilex] * 2) / other.tile_width_fine, 2.2, 0, other.tile_color[_tilex], 1);
+             if (drawwater > 0)
+             {
+-                var spr = 278;
++                var spr = 279;
+                 draw_sprite_ext(spr, sprite_get_number(spr) - (drawwater / 3), other.tower_x + other.tile_x[_tilex], y, (other.tile_xscale[_tilex] * 2) / other.tile_width_fine, 2.2, 0, other.tile_color[_tilex], 1);
+             }
+         }
+@@ -391,7 +391,7 @@
+             draw_sprite_ext(spr_climb_waterbucket, image_index, other.tower_x + other.tile_x[_tilex], y, (other.tile_xscale[_tilex] * 2) / other.tile_width_fine, -2, 0, other.tile_color[_tilex], 1);
+             if (drawwater > 0)
+             {
+-                var spr = 278;
++                var spr = 279;
+                 draw_sprite_ext(spr, sprite_get_number(spr) - (drawwater / 3), other.tower_x + other.tile_x[_tilex], y, (other.tile_xscale[_tilex] * 2) / other.tile_width_fine, 2.2, 0, other.tile_color[_tilex], 1);
+             }
+         }
+FILE ch4/gml_Object_obj_rotating_tower_controller_old_Create_0.gml M 1 1
+@@ -57,7 +57,7 @@
+ }
+ if (wide_tower == true)
+ {
+-    _towersprite = 860;
++    _towersprite = 861;
+ }
+ for (i = 0; i < towerpiececount; i++)
+ {
+FILE ch4/gml_Object_obj_town_burgerpants_Create_0.gml M 5 0
+@@ -60,3 +60,8 @@
+ {
+     scr_depth();
+ }
++susie_marker = scr_marker(-100, -100, spr_susie_walk_down_lw);
++with (susie_marker)
++{
++    visible = 0;
++}
+FILE ch4/gml_Object_obj_town_burgerpants_Step_0.gml M 15 0
+@@ -161,6 +161,7 @@
+     nice_con = 1;
+     global.interact = 1;
+     cutscene_master = scr_cutscene_make();
++    scr_maincharacters_actors();
+     nc = actor_count + 1;
+     nc_actor = instance_create(nicecream_npc.x, nicecream_npc.y, obj_actor);
+     scr_actor_setup(nc, nc_actor, "nicecream");
+@@ -189,7 +190,17 @@
+     c_sel(nc);
+     c_imageindex(0);
+     c_wait_talk();
++    c_customfunc(function()
++    {
++        susie_marker.x = su_actor.x;
++        susie_marker.y = su_actor.y;
++        susie_marker.image_index = su_actor.image_index;
++        susie_marker.sprite_index = su_actor.sprite_index;
++        susie_marker.depth = su_actor.depth;
++        susie_marker.visible = 1;
++    });
+     c_var_instance(nicecream_npc, "visible", 1);
++    c_actortokris();
+     c_terminatekillactors();
+ }
+ if (nice_con == 2 && !i_ex(obj_cutscene_master))
+@@ -199,6 +210,10 @@
+     {
+         visible = 1;
+     }
++    with (susie_marker)
++    {
++        instance_destroy();
++    }
+     nice_con = 99;
+ }
+ if (burger_after_image)

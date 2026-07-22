@@ -1,0 +1,1198 @@
+FILE ch2/gml_GlobalScript_scr_text.gml M 14 5
+@@ -6583,8 +6583,11 @@
+             {
+                 scr_speaker("noelle");
+                 msgsetloc(0, "\\E3* Th-thanks^1, Kris.../%", "scr_text_slash_scr_text_gml_7062_0");
+-                obj_mouseSpawnSwitch.backeddown = 1;
+-                obj_mouseSpawnSwitch.introCon = 8;
++                with (obj_mouseSpawnSwitch)
++                {
++                    backeddown = 1;
++                    introCon = 8;
++                }
+             }
+             if (global.choice == 1)
+             {
+@@ -6599,15 +6602,21 @@
+             {
+                 scr_speaker("noelle");
+                 msgsetloc(0, "\\E3* Th-thanks^1, Kris.../%", "scr_text_slash_scr_text_gml_7082_0");
+-                obj_mouseSpawnSwitch.backeddown = 1;
+-                obj_mouseSpawnSwitch.introCon = 8;
++                with (obj_mouseSpawnSwitch)
++                {
++                    backeddown = 1;
++                    introCon = 8;
++                }
+             }
+             if (global.choice == 1)
+             {
+                 scr_speaker("noelle");
+                 msgsetloc(0, "\\EB* ..^1. I..^1. I.../", "scr_text_slash_scr_text_gml_7090_0");
+                 msgnextloc("\\EB* .../%", "scr_text_slash_scr_text_gml_7091_0");
+-                obj_mouseSpawnSwitch.introCon = 131;
++                with (obj_mouseSpawnSwitch)
++                {
++                    introCon = 131;
++                }
+             }
+             break;
+         case 1205:
+FILE ch2/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -65,14 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.41";
++global.version = "1.42";
+ if (scr_is_switch_os())
+ {
+-    global.version = "1.29";
++    global.version = "1.30";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.version = "1.29";
++    global.version = "1.30";
+ }
+ global.game_won = false;
+ global.chapter = 2;
+FILE ch3/gml_GlobalScript_scr_complete_save_file.gml M 15 0
+@@ -249,3 +249,18 @@
+     }
+     scr_set_ura_value(arg0, slot, new_result);
+ }
++
++function scr_get_vhs_ini_value()
++{
++    var _ini_file = ossafe_ini_open("dr.ini");
++    var _ini_value = ini_read_real("VHS", "watched", 0);
++    ossafe_ini_close();
++    return _ini_value;
++}
++
++function scr_set_vhs_ini_value(arg0)
++{
++    var iniwrite = ossafe_ini_open("dr.ini");
++    ini_write_real("VHS", "watched", arg0);
++    ossafe_ini_close();
++}
+FILE ch3/gml_GlobalScript_scr_credit.gml M 1 1
+@@ -15,7 +15,7 @@
+     credits[4] = [new scr_credit([stringsetloc("-Guest Character Design-", "scr_credit_slash_scr_credit_gml_83_0")], [stringsetloc("(Lanino, Elnina)", "scr_credit_slash_scr_credit_gml_86_0"), stringset("NELNAL")]), new scr_credit([stringsetloc("-Photoshop Edits & Weird Anim-", "scr_credit_slash_scr_credit_gml_98_0")], [stringset("Everdraed")])];
+     credits[5] = [new scr_credit([stringsetloc("-Pixel Art Assistance-", "scr_credit_slash_scr_credit_gml_108_0")], [stringset("Samanthuel Gillson (splendidland)"), stringset("Shawn (puppiesandanime)"), stringset("Kenju"), stringset("Tcheska Lynn B (chess)"), stringset("Satoshi Maruyama")]), new scr_credit([stringsetloc("-Development Tools (Cool)-", "scr_credit_slash_scr_credit_gml_119_0")], [stringset("Juju Adams")])];
+     credits[6] = [new scr_credit([stringsetloc("-3D Assets, Anim, Posing-", "scr_credit_slash_scr_credit_gml_129_0")], [stringset("Chelsea Saunders (pixelatedcrown)")]), new scr_credit([stringsetloc("-3D Tenna Pixel Cleanup-", "scr_credit_slash_scr_credit_gml_136_0")], [stringset("Clairevoire")]), new scr_credit([stringsetloc("-Cutscene Assistance-", "scr_credit_slash_scr_credit_gml_143_0")], [stringset("Tcheska Lynn B (chess)")])];
+-    credits[7] = [new scr_credit([stringsetloc("-Chef Minigame Program-", "scr_credit_slash_scr_credit_gml_153_0")], [stringset("ondy")]), new scr_credit([stringsetloc("-Cowboy Program & Other Detail-", "scr_credit_slash_scr_credit_gml_160_0")], [stringset("James Begg")]), new scr_credit([stringsetloc("-Tenna VHS Final Scene Assist-", "scr_credit_slash_scr_credit_gml_167_0")], [stringset("Smallbu Animation")]), new scr_credit([stringsetloc("-Additional Puzzle Design-", "scr_credit_slash_scr_credit_gml_174_0")], [stringset("NamaTakahashi")])];
++    credits[7] = [new scr_credit([stringsetloc("-Chef Minigame Program-", "scr_credit_slash_scr_credit_gml_153_0")], [stringset("ondydev")]), new scr_credit([stringsetloc("-Cowboy Program & Other Detail-", "scr_credit_slash_scr_credit_gml_160_0")], [stringset("James Begg")]), new scr_credit([stringsetloc("-Tenna VHS Final Scene Assist-", "scr_credit_slash_scr_credit_gml_167_0")], [stringset("Smallbu Animation")]), new scr_credit([stringsetloc("-Additional Puzzle Design-", "scr_credit_slash_scr_credit_gml_174_0")], [stringset("NamaTakahashi")])];
+     credits[8] = [new scr_credit([stringsetloc("-Japanese Localization-", "scr_credit_slash_scr_credit_gml_170_0")], [stringsetloc("8-4, Ltd.", "scr_credit_slash_scr_credit_gml_173_0")]), new scr_credit([stringsetloc("-Translator-", "scr_credit_slash_scr_credit_gml_177_0")], [stringset("Keiko Fukuichi")])];
+     credits[9] = [new scr_credit([stringsetloc("-Localization Producers-", "scr_credit_slash_scr_credit_gml_187_0")], [stringset("Tina Carter"), stringset("John Ricciardi")]), new scr_credit([stringsetloc("-Localization Support-", "scr_credit_slash_scr_credit_gml_195_0")], [stringset("Hiroyuki Matsushita"), stringset("Yutaka Ohbuchi"), stringset("Sami Ragone"), stringset("Alissa Staples"), stringset("JP Wentz")])];
+     credits[10] = [new scr_credit([stringsetloc("-Platform Programming-", "scr_credit_slash_scr_credit_gml_207_0")], [stringset("Sarah O'Donnell"), stringset("Henri Beeres (Enjl)")]), new scr_credit([stringsetloc("-Programming Support-", "scr_credit_slash_scr_credit_gml_214_0")], [stringset("Gregg Tavares")]), new scr_credit([stringsetloc("-Japanese Graphics-", "scr_credit_slash_scr_credit_gml_221_0")], [stringset("256graph"), stringset("Satoshi Maruyama")])];
+FILE ch3/gml_Object_obj_b1cactusfield1_Create_0.gml M 1 1
+@@ -15,7 +15,7 @@
+ susiewalkcon = 0;
+ suplay = -1;
+ suwalktimer = 0;
+-targ = 0;
++targ = -4;
+ susietime = 0;
+ rawalk = 0;
+ wasactive = false;
+FILE ch3/gml_Object_obj_b1cactusfield1_Step_0.gml M 13 1
+@@ -101,7 +101,19 @@
+         targ = instance_nearest(susie.x, susie.y, obj_board_grabbablegrass);
+         if (i_ex(targ))
+         {
+-            scr_pathfind_to_point("susie", targ.x, targ.y, 0);
++            if (point_in_rectangle(targ.x, targ.y, board_tilex(0), board_tiley(0), board_tilex(11), board_tiley(7)))
++            {
++                scr_pathfind_to_point("susie", targ.x, targ.y, 2);
++            }
++            else
++            {
++                scr_pathfind_end("susie");
++                targ = -4;
++                debug_print("no target");
++                susiewalkcon = 99;
++                susie.sleepy = true;
++                scr_play_susie_recording("0W");
++            }
+         }
+         susietime = 0;
+         susiewalkcon = 11;
+FILE ch3/gml_Object_obj_b1cactusfield2_Create_0.gml M 1 1
+@@ -17,7 +17,7 @@
+ susiewalkcon = 0;
+ suplay = -1;
+ suwalktimer = 0;
+-targ = 0;
++targ = -4;
+ susietime = 0;
+ rawalk = 0;
+ cactuschecked = 0;
+FILE ch3/gml_Object_obj_b1cactusfield2_Step_0.gml M 13 1
+@@ -78,7 +78,19 @@
+         targ = instance_nearest(susie.x, susie.y, obj_board_grabbablegrass);
+         if (i_ex(targ))
+         {
+-            scr_pathfind_to_point("susie", targ.x, targ.y, 0);
++            if (point_in_rectangle(targ.x, targ.y, board_tilex(0), board_tiley(0), board_tilex(11), board_tiley(7)))
++            {
++                scr_pathfind_to_point("susie", targ.x, targ.y, 0);
++            }
++            else
++            {
++                scr_pathfind_end("susie");
++                targ = -4;
++                debug_print("no target");
++                susiewalkcon = 99;
++                susie.sleepy = true;
++                scr_play_susie_recording("0W");
++            }
+         }
+         susietime = 0;
+         susiewalkcon = 11;
+FILE ch3/gml_Object_obj_b1enemy_Create_0.gml M 1 1
+@@ -12,7 +12,7 @@
+ visitcon = 0;
+ talkcon = 0;
+ talktimer = 0;
+-targ = 0;
++targ = -4;
+ tenna = 0;
+ tree[0] = 0;
+ batcon = 0;
+FILE ch3/gml_Object_obj_b1enemy_Step_0.gml M 29 11
+@@ -27,10 +27,6 @@
+             other.ralsei = id;
+         }
+     }
+-}
+-if (tenna == 0)
+-{
+-    tenna = obj_actor_tenna;
+ }
+ if (init == 0)
+ {
+@@ -87,6 +83,7 @@
+             if (active)
+             {
+                 weedcount++;
++                show_debug_message_concat(weedcount, ": ", xstart, " , ", ystart);
+             }
+         }
+         if (global.flag[1020] == 0)
+@@ -127,17 +124,32 @@
+         targ = instance_nearest(susie.x, susie.y, obj_board_grabbablegrass);
+         if (i_ex(targ))
+         {
+-            scr_pathfind_to_point("susie", targ.x, targ.y, 2);
++            if (point_in_rectangle(targ.x, targ.y, board_tilex(0), board_tiley(0), board_tilex(11), board_tiley(7)))
++            {
++                scr_pathfind_to_point("susie", targ.x, targ.y, 0);
++            }
++            else
++            {
++                scr_pathfind_end("susie");
++                targ = -4;
++                debug_print("no target");
++                susiewalkcon = 99;
++                susie.sleepy = true;
++                scr_play_susie_recording("0W");
++            }
+         }
+         susietime = 0;
+         susiewalkcon = 11;
+     }
+     if (susiewalkcon == 11)
+     {
+-        if (abs(susie.x - targ.x) < 2 && abs(susie.y - targ.y) < 2)
+-        {
+-            scr_pathfind_end("susie");
+-            susiewalkcon = 12;
++        if (instance_exists(targ))
++        {
++            if (abs(susie.x - targ.x) < 2 && abs(susie.y - targ.y) < 2)
++            {
++                scr_pathfind_end("susie");
++                susiewalkcon = 12;
++            }
+         }
+     }
+     if (susiewalkcon == 12)
+@@ -175,7 +187,10 @@
+     }
+     if (talkcon == 1 && active)
+     {
+-        tenna.bounce = 1;
++        with (obj_actor_tenna)
++        {
++            bounce = 1;
++        }
+         var tetalk = stringsetloc("Enemy!! Careful, brave heroes!!", "obj_b1enemy_slash_Step_0_gml_145_0");
+         scr_couchtalk(tetalk, "tenna", 2, 90);
+         talkcon++;
+@@ -198,7 +213,10 @@
+ }
+ if (visitcon == 200)
+ {
+-    tenna.bounce = true;
++    with (obj_actor_tenna)
++    {
++        bounce = 1;
++    }
+     var tetalk = stringsetloc("Wow, absolutely spineless, folks!!", "obj_b1enemy_slash_Step_0_gml_167_0");
+     scr_couchtalk(tetalk, "tenna", 2);
+     snd_play_delay(snd_laughtrack_short_temp, 15);
+FILE ch3/gml_Object_obj_b1pushpyramid_Create_0.gml M 1 1
+@@ -13,6 +13,6 @@
+ susiewalkcon = 0;
+ suplay = -1;
+ suwalktimer = 0;
+-targ = 0;
++targ = -4;
+ susietime = 0;
+ ptime = 0;
+FILE ch3/gml_Object_obj_b1pushpyramid_Step_0.gml M 13 1
+@@ -135,7 +135,19 @@
+         targ = instance_nearest(susie.x, susie.y, obj_board_grabbablegrass);
+         if (i_ex(targ))
+         {
+-            scr_pathfind_to_point("susie", targ.x, targ.y, 0);
++            if (point_in_rectangle(targ.x, targ.y, board_tilex(0), board_tiley(0), board_tilex(11), board_tiley(7)))
++            {
++                scr_pathfind_to_point("susie", targ.x, targ.y, 2);
++            }
++            else
++            {
++                scr_pathfind_end("susie");
++                targ = -4;
++                debug_print("no target");
++                susiewalkcon = 99;
++                susie.sleepy = true;
++                scr_play_susie_recording("0W");
++            }
+         }
+         susietime = 0;
+         susiewalkcon = 11;
+FILE ch3/gml_Object_obj_b1quiz_Create_0.gml M 1 1
+@@ -12,5 +12,5 @@
+ vcontimer = 0;
+ rareal = 0;
+ tenna = 0;
+-targ = 0;
++targ = -4;
+ susietime = 0;
+FILE ch3/gml_Object_obj_b1quiz_Step_0.gml M 13 1
+@@ -150,7 +150,19 @@
+         targ = instance_nearest(susie.x, susie.y, obj_board_grabbablegrass);
+         if (i_ex(targ))
+         {
+-            scr_pathfind_to_point("susie", targ.x, targ.y, 0);
++            if (point_in_rectangle(targ.x, targ.y, board_tilex(0), board_tiley(0), board_tilex(11), board_tiley(7)))
++            {
++                scr_pathfind_to_point("susie", targ.x, targ.y, 0);
++            }
++            else
++            {
++                scr_pathfind_end("susie");
++                targ = -4;
++                debug_print("no target");
++                susiewalkcon = 99;
++                susie.sleepy = true;
++                scr_play_susie_recording("0W");
++            }
+         }
+         susietime = 0;
+         susiewalkcon = 11;
+FILE ch3/gml_Object_obj_b3bs_console_Draw_0.gml M 0 4
+@@ -39,10 +39,6 @@
+         reddening = clamp(reddening, 0, 1);
+         var redcol = merge_color(c_white, c_red, reddening);
+         var controllerText = global.is_console || obj_gamecontroller.gamepad_active;
+-        if (scr_debug())
+-        {
+-            controllerText = true;
+-        }
+         if (controllerText)
+         {
+             var zSpr = scr_getbuttonsprite(global.input_g[4], false);
+FILE ch3/gml_Object_obj_board_boat_Create_0.gml M 1 1
+@@ -9,7 +9,7 @@
+ wspeed = 4;
+ nopress = 0;
+ buffer = 0;
+-dock = 0;
++dock = -4;
+ embark = 0;
+ embarktimer = 0;
+ disembark = 0;
+FILE ch3/gml_Object_obj_board_boat_Step_0.gml M 51 37
+@@ -568,7 +568,7 @@
+             }
+         }
+     }
+-    if (buffer < 0)
++    if (buffer < 0 && obj_board_camera.con == 0 && obj_board_camera.shift == "none")
+     {
+         if (button1_p())
+         {
+@@ -592,9 +592,27 @@
+             {
+                 cx = -32;
+             }
+-            dock = instance_place(x + cx, y + cy, obj_board_dock);
+-            if (i_ex(dock))
+-            {
++            dock = collision_rectangle(x + cx + 12, y + cy + 12, x + cx + 20, y + cy + 20, obj_board_dock, false, true);
++            if (instance_exists(dock))
++            {
++                myx = dock.x;
++                myy = dock.y;
++                if (facing == 0)
++                {
++                    myy -= 32;
++                }
++                if (facing == 2)
++                {
++                    myy += 32;
++                }
++                if (facing == 1)
++                {
++                    myx -= 32;
++                }
++                if (facing == 3)
++                {
++                    myx += 32;
++                }
+                 global.interact = 1;
+                 disembark = 1;
+                 canfreemove = 0;
+@@ -607,24 +625,6 @@
+     with (obj_mainchara_board)
+     {
+         boat = false;
+-    }
+-    myx = dock.x;
+-    myy = dock.y;
+-    if (facing == 0)
+-    {
+-        myy -= 32;
+-    }
+-    if (facing == 2)
+-    {
+-        myy += 32;
+-    }
+-    if (facing == 1)
+-    {
+-        myx -= 32;
+-    }
+-    if (facing == 3)
+-    {
+-        myx += 32;
+     }
+     disembark = 2;
+     disembarktimer = 0;
+@@ -632,21 +632,35 @@
+ if (disembark == 2)
+ {
+     disembarktimer++;
+-    if (x < myx)
+-    {
+-        x += 2;
+-    }
+-    if (x > myx)
+-    {
+-        x -= 2;
+-    }
+-    if (y < myy)
+-    {
+-        y += 2;
+-    }
+-    if (y > myy)
+-    {
+-        y -= 2;
++    if (abs(x - myx) > 1)
++    {
++        if (x < myx)
++        {
++            x += 2;
++        }
++        if (x > myx)
++        {
++            x -= 2;
++        }
++    }
++    else
++    {
++        x = myx;
++    }
++    if (abs(y - myy) > 1)
++    {
++        if (y < myy)
++        {
++            y += 2;
++        }
++        if (y > myy)
++        {
++            y -= 2;
++        }
++    }
++    else
++    {
++        y = myy;
+     }
+     if ((x == myx && y == myy) || disembarktimer > 16)
+     {
+FILE ch3/gml_Object_obj_board_miniboss_wall_Step_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ scr_board_depth();
+ if (room == room_board_dungeon_3 && sprite_index == spr_board_miniboss_wall_board3)
+ {
+-    depth = obj_mainchara_board.depth + 1000;
++    depth = 999000;
+ }
+FILE ch3/gml_Object_obj_ch3_GSA01G_Create_0.gml M 15 0
+@@ -35,6 +35,21 @@
+ {
+     depth = 6000;
+     scr_script_delayed(scr_lerpvar, other.textfade, "image_alpha", 1, 0, other.tennafade, 2, "out");
++}
++if (scr_get_vhs_ini_value() == 1)
++{
++    screenshot_tenna.visible = false;
++    var skip_overlay = scr_dark_marker(-10, 10, spr_pixel_white);
++    var fade_time = (textfade + tennafade) - 6;
++    with (skip_overlay)
++    {
++        image_blend = c_black;
++        image_xscale = 999;
++        image_yscale = 999;
++        depth = -100;
++        scr_lerpvar("image_alpha", 1, 0, fade_time);
++        scr_doom(id, fade_time + 1);
++    }
+ }
+ bgleft = scr_marker(0, 0, spr_dw_tv_cutscene1g_fakebg);
+ bgright = scr_marker(320, 0, spr_dw_tv_cutscene1g_fakebg);
+FILE ch3/gml_Object_obj_ch3_PGS01F_Step_0.gml M 62 2
+@@ -255,7 +255,12 @@
+ }
+ if (con == 3 && customcon == 1 && !d_ex())
+ {
++    con = 4;
+     customcon = 0;
++    if (scr_get_vhs_ini_value() == 1)
++    {
++        con = 10;
++    }
+     c_waitcustom_end();
+     c_mus2("volume", 0, 15);
+     c_speaker("tenna");
+@@ -270,6 +275,13 @@
+     c_mus("free_all");
+     c_wait(60);
+     c_pannable(0);
++    c_waitcustom();
++}
++if (con == 4 && customcon == 1)
++{
++    con = 20;
++    customcon = 0;
++    c_waitcustom_end();
+     c_sel(kr);
+     c_facing("d");
+     c_var_instance(spotlight_fx, "visible", 0);
+@@ -277,9 +289,57 @@
+     c_actortocaterpillar();
+     c_terminatekillactors();
+ }
+-if (con == 3 && !i_ex(obj_cutscene_master))
+-{
++if (con == 10 && customcon == 1 && !d_ex())
++{
++    con = 11;
++    with (spotlight_fx)
++    {
++        instance_destroy();
++    }
++    with (blackall)
++    {
++        depth = 5000;
++    }
++    camerax_set(0);
++    cameray_set(0);
++    global.choice = -1;
++    global.choicemsg[0] = (global.lang == "ja") ? "#VTRを#スキップ" : "#Skip the#video";
++    global.choicemsg[1] = (global.lang == "ja") ? "#それでも#まだ見る" : "#Try and#watch anyway";
++    global.choicemsg[2] = stringset("");
++    global.choicemsg[3] = stringset("");
++    var prompt_text = (global.lang == "ja") ? "＊ おーっとぉ！&　 VTRの様子がおかしいぞ！/" : "* W-Wait^1! The VHS isn't working!/";
++    scr_speaker("tenna");
++    msgset(0, prompt_text);
++    msgnext("\\C2 ");
++    var d = d_make();
++    d.zurasu = 0;
++}
++if (con == 11 && global.choice != -1)
++{
++    k_d();
++    if (global.choice == 0)
++    {
++        con = 15;
++    }
++    else
++    {
++        con = 4;
++        c_waitcustom_end();
++        c_wait(30);
++        c_waitcustom();
++    }
++}
++if (con == 15 && !d_ex())
++{
++    con = 99;
+     global.plot = 50;
++    room_goto(room_dw_tv_cutscene1g);
++    exit;
++}
++if (con == 20 && !i_ex(obj_cutscene_master))
++{
++    global.plot = 50;
++    scr_set_vhs_ini_value(1);
+     con = 99;
+     room_goto(room_dw_couch_video);
+ }
+FILE ch3/gml_Object_obj_ch3_couch_video_Other_70.gml M 1 0
+@@ -2,5 +2,6 @@
+ if (_type == "video_end")
+ {
+     video_close();
++    scr_set_vhs_ini_value(0);
+     room_goto(room_dw_tv_cutscene1g);
+ }
+FILE ch3/gml_Object_obj_chefs_game_Step_0.gml M 9 0
+@@ -203,6 +203,15 @@
+         }
+         else
+         {
++            if (i_ex(obj_tenna_zoom) || i_ex(obj_tenna_enemy))
++            {
++                with (obj_tenna_zoom)
++                {
++                    con = 2;
++                    timer = -1;
++                }
++                exit;
++            }
+             snd_free_all();
+             scr_flag_set(7, 0);
+             if (replayversion)
+FILE ch3/gml_Object_obj_initializer2_Create_0.gml M 3 1
+@@ -65,12 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.087";
++global.versionno = "v0.0.088";
+ if (scr_is_switch_os())
+ {
++    global.versionno = "v0.0.084";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
++    global.versionno = "v0.0.086";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch3/gml_Object_obj_npc_ramb_Other_10.gml M 1 1
+@@ -60,7 +60,7 @@
+             msgsetsubloc(0, "\\M1* Kris^1! Bang-up job getting ~1-rank^1, luv^1! For that^1, a little prize...~2", rank_letter, sentence_end, "obj_npc_ramb_slash_Other_10_gml_78_0");
+             if (noroom)
+             {
+-                var item_type = (rank_rewards[rank_index][1] == "armor") ? stringsetloc("ARMORs", "obj_npc_ramb_slash_Other_10_gml_82_0_b") : stringsetloc("ITEMs", "obj_npc_ramb_slash_Other_10_gml_82_1");
++                var item_type = (rank_reward_category == "armor") ? stringsetloc("ARMORs", "obj_npc_ramb_slash_Other_10_gml_82_0_b") : stringsetloc("ITEMs", "obj_npc_ramb_slash_Other_10_gml_82_1");
+                 msgnextsubloc("\\M3* Ah^1, you're holding too many \\cY~1\\cW^1, luv. Get rid of something?/%", item_type, "obj_npc_ramb_slash_Other_10_gml_83_0");
+             }
+             else
+FILE ch3/gml_Object_obj_rhythmgame_Step_0.gml M 1 1
+@@ -215,7 +215,7 @@
+     notespeed = round_to_multiple(notespeed, 30);
+     song_loaded = true;
+ }
+-if (tenna_boss && keyboard_check_pressed(ord("V")))
++if (scr_debug() && tenna_boss && keyboard_check_pressed(ord("V")))
+ {
+     auto_play = true;
+     song_done = true;
+FILE ch3/gml_Object_obj_room_green_room_Create_0.gml M 5 1
+@@ -166,7 +166,7 @@
+         {
+             if (x < 40)
+             {
+-                instance_deactivate_object(id);
++                instance_destroy();
+             }
+         }
+         var door_cover_marker = scr_dark_marker(40, 36, spr_dw_green_room_door_cover);
+@@ -449,3 +449,7 @@
+     scr_marker_ext(530, 240, spr_ralsei_racing_play, 2, 2, 0.05, 1);
+     scr_marker_ext(582, 236, spr_susie_racing_play, 2, 2, 1/30, 0);
+ }
++if (global.flag[1067] == 0 && global.flag[1055] >= 6 && global.plot >= 280)
++{
++    instance_create(874, 86, obj_treasure_room);
++}
+FILE ch3/gml_Object_obj_room_green_room_Step_0.gml M 17 3
+@@ -396,9 +396,23 @@
+     global.interact = 0;
+     global.facing = 0;
+     scr_flag_set(1068, 1);
+-    with (obj_doorAny)
+-    {
+-        instance_activate_object(obj_doorAny);
++    var door_a = instance_create(34, 105, obj_doorAny);
++    with (door_a)
++    {
++        image_xscale = 2;
++        image_yscale = 2;
++        doorRoom = room_dw_b3bs_interstitial;
++        doorEntrance = "B";
++        doorPreset = 1;
++    }
++    var door_b = instance_create(26, 184, obj_doorAny);
++    with (door_b)
++    {
++        image_xscale = 1.5;
++        image_yscale = 0.6;
++        doorRoom = room_dw_b3bs_interstitial;
++        doorEntrance = "B";
++        doorPreset = 1;
+     }
+     with (lancer_npc)
+     {
+FILE ch3/gml_Object_obj_susiezilla_gamecontroller_Step_0.gml M 0 16
+@@ -7,22 +7,6 @@
+     with (obj_susiezilla_statue)
+     {
+         hp = maxhp;
+-    }
+-}
+-if (keyboard_check_pressed(vk_f5))
+-{
+-    with (obj_minigame_quit_ui)
+-    {
+-        instance_destroy();
+-    }
+-    susiezilla_destroy();
+-    with (obj_ch3_tennashouter)
+-    {
+-        instance_destroy();
+-    }
+-    with (obj_ch3_tennashouter_alt)
+-    {
+-        instance_destroy();
+     }
+ }
+ timer++;
+FILE ch3/gml_Object_obj_treasure_room_Create_0.gml M 1 1
+@@ -39,7 +39,7 @@
+         visible = 0;
+     }
+ }
+-if (room == room_board_postshadowmantle)
++if (room == room_board_postshadowmantle || room == room_dw_green_room)
+ {
+     itemtype = "armor";
+     itemidchest = 23;
+FILE ch4/gml_GlobalScript_scr_lweapon_can_equip.gml M 8 0
+@@ -60,6 +60,10 @@
+             break;
+         }
+     }
++    if (weapon == -4)
++    {
++        weapon = weapon_list[0];
++    }
+     return weapon;
+ }
+ 
+@@ -75,6 +79,10 @@
+             weapon = weapon_list[i];
+             break;
+         }
++    }
++    if (weapon == -4)
++    {
++        weapon = weapon_list[0];
+     }
+     return weapon;
+ }
+FILE ch4/gml_Object_obj_ch4_LWF03_Create_0.gml M 6 6
+@@ -61,9 +61,9 @@
+             instance_destroy();
+         }
+     }
+-    if (i_ex(obj_doorX_musfade))
++    with (obj_doorX_musfade)
+     {
+-        instance_deactivate_object(obj_doorX_musfade);
++        instance_destroy();
+     }
+     var chair_marker = scr_marker(422, 106, spr_chairiel_empty);
+     with (chair_marker)
+@@ -85,13 +85,13 @@
+         instance_destroy();
+     }
+     door_readable = instance_create(595, 150, obj_readable_room1);
+-    if (i_ex(obj_doorA))
++    with (obj_doorA)
+     {
+-        instance_deactivate_object(obj_doorA);
++        instance_destroy();
+     }
+-    if (i_ex(obj_markerB))
++    with (obj_markerB)
+     {
+-        instance_deactivate_object(obj_markerB);
++        instance_destroy();
+     }
+     bathroom_readable = instance_create(84, 164, obj_readable_room1);
+     var window_marker_a = (scr_flag_get(654) == 1) ? scr_marker(237, 54, spr_torhouse_windows_dark_small) : scr_marker(237, 54, spr_torhouse_windows_dark_small_figures_left);
+FILE ch4/gml_Object_obj_ch4_PDC01C_Create_0.gml M 6 6
+@@ -21,9 +21,9 @@
+         susie_marker = scr_marker(347, 170, spr_susie_breakfast_eating_loop);
+         susie_marker.image_speed = 0.15;
+         susie_marker.depth = table_marker.depth - 10;
+-        if (i_ex(obj_doorX_musfade))
++        with (obj_doorX_musfade)
+         {
+-            instance_deactivate_object(obj_doorX_musfade);
++            instance_destroy();
+         }
+         door_readable = instance_create(595, 150, obj_readable_room1);
+     }
+@@ -42,13 +42,13 @@
+     {
+         plate_marker.x -= 10;
+     }
+-    if (i_ex(obj_doorA))
++    with (obj_doorA)
+     {
+-        instance_deactivate_object(obj_doorA);
++        instance_destroy();
+     }
+-    if (i_ex(obj_markerB))
++    with (obj_markerB)
+     {
+-        instance_deactivate_object(obj_markerB);
++        instance_destroy();
+     }
+     bathroom_readable = instance_create(84, 164, obj_readable_room1);
+     pancake_readable_kris = instance_create(310, 180, obj_readable_room1);
+FILE ch4/gml_Object_obj_ch4_PDC01C_Step_0.gml M 7 1
+@@ -346,7 +346,13 @@
+ {
+     global.interact = 0;
+     global.facing = 0;
+-    instance_activate_object(obj_doorX_musfade);
++    var front_door = instance_create(594, 149, obj_doorX_musfade);
++    with (front_door)
++    {
++        doorFacing = 0;
++        doorPreset = 1;
++        doorFadeMusic = 1;
++    }
+     instance_destroy(door_readable);
+     with (obj_caterpillarchara)
+     {
+FILE ch4/gml_Object_obj_ch4_PDC03A_alphys_juice_Step_0.gml M 0 2
+@@ -8,13 +8,11 @@
+     scr_speaker("susie");
+     msgsetloc(0, "\\E7* Woah^1, nice juice combo. Looks cool./%", "obj_ch4_PDC03A_alphys_juice_slash_Step_0_gml_15_0");
+     d_make();
+-    instance_deactivate_object(obj_readable_room1);
+ }
+ if (susie_con == 1 && !d_ex())
+ {
+     susie_con = 2;
+     global.interact = 0;
+-    instance_activate_object(obj_readable_room1);
+ }
+ if (con == 1 && !d_ex())
+ {
+FILE ch4/gml_Object_obj_ch4_PDC03A_rudy_toriel_Step_0.gml M 36 6
+@@ -584,17 +584,47 @@
+ {
+     disable_npcs = false;
+     toriel_npc.visible = 0;
+-    instance_deactivate_object(rudy_npc);
+-    instance_deactivate_object(toriel_npc);
+-    instance_deactivate_object(noelle_npc);
++    with (rudy_npc)
++    {
++        visible = 0;
++        x = -100;
++        y = -100;
++    }
++    with (toriel_npc)
++    {
++        visible = 0;
++        x = -100;
++        y = -100;
++    }
++    with (noelle_npc)
++    {
++        visible = 0;
++        x = -100;
++        y = -100;
++    }
+ }
+ if (enable_npcs)
+ {
+     enable_npcs = false;
+     toriel_npc.visible = 1;
+-    instance_activate_object(rudy_npc);
+-    instance_activate_object(toriel_npc);
+-    instance_activate_object(noelle_npc);
++    with (rudy_npc)
++    {
++        x = xstart;
++        y = ystart;
++        visible = 1;
++    }
++    with (toriel_npc)
++    {
++        x = xstart;
++        y = ystart;
++        visible = 1;
++    }
++    with (noelle_npc)
++    {
++        x = xstart;
++        y = ystart;
++        visible = 1;
++    }
+     rudy_npc.sprite_index = spr_rudy_juice_walk_left;
+ }
+ if (rudy_turn_con == 1 && !d_ex())
+FILE ch4/gml_Object_obj_ch4_PDC04_Create_0.gml M 2 2
+@@ -27,9 +27,9 @@
+     door_blocker.image_xscale = 4;
+     door_blocker.visible = 0;
+     leave_con = 0;
+-    if (i_ex(obj_doorAny))
++    with (obj_doorAny)
+     {
+-        instance_deactivate_object(obj_doorAny);
++        instance_destroy();
+     }
+ }
+ else
+FILE ch4/gml_Object_obj_ch4_PDC10C_Create_0.gml M 0 4
+@@ -5,10 +5,6 @@
+ vent_entrance_marker.depth = 98900;
+ vent_cover_marker = scr_marker(vent_entrance_marker.x, vent_entrance_marker.y, spr_noellehouse_vent_open_cover);
+ vent_cover_marker.depth = vent_entrance_marker.depth - 150;
+-vent_collider_top = instance_create(120, 76, obj_homealone_solid);
+-vent_collider_top.image_xscale = 4;
+-vent_collider_top.image_yscale = 1;
+-instance_deactivate_object(vent_collider_top);
+ vent_collider_bottom = instance_create(142, 96, obj_homealone_solid);
+ vent_collider_bottom.image_yscale = 0.8;
+ vent_collider_bottom.image_xscale = 0.2;
+FILE ch4/gml_Object_obj_ch4_PDC14A_noelle_Step_0.gml M 14 2
+@@ -52,7 +52,10 @@
+         alarm[0] = 1;
+         global.facing = 0;
+         exit_block = instance_create(320, 40, obj_homealone_solid);
+-        instance_deactivate_object(obj_homealone_vent_hidden);
++        with (obj_homealone_vent_hidden)
++        {
++            instance_destroy();
++        }
+     }
+ }
+ if (con == 2)
+@@ -436,7 +439,16 @@
+     {
+         instance_destroy(exit_block);
+     }
+-    instance_activate_object(obj_homealone_vent_hidden);
++    if (!i_ex(obj_homealone_vent_hidden))
++    {
++        var vent_hidden = instance_create(320, 38, obj_homealone_vent_hidden);
++        with (vent_hidden)
++        {
++            room_name = room_lw_noellehouse_vents_west;
++            vent_name = "noelle";
++            load_type = "left";
++        }
++    }
+ }
+ if (con == 20 && !d_ex() && customcon == 1)
+ {
+FILE ch4/gml_Object_obj_dw_churchb_extinguisher_Create_0.gml M 1 1
+@@ -84,7 +84,7 @@
+         }
+     }
+ }
+-if (global.plot < 240 && global.plot > 238)
++if (global.plot < 240 && global.plot > 238.6)
+ {
+     global.plot = 240;
+ }
+FILE ch4/gml_Object_obj_dw_churchb_fountain_Step_0.gml M 10 4
+@@ -69,8 +69,14 @@
+     alarm[0] = 1;
+     global.interact = 1;
+     global.facing = 0;
+-    instance_deactivate_object(obj_floorshadow);
+-    instance_deactivate_object(obj_sprhighlight);
++    with (obj_floorshadow)
++    {
++        instance_destroy();
++    }
++    with (obj_sprhighlight)
++    {
++        instance_destroy();
++    }
+ }
+ if (con == 2)
+ {
+@@ -182,8 +188,8 @@
+     {
+         scr_caterpillar_interpolate();
+     }
+-    instance_activate_object(obj_floorshadow);
+-    instance_activate_object(obj_sprhighlight);
++    shadinit = 0;
++    exit;
+ }
+ if (con == 3 && !i_ex(obj_cutscene_master))
+ {
+FILE ch4/gml_Object_obj_dw_churchb_staircaseintro_Create_0.gml M 1 0
+@@ -90,6 +90,7 @@
+ if (global.plot >= 240)
+ {
+     con = 40;
++    scr_setparty(1, 1);
+     if (scr_debug())
+     {
+     }
+FILE ch4/gml_Object_obj_homealone_dess_closet_controller_Step_0.gml M 4 1
+@@ -63,7 +63,10 @@
+     guitar_marker.depth = obj_homealone_heart.depth + 20;
+     ladder_marker = scr_marker(295, 69, spr_noellehouse_dess_closet_ladder);
+     ladder_marker.depth = kris.depth + 10;
+-    instance_deactivate_object(obj_npc_room);
++    with (obj_npc_room)
++    {
++        instance_destroy();
++    }
+     kris_pickup = true;
+     with (kris)
+     {
+FILE ch4/gml_Object_obj_homealone_dess_closet_kris_Step_0.gml M 1 1
+@@ -433,7 +433,7 @@
+         reset();
+     }
+ }
+-if (tired_mode)
++if (tired_mode && attackhit == 0)
+ {
+     if (attack_number >= 5)
+     {
+FILE ch4/gml_Object_obj_homealone_main_kris_closet_Create_0.gml M 4 1
+@@ -26,7 +26,10 @@
+     {
+         depth = 95999;
+     }
+-    instance_deactivate_object(obj_homealone_treat_catcher);
++    with (obj_homealone_treat_catcher)
++    {
++        instance_destroy();
++    }
+     catcher_marker = scr_marker(514, 474, spr_noellehouse_treat_catcher_kris);
+     with (catcher_marker)
+     {
+FILE ch4/gml_Object_obj_initializer2_Create_0.gml M 1 1
+@@ -66,7 +66,7 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.086";
++global.versionno = "v0.0.087";
+ if (scr_is_switch_os())
+ {
+     global.versionno = "v0.0.086";
+FILE ch4/gml_Object_obj_noellehouse_dess_Step_0.gml M 7 4
+@@ -130,7 +130,10 @@
+     {
+         scr_flag_set(7, 1);
+     }
+-    instance_deactivate_object(obj_homealone_vent_overlay);
++    with (obj_homealone_vent_overlay)
++    {
++        instance_destroy();
++    }
+     overlay = instance_create(0, 0, obj_noellehouse_basement_overlay);
+     with (overlay)
+     {
+@@ -148,7 +151,7 @@
+         if (global.tempflag[90] == 1)
+         {
+             global.interact = 1;
+-            instance_activate_object(obj_homealone_vent_overlay);
++            instance_create(0, 0, obj_homealone_vent_overlay);
+             with (overlay)
+             {
+                 instance_destroy();
+@@ -202,7 +205,7 @@
+         {
+             global.interact = 1;
+             con = 50;
+-            instance_activate_object(obj_homealone_vent_overlay);
++            instance_create(0, 0, obj_homealone_vent_overlay);
+             with (overlay)
+             {
+                 instance_destroy();
+@@ -293,7 +296,7 @@
+         if (heart_fall_timer == 1)
+         {
+             global.interact = 1;
+-            instance_activate_object(obj_homealone_vent_overlay);
++            instance_create(0, 0, obj_homealone_vent_overlay);
+             with (overlay)
+             {
+                 instance_destroy();
+FILE ch4/gml_Object_obj_noellehouse_main_Create_0.gml M 4 1
+@@ -15,7 +15,10 @@
+     {
+         scr_depth();
+     }
+-    instance_deactivate_object(obj_homealone_vent_overlay);
++    with (obj_homealone_vent_overlay)
++    {
++        instance_destroy();
++    }
+ };
+ 
+ var santa_table = scr_marker(704, 486, spr_noellehouse_table);
+FILE ch4/gml_Object_obj_npc_nubert_Create_0.gml M 31 7
+@@ -7,13 +7,8 @@
+ {
+     scr_depth();
+ }
+-nubert_readable = instance_create(nubert_marker.x, nubert_marker.y, obj_readable_nubert);
+-nubert_readable.image_xscale = 2;
+-nubert_readable.image_yscale = 2;
+-instance_deactivate_object(nubert_readable);
+-nubert_collider = instance_create(nubert_marker.x, nubert_marker.y + 20, obj_solidblockDark);
+-nubert_collider.image_yscale = 0.5;
+-instance_deactivate_object(nubert_collider);
++nubert_readable = -4;
++nubert_collider = -4;
+ entered_zone = false;
+ exited_zone = false;
+ arrive = false;
+@@ -22,3 +17,32 @@
+ leave = false;
+ leave_timer = 0;
+ move_nubert = true;
++
++enable_readable = function()
++{
++    nubert_readable = instance_create(nubert_marker.x, nubert_marker.y, obj_readable_nubert);
++    nubert_readable.image_xscale = 2;
++    nubert_readable.image_yscale = 2;
++};
++
++disable_readable = function()
++{
++    with (nubert_readable)
++    {
++        instance_destroy();
++    }
++};
++
++enable_collider = function()
++{
++    nubert_collider = instance_create(nubert_marker.x, nubert_marker.y + 20, obj_solidblockDark);
++    nubert_collider.image_yscale = 0.5;
++};
++
++disable_collider = function()
++{
++    with (nubert_collider)
++    {
++        instance_destroy();
++    }
++};
+FILE ch4/gml_Object_obj_npc_nubert_Step_0.gml M 4 8
+@@ -27,7 +27,7 @@
+     arrive_timer++;
+     if (arrive_timer == 1)
+     {
+-        instance_activate_object(nubert_collider);
++        enable_collider();
+         with (nubert_marker)
+         {
+             sprite_index = spr_npc_nubert_hole_arrive;
+@@ -41,7 +41,7 @@
+         {
+             image_speed = 0;
+         }
+-        instance_activate_object(nubert_readable);
++        enable_readable();
+     }
+     if (arrive_timer >= 270 && !d_ex() && global.interact == 0)
+     {
+@@ -56,14 +56,14 @@
+     leave_timer++;
+     if (leave_timer == 1)
+     {
+-        instance_deactivate_object(nubert_readable);
++        disable_readable();
+         nubert_marker.sprite_index = spr_npc_nubert_hole_leave;
+         nubert_marker.image_index = 0;
+         nubert_marker.image_speed = 0.2;
+     }
+     if (leave_timer == 30)
+     {
+-        instance_deactivate_object(nubert_collider);
++        disable_collider();
+         nubert_marker.image_speed = 0;
+         leave_timer = 0;
+         leave = false;
+@@ -82,8 +82,4 @@
+     {
+         scr_depth();
+     }
+-    nubert_readable.x = nubert_marker.x;
+-    nubert_readable.y = nubert_marker.y;
+-    nubert_collider.x = nubert_marker.x;
+-    nubert_collider.y = nubert_marker.y + 20;
+ }
+FILE ch4/gml_Object_obj_npc_room_animated_Other_10.gml M 1 1
+@@ -395,7 +395,7 @@
+         scr_speaker("catty");
+         msgsetloc(0, "\\E8* OMG^1! Krissy!!^1! Do you^1, like^1, want some of my free milk!?/", "obj_npc_room_animated_slash_Other_10_gml_423_0");
+         scr_anyface_next("susie", 5);
+-        msgnextloc("\\E5* (That's MY free milk^1, you furry degenerate...)/%", "obj_npc_room_animated_slash_Other_10_gml_425_0");
++        msgnextloc("\\E5* (That's MY free milk^1, you furry freak...)/%", "obj_npc_room_animated_slash_Other_10_gml_425_0");
+     }
+     else
+     {
+FILE ch4/gml_Object_obj_town_krisyard_Create_0.gml M 4 1
+@@ -3,7 +3,10 @@
+ {
+     if (global.plot >= 100 && global.plot < 300)
+     {
+-        instance_deactivate_object(obj_doorX_musfade);
++        with (obj_doorX_musfade)
++        {
++            instance_destroy();
++        }
+         var door_block = instance_create(140, 170, obj_solidblock);
+         with (door_block)
+         {

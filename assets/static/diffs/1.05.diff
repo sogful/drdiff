@@ -1,0 +1,4284 @@
+FILE ch1/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -61,14 +61,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.40";
++global.version = "1.41";
+ if (scr_is_switch_os())
+ {
+-    global.version = "1.28";
++    global.version = "1.29";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.version = "1.28";
++    global.version = "1.29";
+ }
+ old_savedata_check = false;
+ if (global.is_console)
+FILE ch1/gml_Object_obj_shop1_Draw_0.gml M 6 0
+@@ -138,6 +138,7 @@
+     draw_text(480, 300, string_hash_to_newline(scr_84_get_lang_string("obj_shop1_slash_Draw_0_gml_107_0")));
+     draw_text(480, 340, string_hash_to_newline(scr_84_get_lang_string("obj_shop1_slash_Draw_0_gml_108_0")));
+     draw_text(480, 380, string_hash_to_newline(scr_84_get_lang_string("obj_shop1_slash_Draw_0_gml_109_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, (135 + (menuc[0] * 20)) * 2);
+     if (button1_p())
+     {
+@@ -208,6 +209,7 @@
+             }
+             instance_create(450, 260, obj_writer);
+         }
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 30, 270 + (menuc[1] * 40));
+         if (button1_p() && onebuffer < 0)
+         {
+@@ -251,6 +253,7 @@
+         }
+         draw_text(480, 340, string_hash_to_newline(scr_84_get_lang_string("obj_shop1_slash_Draw_0_gml_169_0")));
+         draw_text(480, 370, string_hash_to_newline(scr_84_get_lang_string("obj_shop1_slash_Draw_0_gml_170_0")));
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 450, 350 + (menuc[2] * 30));
+         if (button2_p() && twobuffer < 0)
+         {
+@@ -379,6 +382,7 @@
+         global.msg[0] = scr_84_get_lang_string("obj_shop1_slash_Draw_0_gml_244_0");
+         instance_create(440, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[3] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -435,6 +439,7 @@
+         }
+         instance_create(460, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[10] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -555,6 +560,7 @@
+     }
+     draw_text(480, 340, string_hash_to_newline(scr_84_get_lang_string("obj_shop1_slash_Draw_0_gml_367_0")));
+     draw_text(480, 370, string_hash_to_newline(scr_84_get_lang_string("obj_shop1_slash_Draw_0_gml_368_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, 350 + (menuc[menu] * 30));
+ }
+ scr_shopmenu(5);
+FILE ch1/gml_Object_obj_shop2_Draw_0.gml M 6 0
+@@ -63,6 +63,7 @@
+     draw_text(480, 300, string_hash_to_newline(scr_84_get_lang_string("obj_shop2_slash_Draw_0_gml_83_0")));
+     draw_text(480, 340, string_hash_to_newline(scr_84_get_lang_string("obj_shop2_slash_Draw_0_gml_84_0")));
+     draw_text(480, 380, string_hash_to_newline(scr_84_get_lang_string("obj_shop2_slash_Draw_0_gml_85_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, (135 + (menuc[0] * 20)) * 2);
+     if (button1_p())
+     {
+@@ -137,6 +138,7 @@
+             }
+             instance_create(450, 260, obj_writer);
+         }
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 30, 270 + (menuc[1] * 40));
+         if (button1_p() && onebuffer < 0)
+         {
+@@ -180,6 +182,7 @@
+         }
+         draw_text(480, 340, string_hash_to_newline(scr_84_get_lang_string("obj_shop2_slash_Draw_0_gml_146_0")));
+         draw_text(480, 370, string_hash_to_newline(scr_84_get_lang_string("obj_shop2_slash_Draw_0_gml_147_0")));
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 450, 350 + (menuc[2] * 30));
+         if (button2_p() && twobuffer < 0)
+         {
+@@ -281,6 +284,7 @@
+         global.msg[0] = scr_84_get_lang_string("obj_shop2_slash_Draw_0_gml_202_0");
+         instance_create(440, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[3] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -337,6 +341,7 @@
+         }
+         instance_create(460, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[10] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -457,6 +462,7 @@
+     }
+     draw_text(480, 340, string_hash_to_newline(scr_84_get_lang_string("obj_shop2_slash_Draw_0_gml_325_0")));
+     draw_text(480, 370, string_hash_to_newline(scr_84_get_lang_string("obj_shop2_slash_Draw_0_gml_326_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, 350 + (menuc[menu] * 30));
+ }
+ scr_shopmenu(5);
+FILE ch2/gml_Object_obj_cutscene_master_Create_0.gml M 1 0
+@@ -35,6 +35,7 @@
+ }
+ actor_selected = "noone";
+ actor_selected_id = 99999999;
++inittype = 1;
+ if (inittype == 0)
+ {
+     for (i = 0; i < 20; i++)
+FILE ch2/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -65,14 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.46";
++global.version = "1.47";
+ if (scr_is_switch_os())
+ {
+-    global.version = "1.34";
++    global.version = "1.35";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.version = "1.34";
++    global.version = "1.35";
+ }
+ global.game_won = false;
+ global.chapter = 2;
+FILE ch2/gml_Object_obj_shop1_Draw_0.gml M 6 0
+@@ -138,6 +138,7 @@
+     draw_text(480, 300, string_hash_to_newline(stringsetloc("Sell", "obj_shop1_slash_Draw_0_gml_107_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Talk", "obj_shop1_slash_Draw_0_gml_108_0")));
+     draw_text(480, 380, string_hash_to_newline(stringsetloc("Exit", "obj_shop1_slash_Draw_0_gml_109_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, (135 + (menuc[0] * 20)) * 2);
+     if (button1_p())
+     {
+@@ -220,6 +221,7 @@
+             }
+             instance_create(450, 260, obj_writer);
+         }
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 30, 270 + (menuc[1] * 40));
+         if (button1_p() && onebuffer < 0)
+         {
+@@ -257,6 +259,7 @@
+         draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(buyvalue[menuc[1]]), "obj_shop1_slash_Draw_0_gml_177_0")));
+         draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_169_0")));
+         draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_170_0")));
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 450, 350 + (menuc[2] * 30));
+         if (button2_p() && twobuffer < 0)
+         {
+@@ -393,6 +396,7 @@
+         global.msg[0] = stringsetloc("\\E0Don't have&anything&better&to do.", "obj_shop1_slash_Draw_0_gml_255_0");
+         instance_create(440, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[3] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -450,6 +454,7 @@
+         }
+         instance_create(460, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[10] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -591,6 +596,7 @@
+     draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(sellvalue), "obj_shop1_slash_Draw_0_gml_407_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_367_0")));
+     draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_368_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, 350 + (menuc[menu] * 30));
+ }
+ scr_shopmenu(5);
+FILE ch2/gml_Object_obj_shop2_Draw_0.gml M 6 0
+@@ -63,6 +63,7 @@
+     draw_text(480, 300, string_hash_to_newline(stringsetloc("Sell", "obj_shop2_slash_Draw_0_gml_83_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Talk", "obj_shop2_slash_Draw_0_gml_84_0")));
+     draw_text(480, 380, string_hash_to_newline(stringsetloc("Exit", "obj_shop2_slash_Draw_0_gml_85_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, (135 + (menuc[0] * 20)) * 2);
+     if (button1_p())
+     {
+@@ -137,6 +138,7 @@
+             }
+             instance_create(450, 260, obj_writer);
+         }
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 30, 270 + (menuc[1] * 40));
+         if (button1_p() && onebuffer < 0)
+         {
+@@ -174,6 +176,7 @@
+         draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(buyvalue[menuc[1]]), "obj_shop2_slash_Draw_0_gml_147_0_b")));
+         draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop2_slash_Draw_0_gml_146_0")));
+         draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop2_slash_Draw_0_gml_147_0")));
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 450, 350 + (menuc[2] * 30));
+         if (button2_p() && twobuffer < 0)
+         {
+@@ -275,6 +278,7 @@
+         global.msg[0] = stringsetloc("\\E5Ah^1, what is&thine&Intereste?", "obj_shop2_slash_Draw_0_gml_202_0");
+         instance_create(440, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[3] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -331,6 +335,7 @@
+         }
+         instance_create(460, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[10] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -445,6 +450,7 @@
+     draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(sellvalue), "obj_shop2_slash_Draw_0_gml_328_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop2_slash_Draw_0_gml_325_0")));
+     draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop2_slash_Draw_0_gml_326_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, 350 + (menuc[menu] * 30));
+ }
+ scr_shopmenu(5);
+FILE ch2/gml_Object_obj_shop_ch2_music_Draw_0.gml M 6 0
+@@ -189,6 +189,7 @@
+     }
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Talk", "obj_shop1_slash_Draw_0_gml_108_0")));
+     draw_text(480, 380, string_hash_to_newline(stringsetloc("Exit", "obj_shop1_slash_Draw_0_gml_109_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, (135 + (menuc[0] * 20)) * 2);
+     if (button1_p())
+     {
+@@ -302,6 +303,7 @@
+             global.typer = 78;
+             instance_create(450, 260, obj_writer);
+         }
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 30, 270 + (menuc[1] * 40));
+         if (button1_p() && onebuffer < 0)
+         {
+@@ -339,6 +341,7 @@
+         draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(buyvalue[menuc[1]]), "obj_shop_ch2_music_slash_Draw_0_gml_291_0")));
+         draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_169_0")));
+         draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_170_0")));
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 450, 350 + (menuc[2] * 30));
+         if (button2_p() && twobuffer < 0)
+         {
+@@ -450,6 +453,7 @@
+         global.typer = 78;
+         instance_create(440, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[3] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -508,6 +512,7 @@
+         global.typer = 78;
+         instance_create(460, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[10] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -650,6 +655,7 @@
+     draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(sellvalue), "obj_shop_ch2_music_slash_Draw_0_gml_508_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_367_0")));
+     draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_368_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, 350 + (menuc[menu] * 30));
+ }
+ scr_shopmenu(5);
+FILE ch2/gml_Object_obj_shop_ch2_spamton_Draw_0.gml M 6 0
+@@ -221,6 +221,7 @@
+     draw_text(480, 300, stringsetloc("BUYMORE!!!", "obj_shop_ch2_spamton_slash_Draw_0_gml_283_0"));
+     draw_text(480, 340, stringsetloc("TALKING", "obj_shop_ch2_spamton_slash_Draw_0_gml_284_0"));
+     draw_text(480, 380, stringsetloc("ESCAPE", "obj_shop_ch2_spamton_slash_Draw_0_gml_285_0"));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, (135 + (menuc[0] * 20)) * 2);
+     if (button1_p())
+     {
+@@ -323,6 +324,7 @@
+             }
+             instance_create(450, 260, obj_writer);
+         }
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 30, 270 + (menuc[1] * 40));
+         if (button1_p() && onebuffer < 0 && soldout[menuc[1]] != 1)
+         {
+@@ -360,6 +362,7 @@
+         draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("~1 KROMER ?", string(buyvalue[menuc[1]]), "obj_shop_ch2_spamton_slash_Draw_0_gml_380_0")));
+         draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_169_0")));
+         draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_170_0")));
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 450, 350 + (menuc[2] * 30));
+         if (button2_p() && twobuffer < 0)
+         {
+@@ -500,6 +503,7 @@
+         global.msg[0] = stringsetloc("\\E0LET'S MAKE&A DEAL.", "obj_shop_ch2_spamton_slash_Draw_0_gml_469_0");
+         instance_create(440, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[3] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -557,6 +561,7 @@
+         }
+         instance_create(460, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[10] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -698,6 +703,7 @@
+     draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(sellvalue), "obj_shop_ch2_spamton_slash_Draw_0_gml_619_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_367_0")));
+     draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_368_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, 350 + (menuc[menu] * 30));
+ }
+ scr_shopmenu(5);
+FILE ch2/gml_Object_obj_shop_ch2_swatch_Draw_0.gml M 6 0
+@@ -78,6 +78,7 @@
+     draw_text(480, 300, string_hash_to_newline(stringsetloc("Sell", "obj_shop1_slash_Draw_0_gml_107_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Talk", "obj_shop1_slash_Draw_0_gml_108_0")));
+     draw_text(480, 380, string_hash_to_newline(stringsetloc("Exit", "obj_shop1_slash_Draw_0_gml_109_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, (135 + (menuc[0] * 20)) * 2);
+     if (button1_p())
+     {
+@@ -153,6 +154,7 @@
+             }
+             instance_create(450, 260, obj_writer);
+         }
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 30, 270 + (menuc[1] * 40));
+         if (button1_p() && onebuffer < 0)
+         {
+@@ -190,6 +192,7 @@
+         draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(buyvalue[menuc[1]]), "obj_shop_ch2_swatch_slash_Draw_0_gml_160_0")));
+         draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_169_0")));
+         draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_170_0")));
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 450, 350 + (menuc[2] * 30));
+         if (button2_p() && twobuffer < 0)
+         {
+@@ -313,6 +316,7 @@
+         global.msg[0] = stringsetloc("Chatting&would be&our&pleasure.", "obj_shop_ch2_swatch_slash_Draw_0_gml_236_0");
+         instance_create(440, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[3] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -370,6 +374,7 @@
+         }
+         instance_create(460, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[10] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -511,6 +516,7 @@
+     draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(sellvalue), "obj_shop_ch2_swatch_slash_Draw_0_gml_387_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_367_0")));
+     draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_368_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, 350 + (menuc[menu] * 30));
+ }
+ scr_shopmenu(5);
+FILE ch3/gml_Object_obj_cutscene_master_Create_0.gml M 1 0
+@@ -37,6 +37,7 @@
+ {
+     inittype = 1;
+ }
++inittype = 1;
+ if (inittype == 0)
+ {
+     for (i = 0; i < 20; i++)
+FILE ch3/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -65,14 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.098";
++global.versionno = "v0.0.099";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.095";
++    global.versionno = "v0.0.096";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.097";
++    global.versionno = "v0.0.098";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch3/gml_Object_obj_tenna_enemy_Step_0.gml M 8 1
+@@ -832,7 +832,14 @@
+         }
+         if (acting == 5)
+         {
+-            strng = stringsetloc("You get", "obj_tenna_enemy_slash_Step_0_gml_384_0");
++            if (global.lang != "ja")
++            {
++                strng = stringsetloc("You get", "obj_tenna_enemy_slash_Step_0_gml_384_0");
++            }
++            else
++            {
++                strng = "";
++            }
+         }
+         acting = 5.1;
+     }
+FILE ch4/gml_GlobalScript_scr_become_light.gml M 0 5
+@@ -45,11 +45,6 @@
+         }
+     }
+     var armorconverted = 0;
+-    if (scr_armorcheck_equipped(1, 14) > 0)
+-    {
+-        armorconverted = 1;
+-        global.larmor = 14;
+-    }
+     if (armorconverted == 1)
+     {
+         global.ladef = 1;
+FILE ch4/gml_GlobalScript_scr_gamestart_chapter_override.gml M 64 3
+@@ -55,14 +55,75 @@
+         global.flag[31] = 1;
+         global.flag[32] = 0;
+         var took_watch = false;
+-        scr_litemcheck(14);
+-        took_watch = haveit || scr_armorcheck_equipped_party(14) || scr_armorcheck_inventory(14);
++        var max_party = 3;
++        for (var i = 0; i < array_length(global.litem); i++)
++        {
++            if (global.litem[i] == 14)
++            {
++                took_watch = true;
++                break;
++            }
++        }
++        for (var i = 0; i < array_length(global.armor); i++)
++        {
++            if (global.armor[i] == 14)
++            {
++                took_watch = true;
++                break;
++            }
++        }
++        for (var i = 0; i < array_length(global.chararmor1); i++)
++        {
++            if (i > max_party)
++            {
++                break;
++            }
++            if (global.chararmor1[i] == 14)
++            {
++                took_watch = true;
++                break;
++            }
++        }
++        for (var i = 0; i < array_length(global.chararmor2); i++)
++        {
++            if (i > max_party)
++            {
++                break;
++            }
++            if (global.chararmor2[i] == 14)
++            {
++                took_watch = true;
++                break;
++            }
++        }
+         if (took_watch)
+         {
+             scr_flag_set(708, 1);
+             if (scr_sideb_active())
+             {
+-                scr_litemget(3);
++                global.larmor = 3;
++                for (var i = 0; i < array_length(global.chararmor1); i++)
++                {
++                    if (i > max_party)
++                    {
++                        break;
++                    }
++                    if (global.chararmor1[i] == 14)
++                    {
++                        global.chararmor1[i] = 0;
++                    }
++                }
++                for (var i = 0; i < array_length(global.chararmor2); i++)
++                {
++                    if (i > max_party)
++                    {
++                        break;
++                    }
++                    if (global.chararmor2[i] == 14)
++                    {
++                        global.chararmor2[i] = 0;
++                    }
++                }
+                 scr_litemremove(14);
+                 scr_armorremove(14);
+             }
+FILE ch4/gml_GlobalScript_scr_get_border.gml M 1 1
+@@ -36,7 +36,7 @@
+                 _border_image = border_lw_town;
+             }
+         }
+-        var church_a_rooms = [room_dw_church_savepoint, room_dw_church_intro1, room_dw_church_ripplepuzzle_postgers, room_dw_church_gersonstudy, room_dw_church_nwconnect, room_dw_church_pianopuzzle, room_dw_church_knightclimb_post];
++        var church_a_rooms = [room_dw_church_savepoint, room_dw_church_intro1, room_dw_church_intropiano, room_dw_church_staircase, room_dw_church_glass, room_dw_church_holywatercooler, room_dw_church_intro_guei, room_dw_church_intro_gerson, room_dw_church_shadowgerson, room_dw_church_minorlegend, room_dw_church_bookcase, room_dw_church_turtles, room_dw_church_ripplepuzzle, room_dw_church_ripseq1, room_dw_church_ripseq2, room_dw_church_lantern_hallway, room_dw_church_biblioxencounter, room_dw_church_ripplepuzzle_postgers, room_dw_church_gersonstudy, room_dw_church_nwconnect, room_dw_church_moneyfountain, room_dw_church_bookshelfpuzzle, room_dw_church_tallbookcases, room_dw_church_pianopiece_left, room_dw_church_pianopiece_right, room_dw_church_pianopuzzle, room_dw_church_jackenstein, room_dw_church_knightclimb_post, room_dw_church_darkmaze, room_dw_church_rightconnect, room_dw_church_stairspreview, room_dw_church_trueclimbadventure, room_dw_church_organpuzzle, room_dw_church_mizzleencounter, room_dw_church_bellhall_bookroom, room_dw_church_bellhall_curtain, room_dw_church_sideclimb, room_dw_church_secretpiano, room_dw_church_worshiproom, room_dw_church_fountain, room_dw_church_northprophecies, room_dw_church_pianopiece_left_b, room_dw_church_pianopiece_rightprophecy, room_dw_church_rippleworship, room_dw_church_waterfallroom, room_dw_church_waterfalltearoom];
+         for (var i = 0; i < array_length(church_a_rooms); i++)
+         {
+             if (arg0 != church_a_rooms[i])
+FILE ch4/gml_GlobalScript_scr_load.gml M 40 23
+@@ -11,7 +11,7 @@
+     if (global.is_console)
+     {
+         var othername_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(othername_list); i += 1)
++        for (var i = 0; i < ds_list_size(othername_list); i += 1)
+         {
+             global.othername[i] = ds_list_find_value(othername_list, i);
+         }
+@@ -20,7 +20,7 @@
+     }
+     else
+     {
+-        for (i = 0; i < 6; i += 1)
++        for (var i = 0; i < 6; i += 1)
+         {
+             global.othername[i] = ossafe_file_text_read_string(myfileid);
+             ossafe_file_text_readln(myfileid);
+@@ -47,77 +47,77 @@
+     if (global.is_console)
+     {
+         var hp_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(hp_list); i += 1)
++        for (var i = 0; i < ds_list_size(hp_list); i += 1)
+         {
+             global.hp[i] = ds_list_find_value(hp_list, i);
+         }
+         ds_list_destroy(hp_list);
+         ossafe_file_text_readln(myfileid);
+         var maxhp_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(maxhp_list); i += 1)
++        for (var i = 0; i < ds_list_size(maxhp_list); i += 1)
+         {
+             global.maxhp[i] = ds_list_find_value(maxhp_list, i);
+         }
+         ds_list_destroy(maxhp_list);
+         ossafe_file_text_readln(myfileid);
+         var at_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(at_list); i += 1)
++        for (var i = 0; i < ds_list_size(at_list); i += 1)
+         {
+             global.at[i] = ds_list_find_value(at_list, i);
+         }
+         ds_list_destroy(at_list);
+         ossafe_file_text_readln(myfileid);
+         var df_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(df_list); i += 1)
++        for (var i = 0; i < ds_list_size(df_list); i += 1)
+         {
+             global.df[i] = ds_list_find_value(df_list, i);
+         }
+         ds_list_destroy(df_list);
+         ossafe_file_text_readln(myfileid);
+         var mag_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(mag_list); i += 1)
++        for (var i = 0; i < ds_list_size(mag_list); i += 1)
+         {
+             global.mag[i] = ds_list_find_value(mag_list, i);
+         }
+         ds_list_destroy(mag_list);
+         ossafe_file_text_readln(myfileid);
+         var guts_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(guts_list); i += 1)
++        for (var i = 0; i < ds_list_size(guts_list); i += 1)
+         {
+             global.guts[i] = ds_list_find_value(guts_list, i);
+         }
+         ds_list_destroy(guts_list);
+         ossafe_file_text_readln(myfileid);
+         var charweapon_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(charweapon_list); i += 1)
++        for (var i = 0; i < ds_list_size(charweapon_list); i += 1)
+         {
+             global.charweapon[i] = ds_list_find_value(charweapon_list, i);
+         }
+         ds_list_destroy(charweapon_list);
+         ossafe_file_text_readln(myfileid);
+         var chararmor1_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(chararmor1_list); i += 1)
++        for (var i = 0; i < ds_list_size(chararmor1_list); i += 1)
+         {
+             global.chararmor1[i] = ds_list_find_value(chararmor1_list, i);
+         }
+         ds_list_destroy(chararmor1_list);
+         ossafe_file_text_readln(myfileid);
+         var chararmor2_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(chararmor2_list); i += 1)
++        for (var i = 0; i < ds_list_size(chararmor2_list); i += 1)
+         {
+             global.chararmor2[i] = ds_list_find_value(chararmor2_list, i);
+         }
+         ds_list_destroy(chararmor2_list);
+         ossafe_file_text_readln(myfileid);
+         var weaponstyle_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(weaponstyle_list); i += 1)
++        for (var i = 0; i < ds_list_size(weaponstyle_list); i += 1)
+         {
+             global.weaponstyle[i] = ds_list_find_value(weaponstyle_list, i);
+         }
+         ds_list_destroy(weaponstyle_list);
+         ossafe_file_text_readln(myfileid);
+     }
+-    for (i = 0; i < 5; i += 1)
++    for (var i = 0; i < 5; i += 1)
+     {
+         if (!global.is_console)
+         {
+@@ -180,35 +180,35 @@
+     if (global.is_console)
+     {
+         var item_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(item_list); i += 1)
++        for (var i = 0; i < ds_list_size(item_list); i += 1)
+         {
+             global.item[i] = ds_list_find_value(item_list, i);
+         }
+         ds_list_destroy(item_list);
+         ossafe_file_text_readln(myfileid);
+         var keyitem_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(keyitem_list); i += 1)
++        for (var i = 0; i < ds_list_size(keyitem_list); i += 1)
+         {
+             global.keyitem[i] = ds_list_find_value(keyitem_list, i);
+         }
+         ds_list_destroy(keyitem_list);
+         ossafe_file_text_readln(myfileid);
+         var weapon_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(weapon_list); i += 1)
++        for (var i = 0; i < ds_list_size(weapon_list); i += 1)
+         {
+             global.weapon[i] = ds_list_find_value(weapon_list, i);
+         }
+         ds_list_destroy(weapon_list);
+         ossafe_file_text_readln(myfileid);
+         var armor_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(armor_list); i += 1)
++        for (var i = 0; i < ds_list_size(armor_list); i += 1)
+         {
+             global.armor[i] = ds_list_find_value(armor_list, i);
+         }
+         ds_list_destroy(armor_list);
+         ossafe_file_text_readln(myfileid);
+         var pocket_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < ds_list_size(pocket_list); i += 1)
++        for (var i = 0; i < ds_list_size(pocket_list); i += 1)
+         {
+             global.pocketitem[i] = ds_list_find_value(pocket_list, i);
+         }
+@@ -266,21 +266,21 @@
+     if (global.is_console)
+     {
+         var litem_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < (ds_list_size(litem_list) - 1); i += 1)
++        for (var i = 0; i < (ds_list_size(litem_list) - 1); i += 1)
+         {
+             global.litem[i] = ds_list_find_value(litem_list, i);
+         }
+         ds_list_destroy(litem_list);
+         ossafe_file_text_readln(myfileid);
+         var phone_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < (ds_list_size(phone_list) - 1); i += 1)
++        for (var i = 0; i < (ds_list_size(phone_list) - 1); i += 1)
+         {
+             global.phone[i] = ds_list_find_value(phone_list, i);
+         }
+         ds_list_destroy(phone_list);
+         ossafe_file_text_readln(myfileid);
+         var flag_list = scr_ds_list_read(myfileid);
+-        for (i = 0; i < (ds_list_size(flag_list) - 1); i += 1)
++        for (var i = 0; i < (ds_list_size(flag_list) - 1); i += 1)
+         {
+             global.flag[i] = ds_list_find_value(flag_list, i);
+         }
+@@ -289,14 +289,14 @@
+     }
+     else
+     {
+-        for (i = 0; i < 8; i += 1)
++        for (var i = 0; i < 8; i += 1)
+         {
+             global.litem[i] = ossafe_file_text_read_real(myfileid);
+             ossafe_file_text_readln(myfileid);
+             global.phone[i] = ossafe_file_text_read_real(myfileid);
+             ossafe_file_text_readln(myfileid);
+         }
+-        for (i = 0; i < 2500; i += 1)
++        for (var i = 0; i < 2500; i += 1)
+         {
+             global.flag[i] = ossafe_file_text_read_real(myfileid);
+             ossafe_file_text_readln(myfileid);
+@@ -337,6 +337,23 @@
+             }
+         }
+     }
++    var adjusted_list = [];
++    for (var i = 0; i < array_length(global.item); i += 1)
++    {
++        if (global.item[i] == 0 || global.item[i] >= 999)
++        {
++            continue;
++        }
++        adjusted_list[array_length(adjusted_list)] = global.item[i];
++    }
++    for (var i = 0; i < array_length(global.item); i += 1)
++    {
++        global.item[i] = 0;
++    }
++    for (var i = 0; i < array_length(adjusted_list); i += 1)
++    {
++        global.item[i] = adjusted_list[i];
++    }
+     __loadedroom = scr_get_room_by_id(global.currentroom);
+     if (scr_dogcheck())
+     {
+FILE ch4/gml_GlobalScript_scr_rhythmgame_song_load.gml M 2 2
+@@ -435,8 +435,8 @@
+                 scr_music_event_add(17, "sprite_index", spr_ralsei_sing_polite_closed, true);
+                 scr_music_event_add(74.6, "sprite_index", spr_ralsei_sing_clap, true);
+                 scr_music_event_add(86.95, "sprite_index", spr_ralsei_sing_polite_closed, true);
+-                scr_music_event_add(158.92, "mid", 5311, true);
+-                scr_music_event_add(158.92, "idle", 5272, true);
++                scr_music_event_add(158.92, "mid", 5313, true);
++                scr_music_event_add(158.92, "idle", 5274, true);
+                 scr_music_event_add(158.92, "animspeed", 2, true);
+                 scr_music_event_add(158.92, "sprite_index", spr_ralsei_sing_rude, true);
+                 scr_music_event_add(162.16, "sprite_index", spr_ralsei_sing_cuss, true);
+FILE ch4/gml_Object_obj_actor_tenna_Create_0.gml M 1 1
+@@ -92,7 +92,7 @@
+ scaled_bounce = false;
+ cur_xscale = 2;
+ cur_yscale = 2;
+-palette_sprite = 5411;
++palette_sprite = 5413;
+ palette_index = 0;
+ golden_mode = false;
+ _static = false;
+FILE ch4/gml_Object_obj_actor_tenna_Draw_0.gml M 2 2
+@@ -923,13 +923,13 @@
+         {
+             image_speed = 0;
+             image_index = 0;
+-            rosetennasprite = 5385;
++            rosetennasprite = 5387;
+             scr_lerpvar("image_xscale", image_xscale, sign(image_xscale) * 2, 30, -1, "out");
+             scr_lerpvar("image_yscale", image_yscale, 2, 30, -1, "out");
+         }
+         if (rosetimer == 12)
+         {
+-            rosetennasprite = 3887;
++            rosetennasprite = 3888;
+             image_index = 0;
+         }
+         if (rosetimer >= 16)
+FILE ch4/gml_Object_obj_balthizard_enemy_Create_0.gml M 1 1
+@@ -30,7 +30,7 @@
+ shakehead.parentid = id;
+ animsiner = 0;
+ headamplitude = 0;
+-turthead = 5548;
++turthead = 5550;
+ headindex = 0;
+ neckcolor = make_color_rgb(166, 94, 122);
+ attackselected = 0;
+FILE ch4/gml_Object_obj_balthizard_enemy_Draw_0.gml M 4 4
+@@ -100,10 +100,10 @@
+         lightupfireframes += 0.25;
+         draw_sprite_ext(spr_incense_turtle_head_fire, lightupfireframes, x + 26 + headoffsetx + (sin(animsiner / 8) * headamplitude), y + 46 + headoffsety + ((cos(animsiner / 6) * headamplitude) / 2), head_scale, head_scale, image_angle, image_blend, pieces_alpha2);
+     }
+-    turthead = 5548;
++    turthead = 5550;
+     if (global.mercymod[myself] >= global.mercymax[myself])
+     {
+-        turthead = 3750;
++        turthead = 3751;
+     }
+     draw_monster_body_part(turthead, _headindex, x + 26 + headoffsetx + (sin(animsiner / 8) * headamplitude), y + 56 + headoffsety + ((cos(animsiner / 6) * headamplitude) / 2));
+     if (global.myfight != 3 && acting != 20)
+@@ -362,10 +362,10 @@
+     }
+     draw_sprite_ext(spr_incense_turtle_leg3_transition, piece_index[4], x + piece_xoffset[4], y + piece_yoffset[4], image_xscale, image_yscale, image_angle, image_blend, pieces_alpha2);
+     draw_sprite_ext(spr_incense_turtle_leg2_transition, piece_index[3], x + piece_xoffset[3], y + piece_yoffset[3], image_xscale, image_yscale, image_angle, image_blend, pieces_alpha2);
+-    turthead = 5548;
++    turthead = 5550;
+     if (global.mercymod[myself] >= global.mercymax[myself])
+     {
+-        turthead = 3750;
++        turthead = 3751;
+     }
+     draw_sprite_ext(turthead, _headindex, x + 26 + headoffsetx + (sin(animsiner / 8) * headamplitude), y + 56 + headoffsety + ((cos(animsiner / 6) * headamplitude) / 2), head_scale, head_scale, image_angle, image_blend, pieces_alpha2);
+     if (darken_alpha > 0)
+FILE ch4/gml_Object_obj_bg_palette_swap_PreCreate_0.gml M 1 1
+@@ -1,3 +1,3 @@
+ event_inherited();
+-palette_sprite = 2763;
++palette_sprite = 2764;
+ palette_index = 1;
+FILE ch4/gml_Object_obj_board_writer_Create_0.gml M 1 1
+@@ -25,4 +25,4 @@
+ boxright = 0;
+ reachedend_draw_triangle = true;
+ reachedend_draw_triangle_siner = 0;
+-reachedend_triangle_sprite = 5021;
++reachedend_triangle_sprite = 5023;
+FILE ch4/gml_Object_obj_bookshelf_destructable_Draw_0.gml M 7 7
+@@ -25,27 +25,27 @@
+     switch (sprite_index)
+     {
+         case spr_dw_church_2x2shelf_blue:
+-            myicon = 4912;
++            myicon = 4914;
+             mycol = 5711637;
+             break;
+         case spr_dw_church_2x2shelf_red:
+-            myicon = 5271;
++            myicon = 5273;
+             mycol = 1905236;
+             break;
+         case spr_dw_church_2x2shelf_green:
+-            myicon = 4601;
++            myicon = 4602;
+             mycol = 16896;
+             break;
+         case spr_dw_church_2x2shelf_pink:
+-            myicon = 3194;
++            myicon = 3195;
+             mycol = 9717932;
+             break;
+         case spr_dw_church_2x2shelf_purple:
+-            myicon = 1378;
++            myicon = 1379;
+             mycol = 5114958;
+             break;
+         case spr_dw_church_2x2shelf_orange:
+-            myicon = 1378;
++            myicon = 1379;
+             mycol = 77861;
+             alt = 1;
+             break;
+@@ -87,7 +87,7 @@
+         var sprangle = 0;
+         var scale = 2;
+         var circlespr = myicon;
+-        var arrowspr = 4477;
++        var arrowspr = 4478;
+         var _space = 24;
+         var sinstrength = 0;
+         var sintimevar = 15;
+FILE ch4/gml_Object_obj_bookshelf_destructable_Step_0.gml M 1 1
+@@ -134,7 +134,7 @@
+         var scatter = 791;
+         if ((thisID % 2) == 1)
+         {
+-            scatter = 4201;
++            scatter = 4202;
+         }
+         with (scr_marker_ext(x, y + 80, scatter))
+         {
+FILE ch4/gml_Object_obj_bookshelf_moveable2x2_Draw_0.gml M 7 7
+@@ -7,27 +7,27 @@
+ switch (sprite_index)
+ {
+     case spr_dw_church_2x2shelf_blue:
+-        myicon = 4912;
++        myicon = 4914;
+         mycol = 5711637;
+         break;
+     case spr_dw_church_2x2shelf_red:
+-        myicon = 5271;
++        myicon = 5273;
+         mycol = 1905236;
+         break;
+     case spr_dw_church_2x2shelf_green:
+-        myicon = 4601;
++        myicon = 4602;
+         mycol = 16896;
+         break;
+     case spr_dw_church_2x2shelf_pink:
+-        myicon = 3194;
++        myicon = 3195;
+         mycol = 9717932;
+         break;
+     case spr_dw_church_2x2shelf_purple:
+-        myicon = 1378;
++        myicon = 1379;
+         mycol = 5114958;
+         break;
+     case spr_dw_church_2x2shelf_orange:
+-        myicon = 1378;
++        myicon = 1379;
+         mycol = 77861;
+         alt = 1;
+         break;
+@@ -69,7 +69,7 @@
+     var sprangle = 0;
+     var scale = 2;
+     var circlespr = myicon;
+-    var arrowspr = 4477;
++    var arrowspr = 4478;
+     var _space = 24;
+     var sinstrength = 0;
+     var sintimevar = 15;
+FILE ch4/gml_Object_obj_burgerpants_runaway_Create_0.gml M 1 1
+@@ -5,6 +5,6 @@
+ timer = 0;
+ con = 0;
+ sprite_index = spr_npc_burgerpants_stand_rain;
+-blursprite = 2226;
++blursprite = 2227;
+ init = 0;
+ cookie_timer = 0;
+FILE ch4/gml_Object_obj_caterpillarchara_Create_0.gml M 1 1
+@@ -25,7 +25,7 @@
+ rsprite = spr_susier_dark;
+ lsprite = spr_susiel_dark;
+ slidesprite = spr_susie_slide;
+-climbsprite = 2649;
++climbsprite = 2650;
+ if (global.chapter >= 2)
+ {
+     usprite = spr_susie_walk_up_dw;
+FILE ch4/gml_Object_obj_caterpillarchara_Step_2.gml M 2 2
+@@ -23,7 +23,7 @@
+     }
+     if (name == "ralsei")
+     {
+-        climbsprite = 4837;
++        climbsprite = 4839;
+     }
+ }
+ if (!ignoredepth)
+@@ -62,7 +62,7 @@
+ if (name == "ralsei")
+ {
+     slidesprite = spr_ralsei_slide;
+-    climbsprite = 4837;
++    climbsprite = 4839;
+     halign = 2;
+     valign = 12;
+     if (global.chapter == 4)
+FILE ch4/gml_Object_obj_ch4_DCA01_Create_0.gml M 2 2
+@@ -41,8 +41,8 @@
+     pal_swap_layer_init();
+     pal_swap_enable_layer("TILES");
+     pal_swap_enable_layer("ASSETS_Staircase");
+-    pal_swap_set_layer(3666, palette_index, "TILES", false);
+-    pal_swap_set_layer(3666, palette_index, "ASSETS_Staircase", false);
++    pal_swap_set_layer(3667, palette_index, "TILES", false);
++    pal_swap_set_layer(3667, palette_index, "ASSETS_Staircase", false);
+     pal_swap_reset();
+     roaring_knight = instance_create(200, 100, obj_ch4_DCA01_roaringknight);
+     roaring_knight.sprite_index = spr_roaringknight_lift_head;
+FILE ch4/gml_Object_obj_ch4_DCA01_Step_0.gml M 2 2
+@@ -560,8 +560,8 @@
+             change_palette = true;
+         }
+     }
+-    pal_swap_set_layer(3666, palette_index, "TILES", false);
+-    pal_swap_set_layer(3666, palette_index, "ASSETS_Staircase", false);
++    pal_swap_set_layer(3667, palette_index, "TILES", false);
++    pal_swap_set_layer(3667, palette_index, "ASSETS_Staircase", false);
+     pal_swap_reset();
+ }
+ if (sword_susie)
+FILE ch4/gml_Object_obj_ch4_DCA01_fall_Draw_0.gml M 1 1
+@@ -3,7 +3,7 @@
+     exit;
+ }
+ window_timer += delta;
+-var _window = (delta > 0.5) ? 2295 : 1258;
++var _window = (delta > 0.5) ? 2296 : 1259;
+ for (var i = 0; i < 6; i++)
+ {
+     draw_sprite_ext(_window, 0, camerax() + 40, (cameray() + 500) - (((window_timer * 40) - (i * 200)) % 600), 2, 2, 0, c_white, 1);
+FILE ch4/gml_Object_obj_ch4_DCA05_Create_0.gml M 1 1
+@@ -17,7 +17,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4123)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4124)
+     {
+         book_marker = scr_marker_fromasset(spritesArray[i]);
+         book_marker.depth = layer_get_depth("Tiles_new_books") - 10;
+FILE ch4/gml_Object_obj_ch4_DCA12_darkfountain_Draw_0.gml M 1 1
+@@ -41,7 +41,7 @@
+ {
+     bgsiner -= 7;
+ }
+-bg = 3960;
++bg = 3961;
+ draw_background_tiled_ext(bg, 0 - siner, 0 - siner, 2, 2, colcol, 0.7 * eyebody);
+ draw_background_tiled_ext(bg, -240 + hscroll, 0 + siner, 2, 2, colcol, 0.3 * eyebody);
+ draw_set_color(c_black);
+FILE ch4/gml_Object_obj_ch4_DCA14_Step_0.gml M 1 1
+@@ -88,7 +88,7 @@
+ if (con == 3 && customcon == 1 && !d_ex())
+ {
+     con = 4;
+-    anim_player.init(su_actor, 1283, anim_timestamps);
++    anim_player.init(su_actor, 1284, anim_timestamps);
+     anim_player.event_connect("frame_change", snd_play, 5, [261]);
+     anim_player.event_connect("anim_end", continue_cutscene);
+     anim_player.start();
+FILE ch4/gml_Object_obj_ch4_DCA15_Create_0.gml M 4 4
+@@ -11,13 +11,13 @@
+     {
+         extflag = "church_door_listen";
+     }
+-    anim_sprite[0][0] = 4430;
++    anim_sprite[0][0] = 4431;
+     anim_sprite[0][1] = [500, 330, 330, 330, 330, 200, 100, 50, 100, 50, 50, 100, 500];
+-    anim_sprite[1][0] = 4070;
++    anim_sprite[1][0] = 4071;
+     anim_sprite[1][1] = [100, 100, 200, 1000];
+-    anim_sprite[2][0] = 2868;
++    anim_sprite[2][0] = 2869;
+     anim_sprite[2][1] = [100, 100, 100, 100, 50, 200, 100];
+-    anim_sprite[3][0] = 3379;
++    anim_sprite[3][0] = 3380;
+     anim_sprite[3][1] = [200, 200, 200, 1000];
+     anim_sprite_index = 0;
+     anim_modifier = 30;
+FILE ch4/gml_Object_obj_ch4_DCB02_Create_0.gml M 2 2
+@@ -70,7 +70,7 @@
+ 
+ susie_yell = function()
+ {
+-    anim_player.init(su_actor, 5246, anim_timestamps);
++    anim_player.init(su_actor, 5248, anim_timestamps);
+     anim_player.start();
+ };
+ 
+@@ -79,7 +79,7 @@
+     scr_musicer("raining_in_church2.ogg", 1, undefined, undefined, 30);
+     var _statue = debris;
+     var party_statue = instance_create(_statue.x, _statue.y, obj_marker_palette);
+-    party_statue.current_palette = 4425;
++    party_statue.current_palette = 4426;
+     party_statue.palette_index = 1;
+     party_statue.sprite_index = _statue.sprite_index;
+     with (party_statue)
+FILE ch4/gml_Object_obj_ch4_DCB02_vfx_Draw_0.gml M 4 4
+@@ -64,7 +64,7 @@
+         depth = 100000;
+         var _kris = kris_target;
+         party_kris = instance_create(_kris.x, _kris.y, obj_marker_palette);
+-        party_kris.current_palette = 4425;
++        party_kris.current_palette = 4426;
+         party_kris.palette_index = 1;
+         party_kris.sprite_index = _kris.sprite_index;
+         party_kris.image_index = _kris.image_index;
+@@ -77,7 +77,7 @@
+         }
+         var _ralsei = ralsei_target;
+         party_ralsei = instance_create(_ralsei.x, _ralsei.y, obj_marker_palette);
+-        party_ralsei.current_palette = 4425;
++        party_ralsei.current_palette = 4426;
+         party_ralsei.palette_index = 1;
+         party_ralsei.sprite_index = _ralsei.sprite_index;
+         party_ralsei.image_index = _ralsei.image_index;
+@@ -90,7 +90,7 @@
+         }
+         var _susie = susie_target;
+         party_susie = instance_create(_susie.x, _susie.y, obj_marker_palette);
+-        party_susie.current_palette = 4425;
++        party_susie.current_palette = 4426;
+         party_susie.palette_index = 1;
+         party_susie.sprite_index = _susie.sprite_index;
+         party_susie.image_index = _susie.image_index;
+@@ -103,7 +103,7 @@
+         }
+         var _statue = statue_target;
+         var party_statue = instance_create(_statue.x, _statue.y, obj_marker_palette);
+-        party_statue.current_palette = 4425;
++        party_statue.current_palette = 4426;
+         party_statue.palette_index = 1;
+         party_statue.sprite_index = _statue.sprite_index;
+         with (party_statue)
+FILE ch4/gml_Object_obj_ch4_DCC00_cupstack_Create_0.gml M 1 1
+@@ -49,7 +49,7 @@
+     var recruit_sprite = _sprite;
+     if (_sprite == spr_npc_halo_bat)
+     {
+-        recruit_sprite = 4188;
++        recruit_sprite = 4189;
+     }
+     recruited_sprites[array_length(recruited_sprites)] = recruit_sprite;
+     var height = (sprite_get_height(recruit_sprite) * 2) - 20;
+FILE ch4/gml_Object_obj_ch4_DCC01_Step_0.gml M 1 1
+@@ -79,7 +79,7 @@
+     {
+         var anim_player = instance_create(0, 0, obj_anim_custom);
+         var anim_timestamps = [200, 200, 150, 150, 200, 500, 200, 60, 60, 60, 60, 60];
+-        anim_player.init(roaring_knight, 4568, anim_timestamps);
++        anim_player.init(roaring_knight, 4569, anim_timestamps);
+         anim_player.start();
+     });
+     c_wait(30);
+FILE ch4/gml_Object_obj_ch4_DCC01_fountain_Draw_0.gml M 1 1
+@@ -287,7 +287,7 @@
+             with (beam)
+             {
+                 sprite_index = spr_tower_titanbeam_start;
+-                scr_delay_var("sprite_index", 1836, 20);
++                scr_delay_var("sprite_index", 1837, 20);
+                 scr_darksize();
+                 depth = other.depth - 2500;
+                 scr_lerpvar("x", other.hand.x + 288, other.hand.x + 432, 10);
+FILE ch4/gml_Object_obj_ch4_DCC01_roaringknight_Step_0.gml M 1 1
+@@ -53,7 +53,7 @@
+         image_speed = 0;
+         image_index = 0;
+         scr_lerpvar("image_index", 4, 0, 12 - offset);
+-        scr_delay_var("sprite_index", 2221, 12 - offset);
++        scr_delay_var("sprite_index", 2222, 12 - offset);
+         scr_script_delayed(scr_lerpvar, 12 - offset, "image_index", 0, 4, 12 - offset);
+         snd_play(snd_knight_teleport);
+     }
+FILE ch4/gml_Object_obj_ch4_DCC04_Step_0.gml M 2 2
+@@ -34,8 +34,8 @@
+     susindex = 0;
+     con = 2.1;
+     alarm[4] = 60;
+-    scr_delay_var("sussprite", 3314, 15);
+-    scr_delay_var("sprite_index", 3309, 15);
++    scr_delay_var("sussprite", 3315, 15);
++    scr_delay_var("sprite_index", 3310, 15);
+ }
+ if (con == 3.1)
+ {
+FILE ch4/gml_Object_obj_ch4_PDC01D_Step_0.gml M 1 1
+@@ -58,7 +58,7 @@
+     c_walkdirect_wait(113, 80, 10);
+     c_halt();
+     c_autowalk(0);
+-    var kick_sprite = church_clothes ? 5471 : 479;
++    var kick_sprite = church_clothes ? 5473 : 479;
+     c_sprite(kick_sprite);
+     c_imagespeed(0.3);
+     c_wait(6);
+FILE ch4/gml_Object_obj_ch4_PDC14A_choicer_Create_0.gml M 1 1
+@@ -51,5 +51,5 @@
+ textposy[2] = 0;
+ textposx[3] = 0;
+ textposy[3] = 0;
+-heartSprite = 3711;
++heartSprite = 3712;
+ choicerstyle = 0;
+FILE ch4/gml_Object_obj_ch4_PDC14A_noelle_Step_0.gml M 13 13
+@@ -150,19 +150,19 @@
+         c_sel(no);
+         c_sprite(spr_noelle_sit_closed_eyes_side_b);
+         c_wait_talk();
+-    }
+-    c_wait(30);
+-    if (global.flag[915] == 20)
+-    {
+-        c_msgsetloc(0, "\\Ec* You said^1, sorry for being weird at the hospital^1, Noelle./", "obj_ch4_PDC14A_noelle_slash_Step_0_gml_206_0");
+-    }
+-    else
+-    {
+-        c_msgsetloc(0, "\\Ec* You said^1, sorry for being weird yesterday^1, Noelle./", "obj_ch4_PDC14A_noelle_slash_Step_0_gml_210_0");
+-    }
+-    c_msgnextloc("\\Eb* You said^1, it was all a stupid prank./", "obj_ch4_PDC14A_noelle_slash_Step_0_gml_212_0");
+-    c_msgnextloc("\\Ec* You said^1, Berdly was going to get better./%", "obj_ch4_PDC14A_noelle_slash_Step_0_gml_213_0");
+-    c_talk_wait();
++        c_wait(30);
++        if (global.flag[915] == 20)
++        {
++            c_msgsetloc(0, "\\Ec* You said^1, sorry for being weird at the hospital^1, Noelle./", "obj_ch4_PDC14A_noelle_slash_Step_0_gml_206_0");
++        }
++        else
++        {
++            c_msgsetloc(0, "\\Ec* You said^1, sorry for being weird yesterday^1, Noelle./", "obj_ch4_PDC14A_noelle_slash_Step_0_gml_210_0");
++        }
++        c_msgnextloc("\\Eb* You said^1, it was all a stupid prank./", "obj_ch4_PDC14A_noelle_slash_Step_0_gml_212_0");
++        c_msgnextloc("\\Ec* You said^1, Berdly was going to get better./%", "obj_ch4_PDC14A_noelle_slash_Step_0_gml_213_0");
++        c_talk_wait();
++    }
+     c_wait(30);
+     c_sel(no);
+     c_sprite(spr_noelle_sit_look_down_neutral);
+FILE ch4/gml_Object_obj_ch4_PDC14A_noelle_desaturate_Create_0.gml M 1 1
+@@ -1,7 +1,7 @@
+ con = -1;
+ marker_objects = [];
+ marker_sprites = [];
+-marker_exceptions = [3595, 5116, 2241, 1415];
++marker_exceptions = [3596, 5118, 2242, 1416];
+ snowflakes = [];
+ snowflakes_start = false;
+ snowflakes_stop = false;
+FILE ch4/gml_Object_obj_ch4_PDC16_vfx_Create_0.gml M 1 1
+@@ -11,7 +11,7 @@
+ for (var i = 0; i < array_length(layer_names); i++)
+ {
+     pal_swap_enable_layer(layer_names[i]);
+-    pal_swap_set_layer(4884, palette_index, layer_names[i], false);
++    pal_swap_set_layer(4886, palette_index, layer_names[i], false);
+ }
+ pal_swap_reset();
+ with (obj_church_event)
+FILE ch4/gml_Object_obj_ch4_PDC16_vfx_Draw_0.gml M 1 1
+@@ -10,7 +10,7 @@
+ draw_set_alpha(1);
+ for (var i = 0; i < array_length(layer_names); i++)
+ {
+-    pal_swap_set_layer(4884, palette_index, layer_names[i], false);
++    pal_swap_set_layer(4886, palette_index, layer_names[i], false);
+ }
+ pal_swap_set(bg_town_church_palette, palette_index, false);
+ draw_set_alpha(1);
+FILE ch4/gml_Object_obj_choicer_neo_Create_0.gml M 1 1
+@@ -59,7 +59,7 @@
+ textposy[2] = 0;
+ textposx[3] = 0;
+ textposy[3] = 0;
+-heartSprite = 3711;
++heartSprite = 3712;
+ choicerstyle = 0;
+ if (global.chapter == 3 && i_ex(obj_board_writer))
+ {
+FILE ch4/gml_Object_obj_church_entrance_Create_0.gml M 1 1
+@@ -100,7 +100,7 @@
+     }
+     pal_swap_layer_init();
+     pal_swap_enable_layer("ASSETS_Items");
+-    pal_swap_set_layer(3934, 2, "ASSETS_Items", false);
++    pal_swap_set_layer(3935, 2, "ASSETS_Items", false);
+     pal_swap_reset();
+ }
+ con = -1;
+FILE ch4/gml_Object_obj_church_kris_parry_ripple_Create_0.gml M 1 1
+@@ -14,7 +14,7 @@
+ sprite_xoff = 50;
+ sprite_index = spr_gerson_battle_overworld;
+ sprite[0] = spr_gerson_battle_overworld;
+-underlight[0] = 2972;
++underlight[0] = 2973;
+ sprite[1] = spr_gerson_battle_overworld;
+ sprite[2] = spr_gerson_teleport;
+ sprite[3] = spr_gerson_swing;
+FILE ch4/gml_Object_obj_church_night_vfx_Step_0.gml M 1 1
+@@ -3,7 +3,7 @@
+     palette_init = true;
+     with (obj_marker_palette)
+     {
+-        current_palette = 3934;
++        current_palette = 3935;
+         palette_index = 2;
+     }
+ }
+FILE ch4/gml_Object_obj_church_old_man_ripple_Create_0.gml M 1 1
+@@ -16,7 +16,7 @@
+ sprite[1] = spr_gerson_crouch_armor;
+ sprite[2] = spr_gerson_crouch_armor;
+ sprite[3] = spr_gerson_swing;
+-underlight[0] = 2972;
++underlight[0] = 2973;
+ susie_con = 0;
+ susie_timer = 0;
+ kris_con = 0;
+FILE ch4/gml_Object_obj_church_old_man_ripple_Draw_0.gml M 3 3
+@@ -125,12 +125,12 @@
+         {
+             shader_set(shd_linear_alpha);
+         }
+-        var _underlight = 2972;
++        var _underlight = 2973;
+         var _stindex = step_index;
+         var _lightx = step_x - 50;
+         if (con == 1)
+         {
+-            _underlight = 1844;
++            _underlight = 1845;
+             _stindex = image_index;
+             step_index = image_index;
+             _lightx = _xx;
+@@ -256,7 +256,7 @@
+ if (type == 5)
+ {
+     var _frame = 0;
+-    var _crumbler = 4408;
++    var _crumbler = 4409;
+     if (punch == 0)
+     {
+         _frame = min(timer / 3, 6);
+FILE ch4/gml_Object_obj_church_old_man_ripple_backup_Create_0.gml M 1 1
+@@ -13,7 +13,7 @@
+ sprite_xoff = 50;
+ sprite_index = spr_gerson_battle_overworld;
+ sprite[0] = spr_gerson_battle_overworld;
+-underlight[0] = 4521;
++underlight[0] = 4522;
+ sprite[1] = spr_gerson_battle_overworld;
+ sprite[2] = spr_gerson_teleport;
+ sprite[3] = spr_gerson_swing;
+FILE ch4/gml_Object_obj_church_old_man_ripple_effect_Create_0.gml M 1 1
+@@ -14,7 +14,7 @@
+ sprite_xoff = 50;
+ sprite_index = spr_gerson_battle_overworld;
+ sprite[0] = spr_gerson_battle_overworld;
+-underlight[0] = 2972;
++underlight[0] = 2973;
+ sprite[1] = spr_gerson_battle_overworld;
+ sprite[2] = spr_gerson_teleport;
+ sprite[3] = spr_gerson_swing;
+FILE ch4/gml_Object_obj_church_old_man_ripple_effect_backup_Create_0.gml M 1 1
+@@ -14,7 +14,7 @@
+ sprite_xoff = 50;
+ sprite_index = spr_gerson_battle_overworld;
+ sprite[0] = spr_gerson_battle_overworld;
+-underlight[0] = 2972;
++underlight[0] = 2973;
+ sprite[1] = spr_gerson_battle_overworld;
+ sprite[2] = spr_gerson_teleport;
+ sprite[3] = spr_gerson_swing;
+FILE ch4/gml_Object_obj_church_piano_hint_Draw_0.gml M 2 2
+@@ -33,7 +33,7 @@
+         {
+             var sprangle = 0;
+             var scale = 2;
+-            var spr = 2663;
++            var spr = 2664;
+             var num = real(string_char_at(hint, i + 1));
+             var xloc = (x - (width / 2)) + ((spwid + drawspace) * i);
+             var yloc = y + (sin((siner + (i * 4)) / 8) * 4);
+@@ -44,7 +44,7 @@
+             }
+             else
+             {
+-                spr = 4059;
++                spr = 4060;
+                 scale = 2;
+             }
+             draw_sprite_ext(spr, 0, xloc, yloc, scale, scale, sprangle, col, alpha);
+FILE ch4/gml_Object_obj_church_piano_playable_Draw_0.gml M 3 3
+@@ -24,9 +24,9 @@
+     draw_set_alpha(1);
+     var sprangle = 0;
+     var scale = 2;
+-    var spr = 2663;
+-    var circlespr = 4059;
+-    var arrowspr = 3799;
++    var spr = 2664;
++    var circlespr = 4060;
++    var arrowspr = 3800;
+     var _space = 28;
+     var sinstrength = 2;
+     var basealpha = 0.35;
+FILE ch4/gml_Object_obj_church_secretpiano_playable_Create_0.gml M 1 1
+@@ -53,7 +53,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2862)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2863)
+     {
+         pianomarker = scr_marker_fromasset(spritesArray[i]);
+         scr_depth_alt(pianomarker);
+FILE ch4/gml_Object_obj_church_secretpiano_playable_Draw_0.gml M 3 3
+@@ -16,9 +16,9 @@
+     draw_set_alpha(1);
+     var sprangle = 0;
+     var scale = 2;
+-    var spr = 2663;
+-    var circlespr = 4059;
+-    var arrowspr = 3799;
++    var spr = 2664;
++    var circlespr = 4060;
++    var arrowspr = 3800;
+     var _space = 28;
+     var sinstrength = 2;
+     var basealpha = 0.35;
+FILE ch4/gml_Object_obj_climb_explosion_Create_0.gml M 3 3
+@@ -9,7 +9,7 @@
+ ps = part_system_create();
+ part_system_automatic_draw(ps, false);
+ ptdebris = part_type_create();
+-part_type_sprite(ptdebris, 5552, false, false, true);
++part_type_sprite(ptdebris, 5554, false, false, true);
+ part_type_speed(ptdebris, 3, 8, -0.1, 0);
+ part_type_life(ptdebris, 30, 80);
+ part_type_alpha3(ptdebris, 1, 1, 0);
+@@ -22,14 +22,14 @@
+ bs = part_system_create();
+ part_system_automatic_draw(bs, false);
+ btballs = part_type_create();
+-part_type_sprite(btballs, 3117, false, false, true);
++part_type_sprite(btballs, 3118, false, false, true);
+ var lifetime = random_range(60, 60);
+ part_type_speed(btballs, 1, 6, -6 / lifetime, 0);
+ part_type_life(btballs, lifetime, lifetime);
+ part_type_gravity(btballs, 0.1, 90);
+ part_type_size(btballs, 0, 0, 1 / lifetime, 0);
+ btballs2 = part_type_create();
+-part_type_sprite(btballs2, 3117, false, false, true);
++part_type_sprite(btballs2, 3118, false, false, true);
+ part_type_speed(btballs2, 2, 2, 0, 0);
+ part_type_direction(btballs2, 90, 90, 0, 0);
+ part_type_life(btballs2, 45, 45);
+FILE ch4/gml_Object_obj_climb_kris_Create_0.gml M 1 1
+@@ -13,7 +13,7 @@
+ climb_finished = false;
+ recently_bumped = -1;
+ previous_bump = -1;
+-slipsprite = 3591;
++slipsprite = 3592;
+ currentdir = -1;
+ upbuffer = 0;
+ leftbuffer = 0;
+FILE ch4/gml_Object_obj_climb_kris_Step_0.gml M 4 4
+@@ -1002,11 +1002,11 @@
+         snd_play(snd_bump);
+         if (xclimb > 0)
+         {
+-            slipsprite = 5168;
++            slipsprite = 5170;
+         }
+         else if (xclimb < 0)
+         {
+-            slipsprite = 3591;
++            slipsprite = 3592;
+         }
+         sprite_index = slipsprite;
+         image_index = 1;
+@@ -1176,11 +1176,11 @@
+     {
+         if (xclimb > 0)
+         {
+-            slipsprite = 5168;
++            slipsprite = 5170;
+         }
+         else if (xclimb < 0)
+         {
+-            slipsprite = 3591;
++            slipsprite = 3592;
+         }
+         recently_bumped = -1;
+         previous_bump = -1;
+FILE ch4/gml_Object_obj_climb_orb_Draw_0.gml M 2 2
+@@ -55,10 +55,10 @@
+ var light = 16777215;
+ var dark = 13212566;
+ var mycol = merge_color(c_white, c_gray, bowlindex / 15);
+-var mysprite = 5739;
++var mysprite = 5741;
+ if (value > 5)
+ {
+-    mysprite = 5011;
++    mysprite = 5013;
+ }
+ var sinamt = sin(siner / 20) * 6 * clamp(1 - (bowlindex / 7), 0, 1);
+ draw_sprite_ext(spr_dw_church_coinbowl, bowlindex, x, y - sinamt, 2, 2, 0, mycol, 1);
+FILE ch4/gml_Object_obj_cutscene_master_Create_0.gml M 1 0
+@@ -40,6 +40,7 @@
+ {
+     inittype = 1;
+ }
++inittype = 1;
+ if (inittype == 0)
+ {
+     for (i = 0; i < 20; i++)
+FILE ch4/gml_Object_obj_darkcontroller_Create_0.gml M 2 2
+@@ -131,7 +131,7 @@
+ hpcolor[2] = c_lime;
+ hpcolor[3] = c_yellow;
+ disablesusieattack = 0;
+-menu_sprite = (global.lang == "en") ? 3545 : 3554;
++menu_sprite = (global.lang == "en") ? 3546 : 3555;
+ autorun_text = stringsetloc("Auto-Run", "obj_darkcontroller_slash_Draw_0_gml_94_0");
+ back_text = stringsetloc("Back", "obj_darkcontroller_slash_Draw_0_gml_96_0");
+ gamepad_controls = [gp_face1, gp_face2, gp_face3, gp_face4, gp_shoulderl, gp_shoulderlb, gp_shoulderr, gp_shoulderrb, gp_select, gp_start, gp_stickl, gp_stickr, gp_padu, gp_padd, gp_padl, gp_padr];
+@@ -169,4 +169,4 @@
+         break;
+     }
+ }
+-_spr_dmenu_captions = (global.lang == "en") ? 3317 : 3341;
++_spr_dmenu_captions = (global.lang == "en") ? 3318 : 3342;
+FILE ch4/gml_Object_obj_darkness_bullet_Create_0.gml M 1 1
+@@ -6,7 +6,7 @@
+ damage = 18;
+ target = 0;
+ lightBullet = false;
+-dark_sprite = 1086;
++dark_sprite = 1087;
+ image_speed = 1/3;
+ init = false;
+ depth = obj_darkness_overlay.depth + 10;
+FILE ch4/gml_Object_obj_dbulletcontroller_Step_0.gml M 9 9
+@@ -1874,7 +1874,7 @@
+             var mus = mus_play(snd_init("pumpkin_boss.ogg"));
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_starter;
+-        obj_growtangle.spr_custom_box = 5418;
++        obj_growtangle.spr_custom_box = 5420;
+         obj_growtangle.mask_index = -1;
+         obj_heart.sprite_index = spr_dodgeheart_small;
+         obj_heart.mask_index = spr_dodgeheart_small_mask;
+@@ -2041,7 +2041,7 @@
+             var mus = mus_play(snd_init("pumpkin_boss.ogg"));
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_toolong;
+-        obj_growtangle.spr_custom_box = 2172;
++        obj_growtangle.spr_custom_box = 2173;
+         obj_growtangle.mask_index = -1;
+         obj_heart.sprite_index = spr_dodgeheart_small;
+         obj_heart.mask_index = spr_dodgeheart_small_mask;
+@@ -2222,7 +2222,7 @@
+             var mus = mus_play(snd_init("pumpkin_boss.ogg"));
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_twopumpkins;
+-        obj_growtangle.spr_custom_box = 1867;
++        obj_growtangle.spr_custom_box = 1868;
+         obj_growtangle.mask_index = -1;
+         obj_heart.sprite_index = spr_dodgeheart_small;
+         obj_heart.mask_index = spr_dodgeheart_small_mask;
+@@ -2312,7 +2312,7 @@
+             var mus = mus_play(snd_init("pumpkin_boss.ogg"));
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_chimney;
+-        obj_growtangle.spr_custom_box = 3174;
++        obj_growtangle.spr_custom_box = 3175;
+         obj_growtangle.mask_index = -1;
+         obj_heart.sprite_index = spr_dodgeheart_small;
+         obj_heart.mask_index = spr_dodgeheart_small_mask;
+@@ -2454,7 +2454,7 @@
+             }
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_normal;
+-        obj_growtangle.spr_custom_box = 2333;
++        obj_growtangle.spr_custom_box = 2334;
+         obj_growtangle.mask_index = -1;
+         obj_heart.sprite_index = spr_dodgeheart_small;
+         obj_heart.mask_index = spr_dodgeheart_small_mask;
+@@ -2545,7 +2545,7 @@
+             var mus = mus_play(snd_init("pumpkin_boss.ogg"));
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_yourtutu;
+-        obj_growtangle.spr_custom_box = 1400;
++        obj_growtangle.spr_custom_box = 1401;
+         obj_growtangle.mask_index = -1;
+         obj_heart.sprite_index = spr_dodgeheart_small;
+         obj_heart.mask_index = spr_dodgeheart_small_mask;
+@@ -2718,7 +2718,7 @@
+             var mus = mus_play(snd_init("pumpkin_boss.ogg"));
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_nopumpkin;
+-        obj_growtangle.spr_custom_box = 5798;
++        obj_growtangle.spr_custom_box = 5800;
+         obj_growtangle.x += 26;
+         obj_growtangle.mask_index = -1;
+         obj_heart.sprite_index = spr_dodgeheart_small;
+@@ -2862,7 +2862,7 @@
+             instance_create(x, y, obj_darkness_overlay_bullettest);
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_final;
+-        obj_growtangle.spr_custom_box = 5173;
++        obj_growtangle.spr_custom_box = 5175;
+         obj_growtangle.mask_index = -1;
+         obj_growtangle.y -= 24;
+         obj_growtangle.x += 24;
+@@ -3146,7 +3146,7 @@
+             var mus = mus_play(snd_init("pumpkin_boss.ogg"));
+         }
+         obj_growtangle.sprite_index = spr_ghost_house_lightup;
+-        obj_growtangle.spr_custom_box = 4707;
++        obj_growtangle.spr_custom_box = 4708;
+         obj_growtangle.mask_index = -1;
+         obj_heart.sprite_index = spr_dodgeheart_small;
+         obj_heart.mask_index = spr_dodgeheart_small_mask;
+FILE ch4/gml_Object_obj_dw_church_arena_bg_Create_0.gml M 4 4
+@@ -53,7 +53,7 @@
+ };
+ 
+ timer = 0;
+-cityobj = create_object_to_draw(0, 0, 3079);
++cityobj = create_object_to_draw(0, 0, 3080);
+ cityobj.image_alpha = 0;
+ cityobj.image_blend = c_black;
+ hammerobj = create_object_to_draw(100, 10, 530);
+@@ -80,7 +80,7 @@
+ }
+ for (var i = 0; i < 10; i++)
+ {
+-    var petal = create_object_to_draw((i * 30) + random_range(0, 15), random_range(20, 120), 3578);
++    var petal = create_object_to_draw((i * 30) + random_range(0, 15), random_range(20, 120), 3579);
+     petal.image_alpha = 0;
+     petal.image_speed = random_range(0.125, 0.25);
+     petal.image_blend = #323299;
+@@ -155,9 +155,9 @@
+ };
+ 
+ myShader = 24;
+-textureSprite1 = 2081;
++textureSprite1 = 2082;
+ sampler1 = shader_get_sampler_index(myShader, "sampler_1");
+-textureSprite2 = 4679;
++textureSprite2 = 4680;
+ sampler2 = shader_get_sampler_index(myShader, "sampler_2");
+ uniformTime = shader_get_uniform(myShader, "time");
+ uniformOpacity = shader_get_uniform(myShader, "opacity");
+FILE ch4/gml_Object_obj_dw_church_arena_bg_Step_0.gml M 1 1
+@@ -8,7 +8,7 @@
+     timer++;
+     if ((timer % 12) == 0)
+     {
+-        var petal = create_object_to_draw(random_range(0, 500), -20, choose(3938, 5775, 5137));
++        var petal = create_object_to_draw(random_range(0, 500), -20, choose(3939, 5777, 5139));
+         petal.image_alpha = 0;
+         petal.image_speed = 0.125;
+         petal.image_blend = c_black;
+FILE ch4/gml_Object_obj_dw_church_bellhall_bookroom_winglade_Draw_0.gml M 2 2
+@@ -17,8 +17,8 @@
+ }
+ eyex = lerp(eyex, scr_even(targetEyeX), 0.2);
+ eyey = lerp(eyey, scr_even(targetEyeY), 0.2);
+-wingSpriteL = 5030;
+-wingSpriteR = 5351;
++wingSpriteL = 5032;
++wingSpriteR = 5353;
+ draw_sprite_ext(spr_halo_bat_sword, 0, x, y, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+ draw_sprite_ext(spr_halo_bat_topBit, 0, x, y, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+ draw_sprite_ext(wingSpriteL, siner * 0.25, x, y, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+FILE ch4/gml_Object_obj_dw_church_bookshelfpuzzle_Create_0.gml M 7 7
+@@ -6,27 +6,27 @@
+ var spritesArray = layer_get_all_elements("debug_assets");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1278)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1279)
+     {
+         p[0] = scr_assetgetinfo(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 5436)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 5438)
+     {
+         p[1] = scr_assetgetinfo(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2301)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2302)
+     {
+         p[2] = scr_assetgetinfo(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4969)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4971)
+     {
+         s[0] = scr_assetgetinfo(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4232)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4233)
+     {
+         s[1] = scr_assetgetinfo(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2267)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2268)
+     {
+         s[2] = scr_assetgetinfo(spritesArray[i]);
+     }
+@@ -128,7 +128,7 @@
+                 setxy(trpos[2], trpos[3], treasuremarker);
+             }
+         }
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 3352)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 3353)
+         {
+             telescope = scr_makenpc_fromasset(spritesArray[i]);
+             with (telescope)
+FILE ch4/gml_Object_obj_dw_church_darkmaze_Create_0.gml M 4 4
+@@ -130,13 +130,13 @@
+     var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+     for (var i = 0; i < array_length(spritesArray); i++)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 5127)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 5129)
+         {
+             guei = scr_marker_fromasset(spritesArray[i], undefined, 1);
+             guei.image_speed = 0.25;
+             scr_depth(guei);
+         }
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 5585)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 5587)
+         {
+             cup = scr_marker_fromasset(spritesArray[i], undefined, 1);
+             cup.image_speed = 0.25;
+@@ -148,12 +148,12 @@
+             }
+             scr_depth(cup, 10);
+         }
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 1779)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 1780)
+         {
+             cuptrig = scr_makenpc_fromasset(spritesArray[i], undefined, 1);
+             cuptrig.marker.visible = false;
+         }
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 5276)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 5278)
+         {
+             gueitrig = scr_makenpc_fromasset(spritesArray[i], undefined, 1);
+             gueitrig.marker.visible = false;
+FILE ch4/gml_Object_obj_dw_church_intro_gerson_Create_0.gml M 1 1
+@@ -32,7 +32,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2043)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2044)
+     {
+         npc = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_church_intro_guei_Create_0.gml M 1 1
+@@ -69,7 +69,7 @@
+         {
+             bibliox = scr_makenpc_fromasset(spritesArray[i]);
+         }
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 5585)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 5587)
+         {
+             cup = scr_makenpc_fromasset(spritesArray[i]);
+         }
+FILE ch4/gml_Object_obj_dw_church_intro_guei_Draw_0.gml M 2 2
+@@ -47,10 +47,10 @@
+             draw3 = true;
+         }
+     }
+-    var spr = 1488;
++    var spr = 1489;
+     if (global.lang == "ja")
+     {
+-        spr = 1421;
++        spr = 1422;
+     }
+     var vpos = [138, 298, 342];
+     if (global.lang == "ja")
+FILE ch4/gml_Object_obj_dw_church_jackenstein_pumpkinNPC_Draw_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ var face = spr_jackenpumpkinlaugh_nomouth;
+-var mouth = 1809;
++var mouth = 1810;
+ var animindex = 0;
+ idealmouthscale = 2 + (imgindex * 1.5);
+ mouthscale = lerp(mouthscale, idealmouthscale, 0.5);
+FILE ch4/gml_Object_obj_dw_church_knightclimb_Create_0.gml M 1 1
+@@ -71,7 +71,7 @@
+ knight_notice = function()
+ {
+     anim_timestamps = [200, 200, 150, 150, 200, 500, 200, 60, 60, 60, 60, 60];
+-    anim_player.init(roaring_knight, 4667, anim_timestamps);
++    anim_player.init(roaring_knight, 4668, anim_timestamps);
+     anim_player.event_connect("anim_end", continue_cutscene);
+     anim_player.start();
+ };
+FILE ch4/gml_Object_obj_dw_church_knightclimbpost_Other_19.gml M 1 1
+@@ -3,7 +3,7 @@
+     var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+     for (var i = 0; i < array_length(spritesArray); i++)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 4600)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 4601)
+         {
+             if (global.plot >= 242)
+             {
+FILE ch4/gml_Object_obj_dw_church_knightclimbpost_Step_0.gml M 1 0
+@@ -567,6 +567,7 @@
+         snd_free_all();
+         instance_create(0, 0, obj_persistentfadein);
+         global.flag[1659] = 1;
++        global.tempflag[95] = 1;
+         global.interact = 3;
+         var room_id = scr_get_ini_value(global.chapter, global.filechoice, "Room");
+         var target_room = scr_get_room_by_id(room_id);
+FILE ch4/gml_Object_obj_dw_church_lantern_hallway_Create_0.gml M 2 2
+@@ -298,12 +298,12 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4619)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4620)
+     {
+         bellstatue = scr_makenpc_fromasset(spritesArray[i]);
+         bellstatue.timer = 0;
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2043)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2044)
+     {
+         wafernpc = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_church_lantern_hallway_Step_0.gml M 2 2
+@@ -140,10 +140,10 @@
+         with (ralsei)
+         {
+             fun = 1;
+-            var newsprite = 4939;
++            var newsprite = 4941;
+             if (x < 1350)
+             {
+-                newsprite = 2674;
++                newsprite = 2675;
+             }
+             scr_delay_var("sprite_index", newsprite, susiedelay);
+             scr_script_delayed(scr_shakeobj, susiedelay);
+FILE ch4/gml_Object_obj_dw_church_magicalglass_breakable_Step_0.gml M 1 1
+@@ -55,7 +55,7 @@
+     var delaytime = delay;
+     if (delay)
+     {
+-        spr = 1252;
++        spr = 1253;
+         for (var j = 0; j < sprite_get_number(spr); j++)
+         {
+             with (scr_marker_ext(x + choose(2, -2), y + choose(2, -2), spr, 2, 2, undefined, j, undefined, depth))
+FILE ch4/gml_Object_obj_dw_church_magicalglass_superprophecy_Step_0.gml M 1 1
+@@ -31,7 +31,7 @@
+     var delaytime = delay;
+     if (delay)
+     {
+-        spr = 1252;
++        spr = 1253;
+         for (var j = 0; j < sprite_get_number(spr); j++)
+         {
+             with (scr_marker_ext(x + choose(2, -2), y + choose(2, -2), spr, 2, 2, undefined, j, undefined, depth))
+FILE ch4/gml_Object_obj_dw_church_organ_Create_0.gml M 1 1
+@@ -51,7 +51,7 @@
+ buffer = 0;
+ soundtoplay = 0;
+ depth = 999990;
+-arrows = 1229;
++arrows = 1230;
+ baselight = 0.25;
+ arrowsalpha = baselight;
+ doalpha = 0;
+FILE ch4/gml_Object_obj_dw_church_organ_notes_Draw_0.gml M 2 2
+@@ -20,8 +20,8 @@
+     draw_sprite_ext(spr_gradient20, 0, cx, yy, 32, 1, 0, bgcol, alph);
+     draw_sprite_ext(spr_pxwhite, 0, cx, yy, 640, barheight, 0, bgcol, alph);
+     draw_sprite_ext(spr_gradient20, 0, cx, yy + barheight, 32, -1, 0, bgcol, alph);
+-    var whole = 2848;
+-    var outline = 1294;
++    var whole = 2849;
++    var outline = 1295;
+     var arrows = whole;
+     if (button3_h())
+     {
+FILE ch4/gml_Object_obj_dw_church_pianopiece_left_Create_0.gml M 3 3
+@@ -27,19 +27,19 @@
+ var spritesArray = layer_get_all_elements("debug_assets");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 5707)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 5709)
+     {
+         var info = scr_assetgetinfo(spritesArray[i]);
+         hiddentilex = info[2];
+         hiddentiley = info[3];
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 5597)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 5599)
+     {
+         var info = scr_assetgetinfo(spritesArray[i]);
+         hiddenlightx = info[2];
+         hiddenlighty = info[3];
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1861)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1862)
+     {
+         hiddennpc = scr_marker_fromasset(spritesArray[i]);
+         hiddennpc.image_speed = 1/3;
+FILE ch4/gml_Object_obj_dw_church_pianopuzzle_Other_19.gml M 2 2
+@@ -1,7 +1,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4600)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4601)
+     {
+         var info = scr_assetgetinfo(spritesArray[i]);
+         blueflame = instance_create(info[2], info[3], obj_dw_church_warpflame);
+@@ -12,7 +12,7 @@
+             color = "blue";
+         }
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1021)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1022)
+     {
+         var info = scr_assetgetinfo(spritesArray[i]);
+         with (instance_create(info[2], info[3], obj_solidblock))
+FILE ch4/gml_Object_obj_dw_church_prophecy_Draw_0.gml M 4 4
+@@ -1,8 +1,8 @@
+ var propblue = 16764994;
+ var liteblue = 16777215;
+ image_blend = propblue;
+-var tilespr = 4064;
+-var tiletex = 1522;
++var tilespr = 4065;
++var tiletex = 1523;
+ if (alwaysactive)
+ {
+     active = true;
+@@ -76,7 +76,7 @@
+     {
+         if (musickind == 3)
+         {
+-            icon_sprite = 4528;
++            icon_sprite = 4529;
+         }
+         if (prophecy_icon.custom_sprite != -4)
+         {
+@@ -84,7 +84,7 @@
+         }
+         if (extflag == "angel")
+         {
+-            icon_sprite = 1021;
++            icon_sprite = 1022;
+         }
+     }
+     else
+FILE ch4/gml_Object_obj_dw_church_prophecy_Step_0.gml M 2 2
+@@ -42,7 +42,7 @@
+     {
+         if (extflag == "knight2")
+         {
+-            _icon = 2478;
++            _icon = 2479;
+         }
+         prophecy_icon.initialize_sprite(_icon);
+     }
+@@ -85,7 +85,7 @@
+             snd_add_complex(snd, 4, 321, 1, 0.95, 0, -1, 0);
+         }
+     }
+-    var _shattersprite = (type != 2) ? 5059 : 907;
++    var _shattersprite = (type != 2) ? 5061 : 907;
+     var count = sprite_get_number(_shattersprite);
+     for (var i = 0; i < count; i++)
+     {
+FILE ch4/gml_Object_obj_dw_church_remotepianomove_ui_Draw_0.gml M 3 3
+@@ -24,9 +24,9 @@
+         draw_set_alpha(1);
+         var sprangle = 0;
+         var scale = 2;
+-        var spr = 2663;
+-        var circlespr = 4059;
+-        var arrowspr = 5251;
++        var spr = 2664;
++        var circlespr = 4060;
++        var arrowspr = 5253;
+         var _space = 28;
+         var sinstrength = 3;
+         var sintimevar = 15;
+FILE ch4/gml_Object_obj_dw_church_rippleworship_Create_0.gml M 1 1
+@@ -28,7 +28,7 @@
+         {
+             if (layer_get_element_type(elements[j]) == 4)
+             {
+-                if (layer_sprite_get_sprite(elements[j]) == 5689)
++                if (layer_sprite_get_sprite(elements[j]) == 5691)
+                 {
+                     sprite_array_size++;
+                     organik[sprite_array_size] = instance_create(layer_sprite_get_x(elements[j]), layer_sprite_get_y(elements[j]), obj_trigger_interact);
+FILE ch4/gml_Object_obj_dw_church_secretpiano_Create_0.gml M 1 1
+@@ -79,7 +79,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4109)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4110)
+     {
+         plaque = scr_makenpc_fromasset(spritesArray[i]);
+         plaque.issolid = false;
+FILE ch4/gml_Object_obj_dw_church_secretpiano_Step_0.gml M 1 1
+@@ -26,7 +26,7 @@
+         var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+         for (var i = 0; i < array_length(spritesArray); i++)
+         {
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 4549)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 4550)
+             {
+                 chaseloc = scr_assetgetinfo(spritesArray[i]);
+             }
+FILE ch4/gml_Object_obj_dw_church_sideclimb_Create_0.gml M 3 3
+@@ -40,7 +40,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 5585)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 5587)
+     {
+         if (layer_sprite_get_blend(spritesArray[i]) == 65535)
+         {
+@@ -61,12 +61,12 @@
+             npc3.marker.image_blend = c_white;
+         }
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1056)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1057)
+     {
+         mizzle = scr_marker_fromasset(spritesArray[i], undefined, 1);
+         mizzle.image_speed = 0.25;
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2496)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2497)
+     {
+         _trophy = scr_makenpc_fromasset(spritesArray[i], undefined, 1);
+         _trophy.issolid = false;
+FILE ch4/gml_Object_obj_dw_church_stairspreview_Create_0.gml M 1 1
+@@ -13,7 +13,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_SPRITES");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 5035)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 5037)
+     {
+         var info = scr_assetgetinfo(spritesArray[i]);
+         prophecy = instance_create(info[2] + sprite_get_width(info[0]), info[3] + sprite_get_height(info[0]), obj_dw_church_prophecy);
+FILE ch4/gml_Object_obj_dw_church_tallbookcases_Create_0.gml M 1 1
+@@ -49,7 +49,7 @@
+     var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+     for (var i = 0; i < array_length(spritesArray); i++)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 5585)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 5587)
+         {
+             cup = scr_makenpc_fromasset(spritesArray[i]);
+             cup.strict = true;
+FILE ch4/gml_Object_obj_dw_church_waterfallroom_Create_0.gml M 1 1
+@@ -56,7 +56,7 @@
+     var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+     for (var i = 0; i < array_length(spritesArray); i++)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 4343)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 4344)
+         {
+             blocker = scr_makenpc_fromasset(spritesArray[i]);
+         }
+FILE ch4/gml_Object_obj_dw_church_window_parallax_Create_0.gml M 1 1
+@@ -9,6 +9,6 @@
+ crazy = 0;
+ xoff = (__view_get(e__VW.XView, 0) * ss) + xstart;
+ yoff = (__view_get(e__VW.YView, 0) * ssy) + ystart;
+-windowbg = 2925;
++windowbg = 2926;
+ spritewidth = sprite_get_width(windowbg);
+ spriteheight = sprite_get_height(windowbg);
+FILE ch4/gml_Object_obj_dw_churchb_bellroom_Step_0.gml M 3 3
+@@ -102,11 +102,11 @@
+         var spritesArray = layer_get_all_elements("BELL_ENEMYBELL");
+         for (var i = 0; i < array_length(spritesArray); i++)
+         {
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 4549)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 4550)
+             {
+                 chaseloc = scr_assetgetinfo(spritesArray[i]);
+             }
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 5175)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 5177)
+             {
+                 fakebellbit = scr_marker_fromasset(spritesArray[i], 899999);
+                 fakebellbit.image_alpha = 1;
+@@ -119,7 +119,7 @@
+                     blacklay.depth = layer_get_depth("BELL_FLOOR_ALT_FRONTROW") - 1;
+                 }
+             }
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 4860)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 4862)
+             {
+                 if (!instance_exists(fakebelloverlay))
+                 {
+FILE ch4/gml_Object_obj_dw_churchb_bookshelf_Create_0.gml M 2 2
+@@ -18,11 +18,11 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1021)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1022)
+     {
+         npc = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1614)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1615)
+     {
+         npc2 = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_churchb_darkclimb_Create_0.gml M 1 1
+@@ -55,7 +55,7 @@
+     var spritesArray = layer_get_all_elements("ENEM");
+     for (var i = 0; i < array_length(spritesArray); i++)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 4929)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 4931)
+         {
+             mynpc = scr_makenpc_fromasset(spritesArray[i]);
+         }
+FILE ch4/gml_Object_obj_dw_churchb_darkclimb_scene_Step_0.gml M 2 2
+@@ -112,7 +112,7 @@
+         var spritesArray = layer_get_all_elements("CUTSCENE_ASSETS_PART1");
+         for (var i = 0; i < array_length(spritesArray); i++)
+         {
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 1550)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 1551)
+             {
+                 var info = scr_assetgetinfo(spritesArray[i]);
+                 actor_count++;
+@@ -540,7 +540,7 @@
+         }
+         for (var i = 0; i < array_length(shatter); i++)
+         {
+-            var spr = 1252;
++            var spr = 1253;
+             with (shatter[i])
+             {
+                 for (var j = 0; j < sprite_get_number(spr); j++)
+FILE ch4/gml_Object_obj_dw_churchb_extinguisher_Create_0.gml M 1 1
+@@ -60,7 +60,7 @@
+ var spritesArray = layer_get_all_elements("NPC");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 3102)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 3103)
+     {
+         chicknpc = scr_makenpc_fromasset(spritesArray[i]);
+         chicknpc.siner = 0;
+FILE ch4/gml_Object_obj_dw_churchb_gallery_Create_0.gml M 8 8
+@@ -49,7 +49,7 @@
+ spritesArray = layer_get_all_elements("TALKABLE_NPCS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2269)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2270)
+     {
+         if (layer_sprite_get_blend(spritesArray[i]) == 11185407)
+         {
+@@ -61,7 +61,7 @@
+             intronpc = scr_makenpc_fromasset(spritesArray[i]);
+         }
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1614)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1615)
+     {
+         gueiadmirer = scr_makenpc_fromasset(spritesArray[i]);
+         gueiadmirer.marker.image_blend = c_white;
+@@ -71,7 +71,7 @@
+     {
+         cupadmirer = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4325)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4326)
+     {
+         if (layer_sprite_get_blend(spritesArray[i]) == 255)
+         {
+@@ -105,7 +105,7 @@
+             biblioxadmirer.marker.image_blend = c_white;
+         }
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1301)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1302)
+     {
+         if (layer_sprite_get_blend(spritesArray[i]) == 3355443)
+         {
+@@ -118,22 +118,22 @@
+             welcomesign = scr_makenpc_fromasset(spritesArray[i]);
+         }
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1704)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1705)
+     {
+         watercooler = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4929)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4931)
+     {
+         angyboy = scr_makenpc_fromasset(spritesArray[i]);
+         angyboy.marker.depth -= 200;
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1011)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1012)
+     {
+         scr_marker_fromasset(spritesArray[i], undefined, 1);
+     }
+     if (createstar)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 5864)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 5866)
+         {
+             starwalker = scr_makenpc_fromasset(spritesArray[i]);
+             angyboy.marker.depth -= 200;
+FILE ch4/gml_Object_obj_dw_churchb_gersonstudy_Create_0.gml M 1 1
+@@ -10,7 +10,7 @@
+ shop = -4;
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1645)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1646)
+     {
+         shop = scr_makenpc_fromasset(spritesArray[i]);
+         shop.didgetitem = -1;
+FILE ch4/gml_Object_obj_dw_churchb_gersonstudy_Step_0.gml M 2 2
+@@ -67,7 +67,7 @@
+         var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+         for (var i = 0; i < array_length(spritesArray); i++)
+         {
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 4600)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 4601)
+             {
+                 var info = scr_assetgetinfo(spritesArray[i]);
+                 blueflame = instance_create(info[2], info[3], obj_dw_church_warpflame);
+@@ -78,7 +78,7 @@
+                     color = "blue";
+                 }
+             }
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 1021)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 1022)
+             {
+                 var info = scr_assetgetinfo(spritesArray[i]);
+                 with (instance_create(info[2], info[3], obj_solidblock))
+FILE ch4/gml_Object_obj_dw_churchb_library_Create_0.gml M 3 3
+@@ -31,16 +31,16 @@
+ npc3 = -4;
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2094 && layer_sprite_get_xscale(spritesArray[i]) == 2)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2095 && layer_sprite_get_xscale(spritesArray[i]) == 2)
+     {
+         npc1 = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 3020 && layer_sprite_get_xscale(spritesArray[i]) == -2)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 3021 && layer_sprite_get_xscale(spritesArray[i]) == -2)
+     {
+         npc2 = scr_makenpc_fromasset(spritesArray[i]);
+         npc2.y = npc2.y - 1000;
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1614 && layer_sprite_get_xscale(spritesArray[i]) == 2)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1615 && layer_sprite_get_xscale(spritesArray[i]) == 2)
+     {
+         npc3 = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_churchb_libraryconnector_Create_0.gml M 3 3
+@@ -36,7 +36,7 @@
+ npc4 = -4;
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 3299)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 3300)
+     {
+         if (layer_sprite_get_blend(spritesArray[i]) == 16711935)
+         {
+@@ -54,11 +54,11 @@
+             npc4 = scr_makenpc_fromasset(spritesArray[i]);
+         }
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4929)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4931)
+     {
+         npc2 = scr_marker_fromasset(spritesArray[i], undefined, 1);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1614)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1615)
+     {
+         npc_wing = scr_makenpc_fromasset(spritesArray[i], undefined, 1);
+     }
+FILE ch4/gml_Object_obj_dw_churchb_libraryconnector_Step_0.gml M 1 1
+@@ -289,7 +289,7 @@
+         var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+         for (var i = 0; i < array_length(spritesArray); i++)
+         {
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 4929)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 4931)
+             {
+                 npc2 = scr_marker_fromasset(spritesArray[i], undefined, 1);
+             }
+FILE ch4/gml_Object_obj_dw_churchb_man_Create_0.gml M 2 2
+@@ -22,7 +22,7 @@
+ {
+     var marker = scr_marker_fromasset(spritesArray[i]);
+     scr_depth(marker);
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4778)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4779)
+     {
+         treedoor = marker;
+     }
+@@ -30,7 +30,7 @@
+ spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2325)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2326)
+     {
+         npc = scr_makenpc_fromasset(spritesArray[i]);
+         npc.mask_index = spr_dw_churchb_man_npcmask;
+FILE ch4/gml_Object_obj_dw_churchb_nongerson_Step_0.gml M 3 3
+@@ -121,7 +121,7 @@
+     customcon = 0;
+     con = 38;
+     c_waitcustom_end();
+-    c_var_instance(rippler, "susie_sprite", 5197);
++    c_var_instance(rippler, "susie_sprite", 5199);
+     c_var_instance(id, "susie_timer", 10);
+     c_var_instance(id, "force_ripple", true);
+     c_speaker("susie");
+@@ -289,7 +289,7 @@
+     c_waitcustom_end();
+     c_fefc(0, 0);
+     c_wait(26);
+-    c_var_instance(rippler, "susie_sprite", 1535);
++    c_var_instance(rippler, "susie_sprite", 1536);
+     c_var_instance(rippler, "variant", 1);
+     c_var_instance(rippler, "shiner", 0);
+     c_wait(32);
+@@ -298,7 +298,7 @@
+     c_var_instance(id, "ripple_con", 1);
+     c_wait(10);
+     c_wait(45);
+-    c_var_instance(rippler, "susie_sprite", 1551);
++    c_var_instance(rippler, "susie_sprite", 1552);
+     c_wait(85);
+     c_var_instance(rippler, "x", camerax() + 180);
+     c_var_instance(rippler, "variant", 2);
+FILE ch4/gml_Object_obj_dw_churchb_rotatingtower_Create_0.gml M 1 1
+@@ -64,7 +64,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 3020)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 3021)
+     {
+         organiknpc = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_churchb_windows_Create_0.gml M 5 5
+@@ -42,23 +42,23 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2269)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2270)
+     {
+         npc[0] = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2094)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2095)
+     {
+         npc[1] = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 3020)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 3021)
+     {
+         npc[2] = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1614)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1615)
+     {
+         npc[3] = scr_makenpc_fromasset(spritesArray[i]);
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1510)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1511)
+     {
+         moss = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_churchc_angelprophecy_Step_0.gml M 1 1
+@@ -108,7 +108,7 @@
+         var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+         for (var i = 0; i < array_length(spritesArray); i++)
+         {
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 1779)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 1780)
+             {
+                 npcarea = scr_makenpc_fromasset(spritesArray[i]);
+             }
+FILE ch4/gml_Object_obj_dw_churchc_angelprophecy_encounter_Create_0.gml M 1 1
+@@ -36,7 +36,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 2269)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 2270)
+     {
+         pillarnpc = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_churchc_finalclimb_Create_0.gml M 15 15
+@@ -106,34 +106,34 @@
+         var _glass_index = layer_sprite_get_index(arg0);
+         var _glass_depth = layer_get_depth(layer_get_element_layer(arg0));
+         var _shatter_sprite = -1;
+-        if (_glass_sprite == 2781)
++        if (_glass_sprite == 2782)
+         {
+             switch (_glass_index)
+             {
+                 case 0:
+                 case 5:
+                 default:
+-                    _shatter_sprite = 5306;
++                    _shatter_sprite = 5308;
+                     break;
+                 case 1:
+                 case 6:
+-                    _shatter_sprite = 1684;
++                    _shatter_sprite = 1685;
+                     break;
+                 case 2:
+                 case 7:
+-                    _shatter_sprite = 4499;
++                    _shatter_sprite = 4500;
+                     break;
+                 case 3:
+                 case 8:
+-                    _shatter_sprite = 4899;
++                    _shatter_sprite = 4901;
+                     break;
+                 case 4:
+                 case 9:
+-                    _shatter_sprite = 4155;
+-                    break;
+-            }
+-        }
+-        if (_glass_sprite == 4987)
++                    _shatter_sprite = 4156;
++                    break;
++            }
++        }
++        if (_glass_sprite == 4989)
+         {
+             switch (_glass_index)
+             {
+@@ -144,23 +144,23 @@
+                     break;
+                 case 1:
+                 case 7:
+-                    _shatter_sprite = 4274;
++                    _shatter_sprite = 4275;
+                     break;
+                 case 2:
+                 case 8:
+-                    _shatter_sprite = 5386;
++                    _shatter_sprite = 5388;
+                     break;
+                 case 3:
+                 case 9:
+-                    _shatter_sprite = 2968;
++                    _shatter_sprite = 2969;
+                     break;
+                 case 4:
+                 case 10:
+-                    _shatter_sprite = 2348;
++                    _shatter_sprite = 2349;
+                     break;
+                 case 5:
+                 case 11:
+-                    _shatter_sprite = 1738;
++                    _shatter_sprite = 1739;
+                     break;
+             }
+         }
+FILE ch4/gml_Object_obj_dw_churchc_prepretitan_Create_0.gml M 2 2
+@@ -24,7 +24,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4600)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4601)
+     {
+         var info = scr_assetgetinfo(spritesArray[i]);
+         redflame = instance_create(info[2], info[3], obj_dw_church_warpflame);
+@@ -36,7 +36,7 @@
+             color = "red";
+         }
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1779)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1780)
+     {
+         var info = scr_assetgetinfo(spritesArray[i]);
+         for (i = 0; i < info[4]; i++)
+FILE ch4/gml_Object_obj_dw_churchc_prophecies_Create_0.gml M 1 1
+@@ -21,7 +21,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 1959)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 1960)
+     {
+         npc = scr_makenpc_fromasset(spritesArray[i]);
+     }
+FILE ch4/gml_Object_obj_dw_churchc_savepoint_Create_0.gml M 2 2
+@@ -25,14 +25,14 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4518)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4519)
+     {
+         shop = scr_makenpc_fromasset(spritesArray[i]);
+         shop.marker.image_speed = 0.125;
+         shop.cost = -1;
+         shop.maketype = 0;
+     }
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4600)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4601)
+     {
+         if (global.plot >= 249)
+         {
+FILE ch4/gml_Object_obj_dw_churchc_superprophecies_Create_0.gml M 1 1
+@@ -43,7 +43,7 @@
+ spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4600)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4601)
+     {
+         if (global.plot >= 244.9)
+         {
+FILE ch4/gml_Object_obj_dw_churchc_titanclimb2_post_Step_0.gml M 1 1
+@@ -42,7 +42,7 @@
+         var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+         for (var i = 0; i < array_length(spritesArray); i++)
+         {
+-            if (layer_sprite_get_sprite(spritesArray[i]) == 4329)
++            if (layer_sprite_get_sprite(spritesArray[i]) == 4330)
+             {
+                 cup = scr_makenpc_fromasset(spritesArray[i]);
+             }
+FILE ch4/gml_Object_obj_dw_gerson_study_Create_0.gml M 1 1
+@@ -282,7 +282,7 @@
+     var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+     for (var i = 0; i < array_length(spritesArray); i++)
+     {
+-        if (layer_sprite_get_sprite(spritesArray[i]) == 5585)
++        if (layer_sprite_get_sprite(spritesArray[i]) == 5587)
+         {
+             cup = scr_makenpc_fromasset(spritesArray[i]);
+         }
+FILE ch4/gml_Object_obj_dw_gerson_study_Other_19.gml M 1 1
+@@ -1,7 +1,7 @@
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+ for (var i = 0; i < array_length(spritesArray); i++)
+ {
+-    if (layer_sprite_get_sprite(spritesArray[i]) == 4600)
++    if (layer_sprite_get_sprite(spritesArray[i]) == 4601)
+     {
+         var info = scr_assetgetinfo(spritesArray[i]);
+         greenflame = instance_create(info[2], info[3], obj_dw_church_warpflame);
+FILE ch4/gml_Object_obj_elnina_lanino_rematch_controller_Step_0.gml M 32 32
+@@ -29,11 +29,11 @@
+         }
+         with (obj_lanino_rematch_enemy)
+         {
+-            head = 5119;
+-        }
+-        with (obj_elnina_rematch_enemy)
+-        {
+-            head = 4562;
++            head = 5121;
++        }
++        with (obj_elnina_rematch_enemy)
++        {
++            head = 4563;
+         }
+     }
+     if ((button3_p() && introtimer > 15) || !i_ex(obj_writer))
+@@ -55,11 +55,11 @@
+         }
+         with (obj_lanino_rematch_enemy)
+         {
+-            head = 5119;
+-        }
+-        with (obj_elnina_rematch_enemy)
+-        {
+-            head = 1907;
++            head = 5121;
++        }
++        with (obj_elnina_rematch_enemy)
++        {
++            head = 1908;
+         }
+         endcon = 2;
+         endtimer = 0;
+@@ -91,7 +91,7 @@
+         }
+         with (obj_elnina_rematch_enemy)
+         {
+-            head = 1066;
++            head = 1067;
+         }
+         endcon = 2.5;
+         endtimer = 0;
+@@ -120,7 +120,7 @@
+         }
+         with (obj_elnina_rematch_enemy)
+         {
+-            head = 4562;
++            head = 4563;
+         }
+         endcon = 3;
+         endtimer = 0;
+@@ -148,7 +148,7 @@
+         }
+         with (obj_lanino_rematch_enemy)
+         {
+-            head = 2516;
++            head = 2517;
+         }
+         endcon = 3.5;
+         endtimer = 0;
+@@ -627,11 +627,11 @@
+     {
+         with (obj_lanino_rematch_enemy)
+         {
+-            head = 4749;
+-        }
+-        with (obj_elnina_rematch_enemy)
+-        {
+-            head = 2661;
++            head = 4750;
++        }
++        with (obj_elnina_rematch_enemy)
++        {
++            head = 2662;
+         }
+         msgsetloc(0, "So you've caught on&to our forecasts!&Nice work, you&little sunshines!", "obj_elnina_lanino_rematch_controller_slash_Step_0_gml_518_0");
+         scr_enemyblcon(lanino.x - 10, global.monstery[lanino.myself] - 10, 10);
+@@ -652,11 +652,11 @@
+     {
+         with (obj_lanino_rematch_enemy)
+         {
+-            head = 5233;
+-        }
+-        with (obj_elnina_rematch_enemy)
+-        {
+-            head = 1066;
++            head = 5235;
++        }
++        with (obj_elnina_rematch_enemy)
++        {
++            head = 1067;
+         }
+         msgsetloc(0, "Haha, nice try,&but the weather's &only warming up!&Elnina, tell them &what's next!", "obj_elnina_lanino_rematch_controller_slash_Step_0_gml_535_0");
+         scr_enemyblcon(lanino.x - 10, global.monstery[lanino.myself] - 10, 10);
+@@ -677,11 +677,11 @@
+     {
+         with (obj_lanino_rematch_enemy)
+         {
+-            head = 5233;
+-        }
+-        with (obj_elnina_rematch_enemy)
+-        {
+-            head = 1066;
++            head = 5235;
++        }
++        with (obj_elnina_rematch_enemy)
++        {
++            head = 1067;
+         }
+         msgsetloc(0, "Tonight's weather&is...", "obj_elnina_lanino_rematch_controller_slash_Step_0_gml_552_0_b");
+         scr_enemyblcon(lanino.x - 10, global.monstery[lanino.myself] - 10, 10);
+@@ -828,11 +828,11 @@
+             scr_enemyblcon(elnina.x - 40, global.monstery[elnina.myself] - 10, 10);
+             with (obj_lanino_rematch_enemy)
+             {
+-                head = 5233;
++                head = 5235;
+             }
+             with (obj_elnina_rematch_enemy)
+             {
+-                head = 1066;
++                head = 1067;
+             }
+             ballooncon = 4;
+         }
+@@ -844,11 +844,11 @@
+             scr_enemyblcon(elnina.x - 40, global.monstery[elnina.myself] - 10, 10);
+             with (obj_lanino_rematch_enemy)
+             {
+-                head = 5233;
++                head = 5235;
+             }
+             with (obj_elnina_rematch_enemy)
+             {
+-                head = 1066;
++                head = 1067;
+             }
+             with (obj_lanino_rematch_enemy)
+             {
+FILE ch4/gml_Object_obj_elnina_mascotattack_Create_0.gml M 21 21
+@@ -14,25 +14,25 @@
+ encounterno = global.encounterno;
+ bulletcount = 0;
+ firebulletcount = 2000;
+-bs[0] = 4740;
+-bs[1] = 3141;
+-bs[2] = 5009;
+-bs[3] = 3089;
+-bs[4] = 3549;
+-bs[5] = 5778;
+-ms[0][0] = 4903;
++bs[0] = 4741;
++bs[1] = 3142;
++bs[2] = 5011;
++bs[3] = 3090;
++bs[4] = 3550;
++bs[5] = 5780;
++ms[0][0] = 4905;
+ ms[0][1] = 24;
+-ms[0][2] = 1606;
+-ms[0][3] = 2050;
+-ms[0][4] = 5243;
+-ms[0][5] = 5378;
+-ms[0][6] = 3709;
+-ms[0][7] = 4453;
+-ms[1][0] = 3216;
+-ms[1][1] = 3767;
+-ms[1][2] = 4422;
+-ms[1][3] = 5728;
+-ms[1][4] = 4500;
+-ms[1][5] = 5740;
+-ms[1][6] = 5877;
+-ms[1][7] = 3795;
++ms[0][2] = 1607;
++ms[0][3] = 2051;
++ms[0][4] = 5245;
++ms[0][5] = 5380;
++ms[0][6] = 3710;
++ms[0][7] = 4454;
++ms[1][0] = 3217;
++ms[1][1] = 3768;
++ms[1][2] = 4423;
++ms[1][3] = 5730;
++ms[1][4] = 4501;
++ms[1][5] = 5742;
++ms[1][6] = 5879;
++ms[1][7] = 3796;
+FILE ch4/gml_Object_obj_elnina_mascotattack_Step_0.gml M 3 3
+@@ -302,18 +302,18 @@
+                         }
+                         if (i == 0)
+                         {
+-                            if (laninobulletsprite == 5685)
++                            if (laninobulletsprite == 5687)
+                             {
+                                 mybullet.sprite_index = bs[4];
+                             }
+-                            if (laninobulletsprite == 3637)
++                            if (laninobulletsprite == 3638)
+                             {
+                                 mybullet.sprite_index = bs[3];
+                             }
+                         }
+                         if (i == 1)
+                         {
+-                            if (elninabullesprite == 5614)
++                            if (elninabullesprite == 5616)
+                             {
+                                 mybullet.sprite_index = bs[5];
+                             }
+FILE ch4/gml_Object_obj_elnina_rematch_enemy_Create_0.gml M 6 6
+@@ -14,14 +14,14 @@
+ pose = 0;
+ poseindex = 0;
+ laughtimer = 0;
+-hairtufts = 1176;
+-waist = 1638;
++hairtufts = 1177;
++waist = 1639;
+ rightarm = 813;
+ rightarmindex = 0;
+-head = 1066;
+-leftarm = 5851;
+-lefthand = 4838;
+-skirt = 4517;
++head = 1067;
++leftarm = 5853;
++lefthand = 4840;
++skirt = 4518;
+ flashcolor = c_white;
+ umbrella_count = 0;
+ warmhat_count = 0;
+FILE ch4/gml_Object_obj_elnina_rematch_enemy_Draw_0.gml M 1 1
+@@ -20,7 +20,7 @@
+ if (laughtimer == 0)
+ {
+     talking = 0;
+-    head = 1066;
++    head = 1067;
+ }
+ if (preset == 0)
+ {
+FILE ch4/gml_Object_obj_gerson_growtangle_telegraph_new_Step_0.gml M 1 1
+@@ -22,7 +22,7 @@
+     if (image_alpha <= -1.3)
+     {
+         activetimer++;
+-        if (activetimer == 4)
++        if (activetimer == 3)
+         {
+             active = 1;
+         }
+FILE ch4/gml_Object_obj_gerson_swing_down_Draw_0.gml M 9 20
+@@ -211,7 +211,7 @@
+             var xlocation;
+             if (image_xscale < 0)
+             {
+-                xlocation = x + 52;
++                xlocation = x + 52 + 60;
+             }
+             else
+             {
+@@ -283,31 +283,20 @@
+             {
+                 if (image_xscale < 0)
+                 {
+-                    xlocation = x - 90;
++                    xlocation = (x - 90) + 20;
+                 }
+                 else
+                 {
+-                    xlocation = x + 18;
+-                }
++                    xlocation = (x + 18) - 16;
++                }
++            }
++            else if (image_xscale < 0)
++            {
++                xlocation = x + 52;
+             }
+             else
+             {
+-                if (image_xscale < 0)
+-                {
+-                    xlocation = x + 52;
+-                }
+-                else
+-                {
+-                    xlocation = x + 18;
+-                }
+-                if (xlocation < (obj_growtangle.x - 70))
+-                {
+-                    xlocation = obj_growtangle.x - 70;
+-                }
+-                if (xlocation > obj_growtangle.x)
+-                {
+-                    xlocation = obj_growtangle.x;
+-                }
++                xlocation = x + 18;
+             }
+             inst = instance_create(xlocation, (obj_growtangle.y - 75) + 5, obj_gerson_growtangle_telegraph);
+             inst.image_xscale = 72;
+FILE ch4/gml_Object_obj_gerson_swing_down_Step_0.gml M 5 1
+@@ -10,6 +10,10 @@
+ if (timer > timetoswing && sprite_index == spr_gerson_swing_down)
+ {
+     image_index += 0.5;
++}
++if (swingdowntype == -3)
++{
++    mask_index = spr_nothing;
+ }
+ if (swingdowntype == -3 && eye_con == 0)
+ {
+@@ -59,7 +63,7 @@
+     image_index = 0;
+     image_speed = 0;
+ }
+-if (sprite_index == spr_gerson_swing_down && image_index > 1.5 && con == 0)
++if (sprite_index == spr_gerson_swing_down && con == 0 && image_index > 1)
+ {
+     active = 1;
+     con = 1;
+FILE ch4/gml_Object_obj_gerson_swing_down_mask_Step_0.gml M 1 1
+@@ -63,7 +63,7 @@
+     image_index = 0;
+     image_speed = 0;
+ }
+-if (sprite_index == spr_gerson_swing_down && image_index > 1.5 && con == 0)
++if (sprite_index == spr_gerson_swing_down && con == 0 && image_index > 1)
+ {
+     active = 1;
+     con = 1;
+FILE ch4/gml_Object_obj_gerson_swing_down_new_Create_0.gml M 1 1
+@@ -24,7 +24,7 @@
+ }
+ grazepoints = 4;
+ version = 0;
+-if (i_ex(obj_hammer_of_justice_enemy) && (obj_hammer_of_justice_enemy.trueturn == 10 || true))
++if ((i_ex(obj_hammer_of_justice_enemy) && (obj_hammer_of_justice_enemy.trueturn == 10 || true)) || i_ex(obj_sound_of_justice_enemy))
+ {
+     timetoswing = 10;
+     telegraphtime = 8;
+FILE ch4/gml_Object_obj_gerson_swing_down_new_Draw_0.gml M 1 1
+@@ -92,7 +92,7 @@
+                 with (inst)
+                 {
+                     image_xscale = 1;
+-                    sprite_index = spr_gerson_swing_down_telegraph3;
++                    sprite_index = spr_gerson_swing_down_telegraph4;
+                 }
+             }
+             if (i_ex(obj_heart))
+FILE ch4/gml_Object_obj_ghosthouse_jackolantern_merciful_Create_0.gml M 1 1
+@@ -70,4 +70,4 @@
+ }
+ first_turn = !quick_start;
+ head_sprite = spr_guywhoappearswhenyouhavetakentoolongbutgotanastysurprise;
+-mouth_sprite = 1809;
++mouth_sprite = 1810;
+FILE ch4/gml_Object_obj_ghosthouse_jackolantern_merciful_old_Create_0.gml M 1 1
+@@ -34,4 +34,4 @@
+     }
+ }
+ head_sprite = spr_guywhoappearswhenyouhavetakentoolongbutgotanastysurprise;
+-mouth_sprite = 1809;
++mouth_sprite = 1810;
+FILE ch4/gml_Object_obj_gigaprophecy_Create_0.gml M 2 2
+@@ -8,8 +8,8 @@
+ roomglow.actind = 1;
+ roomglow.tiles_only = true;
+ colour_bluenonsense = 16764994;
+-sprite_blueswirly = 3124;
+-sprite_blueswirly_blur = 1522;
++sprite_blueswirly = 3125;
++sprite_blueswirly_blur = 1523;
+ surf_frontprophecies = -1;
+ surf_parallax_close = -1;
+ surf_parallax_stars = -1;
+FILE ch4/gml_Object_obj_halo_enemy_Draw_0.gml M 4 4
+@@ -38,13 +38,13 @@
+     wingAnimating = 1;
+     if (wingAnimating == 0)
+     {
+-        wingSpriteL = 5804;
+-        wingSpriteR = 4533;
++        wingSpriteL = 5806;
++        wingSpriteR = 4534;
+     }
+     else
+     {
+-        wingSpriteL = 5030;
+-        wingSpriteR = 5351;
++        wingSpriteL = 5032;
++        wingSpriteR = 5353;
+     }
+     thissprite = idlesprite;
+     if (global.mercymod[myself] >= global.mercymax[myself])
+FILE ch4/gml_Object_obj_homealone_dess_closet_controller_Step_0.gml M 1 1
+@@ -162,7 +162,7 @@
+         }
+         var _kris_x = kris.x;
+         var _kris_y = kris.y;
+-        var _kris_sprite = 5572;
++        var _kris_sprite = 5574;
+         var _emote = scr_marker(_kris_x + 10, _kris_y - 10, spr_exc);
+         scr_doom(_emote, 31);
+         with (closet)
+FILE ch4/gml_Object_obj_homealone_heart_Create_0.gml M 1 1
+@@ -52,7 +52,7 @@
+ rsprite = spr_heartsmall;
+ usprite = spr_heartsmall;
+ lsprite = spr_heartsmall;
+-climbsprite = 3708;
++climbsprite = 3709;
+ fun = 0;
+ if (global.facing == 0)
+ {
+FILE ch4/gml_Object_obj_homealone_kitchen_Step_0.gml M 1 1
+@@ -220,7 +220,7 @@
+                 with (kris_marker)
+                 {
+                     sprite_index = spr_noellehouse_kitchen_kris_drink_put_down;
+-                    scr_animate(4796, 1, 0.5);
++                    scr_animate(4797, 1, 0.5);
+                 }
+             }
+             if (kris_throw_timer == 10)
+FILE ch4/gml_Object_obj_incense_cloud_destroyed_Create_0.gml M 2 2
+@@ -8,7 +8,7 @@
+ col2 = make_color_rgb(255, 140.25, 0);
+ col1 = make_color_rgb(204, 0, 0);
+ col2 = make_color_rgb(255, 140.25, 0);
+-DissolveSettings(4594, 0, col1, col2, 0.2);
+-DissolveSettings(4594, 0, 16777215, 16777215, 0.3);
++DissolveSettings(4595, 0, col1, col2, 0.2);
++DissolveSettings(4595, 0, 16777215, 16777215, 0.3);
+ sprite_index = spr_incense_cloud;
+ image_alpha = 1;
+FILE ch4/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -66,14 +66,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.098";
++global.versionno = "v0.0.100";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.096";
++    global.versionno = "v0.0.098";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.096";
++    global.versionno = "v0.0.098";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch4/gml_Object_obj_intro_ch4_Step_0.gml M 2 2
+@@ -74,7 +74,7 @@
+         snd_add_complex(snd, 3, 269, 0.7, 0.95, (_delay_sound_time - 1) + 0, -1, 0);
+         snd_play_delay(break_noise, _delay_sound_time, 0.5, 1);
+         snd_play_delay(break_noise, _delay_sound_time, 0.5, 0.94);
+-        var _shattersprite = 4671;
++        var _shattersprite = 4672;
+         var _fragments = sprite_get_number(_shattersprite);
+         var _delay = 20;
+         for (var i = 0; i < _fragments; i++)
+@@ -177,7 +177,7 @@
+             snd_add_complex(snd, 3, 269, 0.7, 0.95, (_delay_sound_time - 1) + 0, -1, 0);
+             snd_play_delay(break_noise, _delay_sound_time, 0.5, 0.5);
+             snd_play_delay(break_noise, _delay_sound_time, 0.5, 0.44);
+-            var _shattersprite = 5773;
++            var _shattersprite = 5775;
+             var _fragments = sprite_get_number(_shattersprite);
+             var _delay = 20;
+             for (var i = 0; i < _fragments; i++)
+FILE ch4/gml_Object_obj_lanino_rematch_enemy_Create_0.gml M 5 5
+@@ -15,13 +15,13 @@
+ pose = 0;
+ poseindex = 0;
+ laughtimer = 0;
+-shoulders = 3953;
+-legs = 4399;
+-chest = 4591;
++shoulders = 3954;
++legs = 4400;
++chest = 4592;
+ chestindex = 0;
+-head = 5233;
++head = 5235;
+ leftarm = 366;
+-lefthand = 5750;
++lefthand = 5752;
+ flashcolor = c_white;
+ telescope_count = 0;
+ sunglasses_count = 0;
+FILE ch4/gml_Object_obj_lanino_rematch_enemy_Draw_0.gml M 1 1
+@@ -15,7 +15,7 @@
+ if (laughtimer == 0)
+ {
+     talking = 0;
+-    head = 5233;
++    head = 5235;
+ }
+ if (preset == 0)
+ {
+FILE ch4/gml_Object_obj_layershader_Create_0.gml M 2 2
+@@ -4,9 +4,9 @@
+ }
+ if (myShader == 24)
+ {
+-    textureSprite1 = 2081;
++    textureSprite1 = 2082;
+     sampler1 = shader_get_sampler_index(myShader, "sampler_1");
+-    textureSprite2 = 4679;
++    textureSprite2 = 4680;
+     sampler2 = shader_get_sampler_index(myShader, "sampler_2");
+     uniformTime = shader_get_uniform(myShader, "time");
+     uniformOpacity = shader_get_uniform(myShader, "opacity");
+FILE ch4/gml_Object_obj_lightbeamfx_Create_0.gml M 1 1
+@@ -1,7 +1,7 @@
+ ps = part_system_create();
+ part_system_automatic_draw(ps, false);
+ ptdust = part_type_create();
+-part_type_sprite(ptdust, 4844, true, false, false);
++part_type_sprite(ptdust, 4846, true, false, false);
+ part_type_speed(ptdust, 0.06, 0.2, 0, 0.1);
+ part_type_direction(ptdust, 0, 360, 0, 0.5);
+ part_type_life(ptdust, 50, 350);
+FILE ch4/gml_Object_obj_lw_rain_effect_Create_0.gml M 4 4
+@@ -1,11 +1,11 @@
+ rain_style = 1;
+ rain_letters = "ABCDEF";
+ rain_sprite[0] = 627;
+-rain_sprite[1] = 4516;
+-rain_sprite[2] = 1874;
+-rain_sprite[3] = 3147;
++rain_sprite[1] = 4517;
++rain_sprite[2] = 1875;
++rain_sprite[3] = 3148;
+ rain_sprite[4] = 847;
+-rain_sprite[5] = 2912;
++rain_sprite[5] = 2913;
+ xdir = -1;
+ xspeed = 1;
+ yspeed = 2;
+FILE ch4/gml_Object_obj_lw_town_sideb_choicer_Create_0.gml M 1 1
+@@ -40,7 +40,7 @@
+ textposy[2] = 0;
+ textposx[3] = 0;
+ textposy[3] = 0;
+-heartSprite = 3711;
++heartSprite = 3712;
+ choicerstyle = 0;
+ side = 0;
+ cur_jewel = 0;
+FILE ch4/gml_Object_obj_mainchara_Create_0.gml M 1 1
+@@ -66,7 +66,7 @@
+ rsprite = spr_krisr;
+ usprite = spr_krisu;
+ lsprite = spr_krisl;
+-climbsprite = 3708;
++climbsprite = 3709;
+ if (global.darkzone == 1)
+ {
+     dsprite = spr_krisd_dark;
+FILE ch4/gml_Object_obj_mike_battle_Draw_0.gml M 1 1
+@@ -70,7 +70,7 @@
+     image_speed = 1;
+     if (sprite_index == spr_mike_m)
+     {
+-        _sp = 2133;
++        _sp = 2134;
+         image_speed = 0.25;
+     }
+     draw_sprite_ext(_sp, image_index, x, y, image_xscale * xscale, image_yscale * yscale, image_angle, image_blend, image_alpha);
+FILE ch4/gml_Object_obj_mike_hand_Draw_0.gml M 3 3
+@@ -120,14 +120,14 @@
+             switch (obj_mike_attack_controller.pet_current[0])
+             {
+                 case 1:
+-                    hand_fruit = 1555;
++                    hand_fruit = 1556;
+                     break;
+                 case 2:
+-                    hand_fruit = 2555;
++                    hand_fruit = 2556;
+                     break;
+                 case 3:
+                 default:
+-                    hand_fruit = 2287;
++                    hand_fruit = 2288;
+                     break;
+             }
+         }
+FILE ch4/gml_Object_obj_movingBookshelf_Create_0.gml M 3 3
+@@ -24,6 +24,6 @@
+ krisball = 67;
+ susieball = 64;
+ ralseiball = 350;
+-kriscling = 3708;
+-susiecling = 2649;
+-ralseicling = 4837;
++kriscling = 3709;
++susiecling = 2650;
++ralseicling = 4839;
+FILE ch4/gml_Object_obj_noellehouse_basement_Step_0.gml M 10 10
+@@ -440,7 +440,7 @@
+             scr_stickto(no_target, -20);
+         }
+         overlay.noelle_light_target = noelle_flashlight;
+-        overlay.noelle_light_mask = 5831;
++        overlay.noelle_light_mask = 5833;
+         susie_marker.sprite_index = spr_susie_walk_left_flashlight;
+         susie_marker.x = 394;
+         susie_marker.y = 95;
+@@ -448,7 +448,7 @@
+         susie_flashlight.x = susie_marker.x;
+         susie_flashlight.y = susie_marker.y + 26;
+         overlay.susie_light_target = susie_flashlight;
+-        overlay.susie_light_mask = 5831;
++        overlay.susie_light_mask = 5833;
+         var su_target = susie_marker;
+         with (susie_flashlight)
+         {
+@@ -460,7 +460,7 @@
+         {
+             scr_delay_var("image_index", 0, 31);
+             scr_delay_var("image_speed", 0, 31);
+-            scr_delay_var("sprite_index", 4331, 31);
++            scr_delay_var("sprite_index", 4332, 31);
+         }
+     }
+     tree_sprite_timer--;
+@@ -588,7 +588,7 @@
+         {
+             scr_delay_var("image_index", 0, 101);
+             scr_delay_var("image_speed", 0, 101);
+-            scr_delay_var("sprite_index", 1037, 116);
++            scr_delay_var("sprite_index", 1038, 116);
+             scr_delay_var("image_speed", 0.1, 116);
+         }
+         susie_marker.sprite_index = spr_susie_walk_left_flashlight;
+@@ -599,7 +599,7 @@
+         {
+             scr_delay_var("image_index", 0, 101);
+             scr_delay_var("image_speed", 0, 101);
+-            scr_delay_var("sprite_index", 5846, 131);
++            scr_delay_var("sprite_index", 5848, 131);
+             scr_delay_var("image_speed", 0.04, 131);
+         }
+         angel_marker.depth = susie_marker.depth + 10;
+@@ -671,7 +671,7 @@
+                     susie_flashlight.y = susie_marker.y + 34;
+                     susie_flashlight.depth = 6010;
+                     susie_flashlight.image_angle = 0;
+-                    overlay.susie_light_mask = 5831;
++                    overlay.susie_light_mask = 5833;
+                 }
+                 if (susie_surprise_index == 2)
+                 {
+@@ -743,7 +743,7 @@
+         susie_flashlight.y -= 7;
+         susie_flashlight.image_angle = 0;
+         susie_flashlight.depth = 6010;
+-        overlay.susie_light_mask = 3678;
++        overlay.susie_light_mask = 3679;
+     }
+     if (noelle_face_left)
+     {
+@@ -756,7 +756,7 @@
+         noelle_flashlight.image_angle = 0;
+         noelle_flashlight.x = noelle_marker.x;
+         noelle_flashlight.y = noelle_marker.y + 30;
+-        overlay.noelle_light_mask = 1407;
++        overlay.noelle_light_mask = 1408;
+     }
+     if (noelle_surprise)
+     {
+@@ -783,7 +783,7 @@
+                     noelle_flashlight.image_angle = 0;
+                     noelle_flashlight.x = noelle_marker.x;
+                     noelle_flashlight.y = noelle_marker.y + 30;
+-                    overlay.noelle_light_mask = 5831;
++                    overlay.noelle_light_mask = 5833;
+                     noelle_flashlight.depth = 6010;
+                 }
+                 noelle_surprise_timer = noelle_surprise_timestamps[noelle_surprise_index] / 30;
+@@ -976,7 +976,7 @@
+                         scr_delay_var("vspeed", 0, 12);
+                         scr_delay_var("gravity", 0, 12);
+                     }
+-                    overlay.susie_light_mask = 5831;
++                    overlay.susie_light_mask = 5833;
+                     move_wait = false;
+                 }
+             }
+FILE ch4/gml_Object_obj_noellehouse_dess_Step_0.gml M 5 5
+@@ -331,7 +331,7 @@
+         if (heart_fall_timer == 60)
+         {
+             hit_heart = false;
+-            anim_player.init(kris_bed_marker, 3096, kris_bed_timestamps);
++            anim_player.init(kris_bed_marker, 3097, kris_bed_timestamps);
+             anim_player.event_connect("anim_end", kris_get_heart);
+             anim_player.start();
+         }
+@@ -454,7 +454,7 @@
+     c_wait(6);
+     c_var_instance(kris_marker, "image_index", 0);
+     c_var_instance(kris_marker, "image_speed", 0);
+-    c_var_instance(310, "kris_sprite", 3534);
++    c_var_instance(310, "kris_sprite", 3535);
+     c_var_instance(310, "kris_x", 190);
+     c_var_instance(310, "kris_y", 80);
+     c_var_instance(310, "kris_active", true);
+@@ -711,7 +711,7 @@
+     c_facing("u");
+     c_wait(30);
+     c_snd_play(snd_wing);
+-    c_var_instance(310, "kris_sprite", 3820);
++    c_var_instance(310, "kris_sprite", 3821);
+     c_var_instance(310, "kris_x", 213);
+     c_var_instance(310, "kris_y", 89);
+     c_var_instance(310, "open_door", true);
+@@ -726,7 +726,7 @@
+     c_sprite(spr_susie_guitar_grab_up);
+     c_lerp_var_instance(su_actor, "image_index", 0, 4, 16);
+     c_wait(8);
+-    c_var_instance(310, "kris_sprite", 4635);
++    c_var_instance(310, "kris_sprite", 4636);
+     c_var_instance(310, "kris_index", 0);
+     c_wait(45);
+     c_snd_play(snd_wing);
+@@ -826,7 +826,7 @@
+     c_snd_play(snd_noise);
+     c_var_instance(310, "kris_x", kris_closet_x);
+     c_var_instance(310, "kris_y", 80);
+-    c_var_instance(310, "kris_sprite", 1460);
++    c_var_instance(310, "kris_sprite", 1461);
+     c_var_lerp_to_instance(310, "door_xpos", obj_noellehouse_dess_closet.door_xpos - 14, 15);
+     c_wait(30);
+     c_var_instance(kris_marker, "x", kris_closet_x);
+FILE ch4/gml_Object_obj_noellehouse_fence_Create_0.gml M 2 2
+@@ -5,9 +5,9 @@
+ hide_fence = false;
+ fence_left = scr_marker(x, y, bg_noellefence_left);
+ fence_left.depth = 9700;
+-fence_left_sprite = 4459;
++fence_left_sprite = 4460;
+ fence_left_ypos = y;
+-fence_right_sprite = 1854;
++fence_right_sprite = 1855;
+ fence_right_xpos = x;
+ fence_right_ypos = y;
+ test_timer = 0;
+FILE ch4/gml_Object_obj_noellehouse_noelle_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ var side_b = scr_sideb_active();
+-curtains_sprite = side_b ? 5236 : 1415;
++curtains_sprite = side_b ? 5238 : 1416;
+ curtain_marker = scr_marker(132, 62, curtains_sprite);
+ with (curtain_marker)
+ {
+FILE ch4/gml_Object_obj_npc_castle_addison_Create_0.gml M 20 20
+@@ -1,32 +1,32 @@
+ var lineup = scr_flag_get(792);
+-addison_sell_sprite = 1174;
+-addison_buy_sprite = 1178;
+-ad_a_sprite = 4898;
+-ad_b_sprite = 1512;
+-ad_c_sprite = 3348;
++addison_sell_sprite = 1175;
++addison_buy_sprite = 1179;
++ad_a_sprite = 4900;
++ad_b_sprite = 1513;
++ad_c_sprite = 3349;
+ if (lineup == 1)
+ {
+-    addison_sell_sprite = 1170;
+-    addison_buy_sprite = 1174;
+-    ad_a_sprite = 5086;
+-    ad_b_sprite = 1512;
+-    ad_c_sprite = 3348;
++    addison_sell_sprite = 1171;
++    addison_buy_sprite = 1175;
++    ad_a_sprite = 5088;
++    ad_b_sprite = 1513;
++    ad_c_sprite = 3349;
+ }
+ if (lineup == 2)
+ {
+-    addison_sell_sprite = 1172;
+-    addison_buy_sprite = 1170;
+-    ad_a_sprite = 3507;
+-    ad_b_sprite = 5086;
+-    ad_c_sprite = 4898;
++    addison_sell_sprite = 1173;
++    addison_buy_sprite = 1171;
++    ad_a_sprite = 3508;
++    ad_b_sprite = 5088;
++    ad_c_sprite = 4900;
+ }
+ if (lineup == 3)
+ {
+-    addison_sell_sprite = 1178;
+-    addison_buy_sprite = 1172;
+-    ad_a_sprite = 1512;
+-    ad_b_sprite = 4898;
+-    ad_c_sprite = 3348;
++    addison_sell_sprite = 1179;
++    addison_buy_sprite = 1173;
++    ad_a_sprite = 1513;
++    ad_b_sprite = 4900;
++    ad_c_sprite = 3349;
+ }
+ ad[0] = scr_dark_marker(700, 60, ad_a_sprite);
+ ad[1] = scr_dark_marker(878, 20, ad_b_sprite);
+FILE ch4/gml_Object_obj_npc_castle_door_Create_0.gml M 3 3
+@@ -2,16 +2,16 @@
+ howl_con = 0;
+ var ball_x_offset = 0;
+ var ball_y_offset = 0;
+-var ball_sprite = 1098;
++var ball_sprite = 1099;
+ if (scr_recruited_all_in_chapter(2))
+ {
+-    ball_sprite = 1221;
++    ball_sprite = 1222;
+     ball_x_offset = -16;
+     ball_y_offset = -12;
+ }
+ if (scr_recruited_all_in_chapter(3))
+ {
+-    ball_sprite = 3716;
++    ball_sprite = 3717;
+     ball_x_offset = -16;
+     ball_y_offset = -20;
+ }
+FILE ch4/gml_Object_obj_npc_gerson_Step_0.gml M 1 1
+@@ -357,7 +357,7 @@
+     anim_timer++;
+     if (anim_timer == 1)
+     {
+-        scr_jump_to_point_sprite(x, y, 8, 8, 2203, 2203);
++        scr_jump_to_point_sprite(x, y, 8, 8, 2204, 2204);
+     }
+     if (anim_timer == 14)
+     {
+FILE ch4/gml_Object_obj_npc_hammerguy_Create_0.gml M 1 1
+@@ -16,6 +16,6 @@
+ npc_sprite = sprite_index;
+ if (global.chapter == 4)
+ {
+-    npc_sprite = 1214;
++    npc_sprite = 1215;
+ }
+ sprite_index = npc_sprite;
+FILE ch4/gml_Object_obj_ow_pathingenemy_Draw_0.gml M 1 1
+@@ -20,7 +20,7 @@
+     }
+     var col = merge_color(c_white, c_black, clamp(dist / 140, 0, 0.85));
+     image_blend = col;
+-    var spr = 2112;
++    var spr = 2113;
+     var scale = 1;
+     var angle = idir * 90;
+     var xoff = 20;
+FILE ch4/gml_Object_obj_perspective_test_Create_0.gml M 1 1
+@@ -7,7 +7,7 @@
+ xsinerspeed = 1;
+ ysinerspeed = 2;
+ zsinerspeed = 1;
+-newsprite = 2743;
++newsprite = 2744;
+ partcount = 48;
+ parts[0] = -4;
+ shadows[0] = -4;
+FILE ch4/gml_Object_obj_pippins_enemy_Draw_0.gml M 1 1
+@@ -39,7 +39,7 @@
+         if (attackanimindex >= 6)
+         {
+             var rand = choose(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3);
+-            var spinsprite = 3701;
++            var spinsprite = 3702;
+             draw_sprite_ext(spinsprite, attackanimindex, x, y, 2, 2, 0, c_white, 1);
+         }
+         else
+FILE ch4/gml_Object_obj_rhythmgame_editor_Draw_0.gml M 3 3
+@@ -232,14 +232,14 @@
+     {
+         draw_sprite_ext(spr_sneo_bullet_arrow, 0, (camerax() + 640) - 38, lerp((cameray() + 480) - 21, cameray() + 19, rem_pos / track_length), 1, 1, 0, _remcolor, 1);
+     }
+-    var _walk_sprite = 5636;
++    var _walk_sprite = 5638;
+     if (instrument == 1)
+     {
+-        _walk_sprite = 5143;
++        _walk_sprite = 5145;
+     }
+     else if (instrument == 2)
+     {
+-        _walk_sprite = 3320;
++        _walk_sprite = 3321;
+     }
+     gpu_set_fog(true, c_black, 0, 1);
+     draw_sprite(_walk_sprite, trackpos / notespacing, (camerax() + 640) - 28, lerp((cameray() + 480) - 28, cameray() + 12, trackpos / track_length) - 1);
+FILE ch4/gml_Object_obj_room_castle_front_Step_0.gml M 1 1
+@@ -19,7 +19,7 @@
+         image_index = 0;
+         image_speed = 0;
+         scr_lerpvar("image_index", 0, 4, 12);
+-        scr_delay_var("sprite_index", 2569, 13);
++        scr_delay_var("sprite_index", 2570, 13);
+         scr_delay_var("image_speed", 0.2, 13);
+     }
+     scr_delay_var("shutta_posing", false, 13);
+FILE ch4/gml_Object_obj_room_church_choir_Create_0.gml M 1 1
+@@ -56,7 +56,7 @@
+     }
+     pal_swap_layer_init();
+     pal_swap_enable_layer("ASSETS_Items");
+-    pal_swap_set_layer(3934, 2, "ASSETS_Items", false);
++    pal_swap_set_layer(3935, 2, "ASSETS_Items", false);
+     pal_swap_reset();
+     if (global.plot >= 290 && global.plot < 300)
+     {
+FILE ch4/gml_Object_obj_room_church_office_Create_0.gml M 1 1
+@@ -49,7 +49,7 @@
+     bg_vfx.depth = 1000290;
+     pal_swap_layer_init();
+     pal_swap_enable_layer("BG_Items");
+-    pal_swap_set_layer(3934, palette_index, "BG_Items", false);
++    pal_swap_set_layer(3935, palette_index, "BG_Items", false);
+     pal_swap_reset();
+     if (global.plot >= 290 && global.plot < 300)
+     {
+FILE ch4/gml_Object_obj_room_town_alphysalley_Create_0.gml M 1 1
+@@ -18,7 +18,7 @@
+         {
+             var lay_id = layer_get_id("BACKGROUND");
+             var back_id = layer_background_get_id(lay_id);
+-            layer_background_sprite(back_id, 2456);
++            layer_background_sprite(back_id, 2457);
+             with (obj_readable_room1)
+             {
+                 instance_destroy();
+FILE ch4/gml_Object_obj_room_town_hospital_room2_Create_0.gml M 2 2
+@@ -5,7 +5,7 @@
+     var back_id = layer_background_get_id(lay_id);
+     if (scr_flag_get(349) > 0)
+     {
+-        layer_background_sprite(back_id, 3906);
++        layer_background_sprite(back_id, 3907);
+         instance_create(180, 105, obj_readable_room1);
+         instance_create(180, 105, obj_solidblockLight);
+         with (obj_caterpillarchara)
+@@ -16,7 +16,7 @@
+     }
+     else
+     {
+-        layer_background_sprite(back_id, 2291);
++        layer_background_sprite(back_id, 2292);
+     }
+ }
+ else
+FILE ch4/gml_Object_obj_room_town_shelter_Create_0.gml M 2 2
+@@ -15,9 +15,9 @@
+     grass_marker.depth = panel_marker.depth - 10;
+     if (global.plot >= 300)
+     {
+-        panel_marker.current_palette = 2763;
++        panel_marker.current_palette = 2764;
+         panel_marker.palette_index = 1;
+-        grass_marker.current_palette = 2763;
++        grass_marker.current_palette = 2764;
+         grass_marker.palette_index = 1;
+     }
+ }
+FILE ch4/gml_Object_obj_rotating_tower_controller_Create_0.gml M 13 13
+@@ -51,10 +51,10 @@
+ {
+     wide_tower = true;
+ }
+-var _towersprite = 5713;
++var _towersprite = 5715;
+ if (tower_type == 2)
+ {
+-    _towersprite = 4168;
++    _towersprite = 4169;
+ }
+ if (wide_tower == true)
+ {
+@@ -192,16 +192,16 @@
+     piecemaxdistance = 110;
+ }
+ _tower_angle = tower_angle;
+-laddersprite = 5084;
+-stepssprite = 5714;
+-rocksprite = 1902;
+-eyesprite = 5370;
+-eyedripsprite = 2654;
++laddersprite = 5086;
++stepssprite = 5716;
++rocksprite = 1903;
++eyesprite = 5372;
++eyedripsprite = 2655;
+ if (wide_tower)
+ {
+-    laddersprite = 4785;
+-    stepssprite = 1308;
+-    rocksprite = 4829;
+-    eyesprite = 5130;
+-    eyedripsprite = 4973;
+-}
++    laddersprite = 4786;
++    stepssprite = 1309;
++    rocksprite = 4831;
++    eyesprite = 5132;
++    eyedripsprite = 4975;
++}
+FILE ch4/gml_Object_obj_rotating_tower_controller_Draw_0.gml M 17 17
+@@ -14,7 +14,7 @@
+ {
+     middlex = 300;
+ }
+-var towertilesprite = 2215;
++var towertilesprite = 2216;
+ with (obj_tower_falling_piece)
+ {
+     image_index = obj_rotating_tower_controller.tower_image_index;
+@@ -86,7 +86,7 @@
+             i = render_ypos + 7;
+             while (i < 499)
+             {
+-                tower_piece_sprite[i] = 4168;
++                tower_piece_sprite[i] = 4169;
+                 for (var _i = 0; _i < 8; _i++)
+                 {
+                     tower_object[i][_i] = 0;
+@@ -193,7 +193,7 @@
+     }
+     if (tower_falls_apart_timer == 2)
+     {
+-        tower_piece_sprite[tower_falls_apart_i] = 4168;
++        tower_piece_sprite[tower_falls_apart_i] = 4169;
+         for (var _i = 0; _i < 8; _i++)
+         {
+             tower_object[tower_falls_apart_i][_i] = tower_object[tower_falls_apart_i][_i] * -1;
+@@ -223,7 +223,7 @@
+             i = render_ypos + 7;
+             while (i < 499)
+             {
+-                tower_piece_sprite_dog[i] = 4168;
++                tower_piece_sprite_dog[i] = 4169;
+                 i++;
+             }
+         }
+@@ -294,7 +294,7 @@
+     }
+     if (tower_falls_apart_timer_dog == 2)
+     {
+-        tower_piece_sprite_dog[tower_falls_apart_i_dog] = 4168;
++        tower_piece_sprite_dog[tower_falls_apart_i_dog] = 4169;
+     }
+     if (endclimb == false)
+     {
+@@ -318,7 +318,7 @@
+             tower_image_index = 0;
+         }
+         draw_sprite(tower_piece_sprite[i], tower_image_index, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+-        if (wide_tower && tower_piece_sprite[i] != 5316)
++        if (wide_tower && tower_piece_sprite[i] != 5318)
+         {
+             draw_sprite(spr_tower_rotating_fountain_gradient, 0, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+         }
+@@ -335,13 +335,13 @@
+             {
+                 event_user(10);
+                 blend = merge_color(c_white, c_gray, abs(_x[i][ii]) / 130);
+-                towertilesprite = 5408;
++                towertilesprite = 5410;
+                 if (tower_object[i][ii] > 0 && tower_object[i][ii] < 4)
+                 {
+-                    towertilesprite = 5279;
++                    towertilesprite = 5281;
+                 }
+                 var showtile = true;
+-                if (tower_piece_sprite[i] == 5316 && tower_object[i][ii] == 0)
++                if (tower_piece_sprite[i] == 5318 && tower_object[i][ii] == 0)
+                 {
+                     showtile = false;
+                 }
+@@ -357,13 +357,13 @@
+             {
+                 event_user(10);
+                 blend = merge_color(c_white, c_gray, abs(_x[i][ii]) / 130);
+-                towertilesprite = 5408;
++                towertilesprite = 5410;
+                 if (tower_object[i][ii] > 0 && tower_object[i][ii] < 4)
+                 {
+-                    towertilesprite = 5279;
++                    towertilesprite = 5281;
+                 }
+                 var showtile = true;
+-                if (tower_piece_sprite[i] == 5316 && tower_object[i][ii] == 0)
++                if (tower_piece_sprite[i] == 5318 && tower_object[i][ii] == 0)
+                 {
+                     showtile = false;
+                 }
+@@ -373,7 +373,7 @@
+                 }
+             }
+         }
+-        if (tower_piece_sprite[i] == 5316)
++        if (tower_piece_sprite[i] == 5318)
+         {
+             draw_sprite(tower_piece_sprite[i], tower_image_index, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+         }
+@@ -383,13 +383,13 @@
+             {
+                 event_user(10);
+                 blend = merge_color(c_white, c_gray, abs(_x[i][ii]) / 130);
+-                towertilesprite = 5408;
++                towertilesprite = 5410;
+                 if (tower_object[i][ii] > 0 && tower_object[i][ii] < 4)
+                 {
+-                    towertilesprite = 5279;
++                    towertilesprite = 5281;
+                 }
+                 var showtile = true;
+-                if (tower_piece_sprite[i] == 5316 && tower_object[i][ii] == 0)
++                if (tower_piece_sprite[i] == 5318 && tower_object[i][ii] == 0)
+                 {
+                     showtile = false;
+                 }
+@@ -524,7 +524,7 @@
+                 {
+                     xx = lerp(0, 70, tower_angle / 100);
+                 }
+-                if (tower_piece_sprite_dog[i] != 4168)
++                if (tower_piece_sprite_dog[i] != 4169)
+                 {
+                     if ((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false)
+                     {
+FILE ch4/gml_Object_obj_rotating_tower_controller_Other_12.gml M 3 3
+@@ -71,10 +71,10 @@
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 3, 0, 0, 3, 3, 464);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 3, 0, 0, 3, 3, 465);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 466);
+-tower_piece_sprite[466] = 5316;
++tower_piece_sprite[466] = 5318;
+ tower_xoffset[466] = 0;
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 467);
+-tower_piece_sprite[467] = 5316;
++tower_piece_sprite[467] = 5318;
+ tower_xoffset[467] = 0;
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 468);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 469);
+@@ -87,7 +87,7 @@
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 476);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 477);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 478);
+-tower_piece_sprite[478] = 5316;
++tower_piece_sprite[478] = 5318;
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 479);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 480);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 481);
+FILE ch4/gml_Object_obj_rotating_tower_controller_Other_24.gml M 7 7
+@@ -75,7 +75,7 @@
+             var i = render_ypos + 7;
+             while (i < 499)
+             {
+-                tower_piece_sprite[i] = 4168;
++                tower_piece_sprite[i] = 4169;
+                 for (var _i = 0; _i < 8; _i++)
+                 {
+                     tower_object[i][_i] = 0;
+@@ -182,7 +182,7 @@
+     }
+     if (tower_falls_apart_timer == 2)
+     {
+-        tower_piece_sprite[tower_falls_apart_i] = 4168;
++        tower_piece_sprite[tower_falls_apart_i] = 4169;
+         for (var _i = 0; _i < 8; _i++)
+         {
+             tower_object[tower_falls_apart_i][_i] = tower_object[tower_falls_apart_i][_i] * -1;
+@@ -212,7 +212,7 @@
+             var i = render_ypos + 7;
+             while (i < 499)
+             {
+-                tower_piece_sprite_dog[i] = 4168;
++                tower_piece_sprite_dog[i] = 4169;
+                 i++;
+             }
+         }
+@@ -283,7 +283,7 @@
+     }
+     if (tower_falls_apart_timer_dog == 2)
+     {
+-        tower_piece_sprite_dog[tower_falls_apart_i_dog] = 4168;
++        tower_piece_sprite_dog[tower_falls_apart_i_dog] = 4169;
+     }
+     if (endclimb == false)
+     {
+@@ -307,7 +307,7 @@
+             tower_image_index = 0;
+         }
+         draw_sprite(tower_piece_sprite[i], tower_image_index, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+-        if (tower_piece_sprite[i] != 5316)
++        if (tower_piece_sprite[i] != 5318)
+         {
+             draw_sprite(spr_tower_rotating_fountain_gradient, 0, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+         }
+@@ -1383,7 +1383,7 @@
+                 }
+                 if (((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false) && vis == true)
+                 {
+-                    if (tower_piece_sprite[i] == 5316)
++                    if (tower_piece_sprite[i] == 5318)
+                     {
+                         var bg_index = ladder_index;
+                         if (bg_index == 9)
+@@ -1486,7 +1486,7 @@
+                 {
+                     xx = lerp(0, 70, tower_angle / 100);
+                 }
+-                if (tower_piece_sprite_dog[i] != 4168)
++                if (tower_piece_sprite_dog[i] != 4169)
+                 {
+                     if ((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false)
+                     {
+FILE ch4/gml_Object_obj_rotating_tower_controller_new_Create_0.gml M 10 10
+@@ -119,14 +119,14 @@
+ }
+ horizontaltilecount = tower_circumference / tile_width_fine;
+ tile_angle_difference = 360 / horizontaltilecount;
+-var default_tile = 5180;
++var default_tile = 5182;
+ if (tiledefaultclimbable)
+ {
+-    default_tile = 2715;
++    default_tile = 2716;
+ }
+ if (appearance == 2)
+ {
+-    default_tile = 4168;
++    default_tile = 4169;
+ }
+ var a = 16;
+ var _index = 0;
+@@ -152,10 +152,10 @@
+     layer_set_visible(collision_id, false);
+     tm_collision = scr_layer_tilemap_get_id_fixed(collision_id);
+ }
+-var tileset = 3604;
++var tileset = 3605;
+ if (appearance == 1)
+ {
+-    tileset = 5101;
++    tileset = 5103;
+ }
+ for (ii = 0; ii < verticaltilecount; ii++)
+ {
+@@ -250,14 +250,14 @@
+         _b = 0;
+     }
+ }
+-default_tile = 4084;
++default_tile = 4085;
+ if (appearance == 1)
+ {
+-    default_tile = 5408;
++    default_tile = 5410;
+ }
+ if (appearance == 2)
+ {
+-    default_tile = 5546;
++    default_tile = 5548;
+ }
+ eye_sprite_width = sprite_get_width(spr_climb_eyeenemy_noeye);
+ eye_sprite_height = sprite_get_height(spr_climb_eyeenemy_noeye);
+@@ -573,11 +573,11 @@
+ }
+ if (appearance == 0)
+ {
+-    default_tile = 2715;
++    default_tile = 2716;
+ }
+ if (appearance == 1)
+ {
+-    default_tile = 5408;
++    default_tile = 5410;
+ }
+ if (appearance != 1)
+ {
+FILE ch4/gml_Object_obj_rotating_tower_controller_new_Draw_0.gml M 3 3
+@@ -76,12 +76,12 @@
+     var cx = camerax();
+     var cy = camy;
+     var len = array_length(backface_indices);
+-    var statictile = 4388;
++    var statictile = 4389;
+     var statictilecount = 2;
+     var staticyoffset = 760;
+     if (i_ex(obj_dw_churchc_titanclimb2))
+     {
+-        statictile = 1557;
++        statictile = 1558;
+         statictilecount = 3;
+         staticyoffset = 320;
+     }
+@@ -183,7 +183,7 @@
+     var staticyoffset = 760;
+     if (i_ex(obj_dw_churchb_rotatingtower))
+     {
+-        statictile = 1664;
++        statictile = 1665;
+         statictilecount = 2;
+         staticyoffset = 0;
+     }
+FILE ch4/gml_Object_obj_rotating_tower_controller_new_Other_11.gml M 1 1
+@@ -10,7 +10,7 @@
+ {
+     bgsiner -= 7;
+ }
+-bg = 3960;
++bg = 3961;
+ var yy = cameray();
+ draw_sprite_tiled_ext(bg, 0, tower_x, yy, 2, 2, colcol, 0.7 * eyebody);
+ draw_sprite_tiled_ext(bg, 0, tower_x - 240, yy, 2, 2, colcol, 0.3 * eyebody);
+FILE ch4/gml_Object_obj_rotating_tower_controller_old_Create_0.gml M 2 2
+@@ -50,10 +50,10 @@
+ {
+     wide_tower = true;
+ }
+-var _towersprite = 5713;
++var _towersprite = 5715;
+ if (tower_type == 2)
+ {
+-    _towersprite = 4168;
++    _towersprite = 4169;
+ }
+ if (wide_tower == true)
+ {
+FILE ch4/gml_Object_obj_rotating_tower_controller_old_Draw_0.gml M 8 8
+@@ -80,7 +80,7 @@
+             i = render_ypos + 7;
+             while (i < 499)
+             {
+-                tower_piece_sprite[i] = 4168;
++                tower_piece_sprite[i] = 4169;
+                 for (var _i = 0; _i < 8; _i++)
+                 {
+                     tower_object[i][_i] = 0;
+@@ -187,7 +187,7 @@
+     }
+     if (tower_falls_apart_timer == 2)
+     {
+-        tower_piece_sprite[tower_falls_apart_i] = 4168;
++        tower_piece_sprite[tower_falls_apart_i] = 4169;
+         for (var _i = 0; _i < 8; _i++)
+         {
+             tower_object[tower_falls_apart_i][_i] = tower_object[tower_falls_apart_i][_i] * -1;
+@@ -217,7 +217,7 @@
+             i = render_ypos + 7;
+             while (i < 499)
+             {
+-                tower_piece_sprite_dog[i] = 4168;
++                tower_piece_sprite_dog[i] = 4169;
+                 i++;
+             }
+         }
+@@ -288,7 +288,7 @@
+     }
+     if (tower_falls_apart_timer_dog == 2)
+     {
+-        tower_piece_sprite_dog[tower_falls_apart_i_dog] = 4168;
++        tower_piece_sprite_dog[tower_falls_apart_i_dog] = 4169;
+     }
+     if (endclimb == false)
+     {
+@@ -312,7 +312,7 @@
+             if (tower_object[i][ii] > 0)
+             {
+                 event_user(10);
+-                if (((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false) && tower_piece_sprite[i] == 5316)
++                if (((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false) && tower_piece_sprite[i] == 5318)
+                 {
+                     var bg_index = ladder_index + 10;
+                     draw_sprite_ext(spr_tower_rotating_bg, bg_index, 320 + xx + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40), 1.1, 1, 0, c_white, 1);
+@@ -327,7 +327,7 @@
+             tower_image_index = 0;
+         }
+         draw_sprite(tower_piece_sprite[i], tower_image_index, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+-        if (wide_tower && tower_piece_sprite[i] != 5316)
++        if (wide_tower && tower_piece_sprite[i] != 5318)
+         {
+             draw_sprite(spr_tower_rotating_fountain_gradient, 0, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+         }
+@@ -353,7 +353,7 @@
+                 {
+                     _blend = merge_color(c_white, c_black, abs(xx) / (piecemaxdistance * 1.2));
+                 }
+-                if (((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false) && tower_piece_sprite[i] == 5316)
++                if (((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false) && tower_piece_sprite[i] == 5318)
+                 {
+                     var bg_index = ladder_index;
+                     if (towerback)
+@@ -475,7 +475,7 @@
+                 {
+                     xx = lerp(0, 70, tower_angle / 100);
+                 }
+-                if (tower_piece_sprite_dog[i] != 4168)
++                if (tower_piece_sprite_dog[i] != 4169)
+                 {
+                     if ((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false)
+                     {
+FILE ch4/gml_Object_obj_rotating_tower_controller_old_Other_12.gml M 3 3
+@@ -71,10 +71,10 @@
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 3, 0, 0, 3, 3, 464);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 3, 0, 0, 3, 3, 465);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 466);
+-tower_piece_sprite[466] = 5316;
++tower_piece_sprite[466] = 5318;
+ tower_xoffset[466] = 0;
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 467);
+-tower_piece_sprite[467] = 5316;
++tower_piece_sprite[467] = 5318;
+ tower_xoffset[467] = 0;
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 468);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 469);
+@@ -87,7 +87,7 @@
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 476);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 477);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 478);
+-tower_piece_sprite[478] = 5316;
++tower_piece_sprite[478] = 5318;
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 479);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 480);
+ scr_tower_object_setup_wide(0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 481);
+FILE ch4/gml_Object_obj_rotating_tower_controller_old_Other_24.gml M 7 7
+@@ -75,7 +75,7 @@
+             var i = render_ypos + 7;
+             while (i < 499)
+             {
+-                tower_piece_sprite[i] = 4168;
++                tower_piece_sprite[i] = 4169;
+                 for (var _i = 0; _i < 8; _i++)
+                 {
+                     tower_object[i][_i] = 0;
+@@ -182,7 +182,7 @@
+     }
+     if (tower_falls_apart_timer == 2)
+     {
+-        tower_piece_sprite[tower_falls_apart_i] = 4168;
++        tower_piece_sprite[tower_falls_apart_i] = 4169;
+         for (var _i = 0; _i < 8; _i++)
+         {
+             tower_object[tower_falls_apart_i][_i] = tower_object[tower_falls_apart_i][_i] * -1;
+@@ -212,7 +212,7 @@
+             var i = render_ypos + 7;
+             while (i < 499)
+             {
+-                tower_piece_sprite_dog[i] = 4168;
++                tower_piece_sprite_dog[i] = 4169;
+                 i++;
+             }
+         }
+@@ -283,7 +283,7 @@
+     }
+     if (tower_falls_apart_timer_dog == 2)
+     {
+-        tower_piece_sprite_dog[tower_falls_apart_i_dog] = 4168;
++        tower_piece_sprite_dog[tower_falls_apart_i_dog] = 4169;
+     }
+     if (endclimb == false)
+     {
+@@ -307,7 +307,7 @@
+             tower_image_index = 0;
+         }
+         draw_sprite(tower_piece_sprite[i], tower_image_index, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+-        if (tower_piece_sprite[i] != 5316)
++        if (tower_piece_sprite[i] != 5318)
+         {
+             draw_sprite(spr_tower_rotating_fountain_gradient, 0, 320 + tower_xoffset[i], ((40 * i) + yoffset) - (towerpiececount * 40));
+         }
+@@ -1383,7 +1383,7 @@
+                 }
+                 if (((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false) && vis == true)
+                 {
+-                    if (tower_piece_sprite[i] == 5316)
++                    if (tower_piece_sprite[i] == 5318)
+                     {
+                         var bg_index = ladder_index;
+                         if (bg_index == 9)
+@@ -1486,7 +1486,7 @@
+                 {
+                     xx = lerp(0, 70, tower_angle / 100);
+                 }
+-                if (tower_piece_sprite_dog[i] != 4168)
++                if (tower_piece_sprite_dog[i] != 4169)
+                 {
+                     if ((((40 * i) + yoffset) - (towerpiececount * 40)) > -20 || endclimb == false)
+                     {
+FILE ch4/gml_Object_obj_shop1_Draw_0.gml M 6 0
+@@ -138,6 +138,7 @@
+     draw_text(480, 300, string_hash_to_newline(stringsetloc("Sell", "obj_shop1_slash_Draw_0_gml_107_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Talk", "obj_shop1_slash_Draw_0_gml_108_0")));
+     draw_text(480, 380, string_hash_to_newline(stringsetloc("Exit", "obj_shop1_slash_Draw_0_gml_109_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, (135 + (menuc[0] * 20)) * 2);
+     if (button1_p())
+     {
+@@ -220,6 +221,7 @@
+             }
+             instance_create(450, 260, obj_writer);
+         }
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 30, 270 + (menuc[1] * 40));
+         if (button1_p() && onebuffer < 0)
+         {
+@@ -257,6 +259,7 @@
+         draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(buyvalue[menuc[1]]), "obj_shop1_slash_Draw_0_gml_177_0")));
+         draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_169_0")));
+         draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_170_0")));
++        menuc[menu] = min(menuc[menu], menumax);
+         draw_sprite(spr_heart, 0, 450, 350 + (menuc[2] * 30));
+         if (button2_p() && twobuffer < 0)
+         {
+@@ -393,6 +396,7 @@
+         global.msg[0] = stringsetloc("\\E0Don't have&anything&better&to do.", "obj_shop1_slash_Draw_0_gml_255_0");
+         instance_create(440, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[3] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -450,6 +454,7 @@
+         }
+         instance_create(460, 260, obj_writer);
+     }
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 50, 270 + (menuc[10] * 40));
+     if (button1_p() && onebuffer < 0)
+     {
+@@ -591,6 +596,7 @@
+     draw_text(460, y2_off, string_hash_to_newline(stringsetsubloc("$~1 ?", string(sellvalue), "obj_shop1_slash_Draw_0_gml_407_0")));
+     draw_text(480, 340, string_hash_to_newline(stringsetloc("Yes", "obj_shop1_slash_Draw_0_gml_367_0")));
+     draw_text(480, 370, string_hash_to_newline(stringsetloc("No", "obj_shop1_slash_Draw_0_gml_368_0")));
++    menuc[menu] = min(menuc[menu], menumax);
+     draw_sprite(spr_heart, 0, 450, 350 + (menuc[menu] * 30));
+ }
+ scr_shopmenu(5);
+FILE ch4/gml_Object_obj_texturescroller_Create_0.gml M 1 1
+@@ -1,7 +1,7 @@
+ surf_textured = -1;
+ tile_object = 455;
+ base_texture = 88;
+-scroll_texture = 991;
++scroll_texture = 992;
+ fade_time_seconds = 4;
+ fade_from = 0;
+ fade_to = 1;
+FILE ch4/gml_Object_obj_texturescroller_dark_Create_0.gml M 2 2
+@@ -1,7 +1,7 @@
+ surf_textured = -1;
+ tile_object = 455;
+-base_texture = 4434;
+-scroll_texture = 4543;
++base_texture = 4435;
++scroll_texture = 4544;
+ fade_time_seconds = 1;
+ fade_from = 0;
+ fade_to = 1;
+FILE ch4/gml_Object_obj_texturescroller_library_Create_0.gml M 2 2
+@@ -1,7 +1,7 @@
+ surf_textured = -1;
+ tile_object = 455;
+-base_texture = 5771;
+-scroll_texture = 4382;
++base_texture = 5773;
++scroll_texture = 4383;
+ fade_time_seconds = 4;
+ fade_from = 0;
+ fade_to = 1;
+FILE ch4/gml_Object_obj_texturescroller_prophecy_Create_0.gml M 1 1
+@@ -1,7 +1,7 @@
+ surf_textured = -1;
+ tile_object = 364;
+ base_texture = 88;
+-scroll_texture = 991;
++scroll_texture = 992;
+ fade_time_seconds = 4;
+ fade_from = 0;
+ fade_to = 1;
+FILE ch4/gml_Object_obj_titan_background_balls_Create_0.gml M 1 1
+@@ -7,7 +7,7 @@
+ bs = part_system_create();
+ part_system_automatic_draw(bs, false);
+ btballs = part_type_create();
+-part_type_sprite(btballs, 3117, false, false, true);
++part_type_sprite(btballs, 3118, false, false, true);
+ var lifetime = 700;
+ part_type_speed(btballs, 0.8, 1.6, 0, 0.2);
+ part_type_life(btballs, lifetime, lifetime);
+FILE ch4/gml_Object_obj_titan_battle_finger_Create_0.gml M 1 1
+@@ -26,7 +26,7 @@
+ break_store = "nothing";
+ counter = 3;
+ light = 0;
+-weakspot_sprite = 4096;
++weakspot_sprite = 4097;
+ weak_dist = 40;
+ weak_off[0] = 0;
+ weak_off[1] = 10;
+FILE ch4/gml_Object_obj_titan_climb_hand_Create_0.gml M 2 2
+@@ -1,7 +1,7 @@
+ con = -1;
+ hand_sprite = spr_titan_climb_hand;
+-finger_sprite = 1547;
+-arm_sprite = 4314;
++finger_sprite = 1548;
++arm_sprite = 4315;
+ finger_anim = 0;
+ anim_timer = 0;
+ base_rot = -10;
+FILE ch4/gml_Object_obj_titan_climb_spawn_Other_21.gml M 1 1
+@@ -1,6 +1,6 @@
+ var speed_modifier = 3;
+ scr_lerpvar("image_alpha", 0, 1, 4 * speed_modifier);
+ scr_lerpvar("image_index", 5, 0, 6 * speed_modifier);
+-scr_delay_var("sprite_index", 4949, 7 * speed_modifier);
++scr_delay_var("sprite_index", 4951, 7 * speed_modifier);
+ scr_delay_var("image_index", 0, 7 * speed_modifier);
+ scr_delay_var("image_speed", 0.2, 7 * speed_modifier);
+FILE ch4/gml_Object_obj_titan_distort_Create_0.gml M 3 3
+@@ -28,9 +28,9 @@
+ multa = 20;
+ multb = 30;
+ altspeed = scroll_speed;
+-idle_sprite = 5262;
+-effect_sprite = 5262;
+-infinite_sprite = 5262;
++idle_sprite = 5264;
++effect_sprite = 5264;
++infinite_sprite = 5264;
+ image_speed = 0.5;
+ image_xscale = 2;
+ image_yscale = 2;
+FILE ch4/gml_Object_obj_tower_dog_stilts_Step_0.gml M 1 1
+@@ -30,7 +30,7 @@
+     {
+         for (var i = 0; i < towerpiececount; i++)
+         {
+-            tower_piece_sprite_dog[i] = 4168;
++            tower_piece_sprite_dog[i] = 4169;
+         }
+     }
+ }
+FILE ch4/gml_Object_obj_town_north_Create_0.gml M 1 1
+@@ -63,7 +63,7 @@
+         var bratty_marker = instance_create(800, 0, obj_marker_palette);
+         bratty_marker.sprite_index = bg_building_brattyhouse_night;
+         bratty_marker.depth = 949996;
+-        bratty_marker.current_palette = 2763;
++        bratty_marker.current_palette = 2764;
+         bratty_marker.palette_index = 1;
+         var door_readable = instance_create(526, 76, obj_readable_room1);
+         door_readable.image_xscale = 1.6;
+FILE ch4/gml_Object_obj_traintrack_moving_bend_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ event_inherited();
+-track_sprite = 2023;
++track_sprite = 2024;
+ track_angle = image_angle + (image_index * 90);
+ track_angle_target = image_angle + (image_index * 90);
+ switch (image_angle)
+FILE ch4/gml_Object_obj_traintrack_moving_center_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ event_inherited();
+-track_sprite = 5738;
++track_sprite = 5740;
+ switch (image_angle)
+ {
+     case 0:
+FILE ch4/gml_Object_obj_traintrack_moving_corner_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ event_inherited();
+-track_sprite = 1767;
++track_sprite = 1768;
+ switch (image_angle)
+ {
+     case 0:
+FILE ch4/gml_Object_obj_watercooler_bullet_rainball_Create_0.gml M 1 1
+@@ -6,7 +6,7 @@
+ threshold = 3;
+ count = 0;
+ regrazetimer = 0;
+-bulletsprite = 1761;
++bulletsprite = 1762;
+ siner = 0;
+ scr_turntimer(300);
+ side = choose(-1, 1);

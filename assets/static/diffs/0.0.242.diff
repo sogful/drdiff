@@ -1,0 +1,368 @@
+FILE ch5/gml_GlobalScript_msgset_add.gml M 8 0
+@@ -115,3 +115,11 @@
+ {
+     msgset_insert("", 0, 0, -1, 50, arg0, arg1);
+ }
++
++function msgset_clear()
++{
++    with (obj_balloon_queue)
++    {
++        instance_destroy();
++    }
++}
+FILE ch5/gml_GlobalScript_scr_plat_encounter.gml M 1 0
+@@ -13,6 +13,7 @@
+             mc.image_index = image_index;
+             mc.image_speed = 0;
+             mc.cutscene = 1;
++            mc.doorcooldown = 99999999;
+             mc.fun = 1;
+             mc.depth = depth;
+         }
+FILE ch5/gml_Object_obj_bullet_super_nubert2_Step_0.gml M 2 2
+@@ -31,8 +31,8 @@
+                 if (collision_rectangle(_box[0], _box[1], _box[2], _box[3], id, true, false))
+                 {
+                     other.nubert_hooped = true;
+-                    scr_mercyadd(obj_trashy_trio.myself, 5);
+-                    if (global.mercymod[obj_trashy_trio.myself] >= 100)
++                    scr_mercyadd(obj_trashy_trio.myself, min(5, 99 - global.mercymod[obj_trashy_trio.myself]));
++                    if (global.mercymod[obj_trashy_trio.myself] >= 99)
+                     {
+                         with (obj_trashy_trio)
+                         {
+FILE ch5/gml_Object_obj_ch5_LW21_arrive_Create_0.gml M 1 0
+@@ -23,6 +23,7 @@
+ {
+     global.interact = 1;
+     con = 0;
++    scr_setparty(1, 0, 0);
+     if (scr_debug() && !i_ex(obj_dw_transition))
+     {
+         _manual_kris_set = true;
+FILE ch5/gml_Object_obj_dw_fcastle_dangerous_platforming_Step_0.gml M 10 0
+@@ -32,6 +32,16 @@
+     }
+     if (global.flag[1454] < 40)
+     {
++        var gm = scr_genmarker("no_early_jump");
++        with (gm)
++        {
++            var block = instance_create(x, y, obj_plat_block);
++            with (block)
++            {
++                image_yscale = 6;
++                visible = 0;
++            }
++        }
+         remove_evidence();
+         with (obj_plat_sinerbullet)
+         {
+FILE ch5/gml_Object_obj_dw_fcastle_top_pinkdoor_Step_0.gml M 6 0
+@@ -74,6 +74,9 @@
+     var krdist = point_distance(kr_actor.x, kr_actor.y, krmarker[0], krmarker[1]) / 8;
+     var radist = point_distance(ra_actor.x, ra_actor.y, ramarker[0], ramarker[1]) / 8;
+     var sudist = point_distance(su_actor.x, su_actor.y, sumarker[0], sumarker[1]) / 8;
++    krdist = max(krdist, 1);
++    radist = max(radist, 1);
++    sudist = max(sudist, 1);
+     c_sel(kr);
+     c_walkdirect(krmarker[0], krmarker[1], krdist);
+     c_sel(su);
+@@ -142,6 +145,9 @@
+     var krdist = point_distance(kr_actor.x, kr_actor.y, krmarker[0], krmarker[1]) / 8;
+     var radist = point_distance(ra_actor.x, ra_actor.y, ramarker[0], ramarker[1]) / 8;
+     var sudist = point_distance(su_actor.x, su_actor.y, sumarker[0], sumarker[1]) / 8;
++    krdist = max(krdist, 1);
++    radist = max(radist, 1);
++    sudist = max(sudist, 1);
+     c_sel(kr);
+     c_walkdirect(krmarker[0], krmarker[1], krdist);
+     c_sel(su);
+FILE ch5/gml_Object_obj_dw_fcastle_yellowblue_Step_0.gml M 12 9
+@@ -305,16 +305,19 @@
+     {
+         if (grounded)
+         {
+-            if (ground != other.last_ground && ground.sprite_width < 200)
++            if (instance_exists(ground))
+             {
+-                var xx = camerax() + 320 + (480 * gunside);
+-                with (instance_create(xx, obj_plat_player.ground.y + 20, obj_dw_fcastle_yellowblue_gun))
+-                {
+-                    scr_darksize();
+-                    image_xscale = -2 * gunside;
+-                    depth = 50000;
+-                }
+-                other.next_gun_side *= -1;
++                if (ground != other.last_ground && ground.sprite_width < 200)
++                {
++                    var xx = camerax() + 320 + (480 * gunside);
++                    with (instance_create(xx, obj_plat_player.ground.y + 20, obj_dw_fcastle_yellowblue_gun))
++                    {
++                        scr_darksize();
++                        image_xscale = -2 * gunside;
++                        depth = 50000;
++                    }
++                    other.next_gun_side *= -1;
++                }
+             }
+             other.last_ground = ground;
+         }
+FILE ch5/gml_Object_obj_dw_garden_intro_Create_0.gml M 12 0
+@@ -1,4 +1,16 @@
+ turnofflayers("DEBUG_ASSETS");
++if (scr_debug())
++{
++    if (keyboard_check(ord("P")))
++    {
++        global.tempflag[90] = 0.001;
++    }
++    if (global.tempflag[90] == 0.001)
++    {
++        global.tempflag[90] = 0;
++        global.plot = 199;
++    }
++}
+ if (global.plot >= 200)
+ {
+     scr_musicer("birds_ch5.ogg", 1);
+FILE ch5/gml_Object_obj_flowery_towery_CleanUp_0.gml M 2 2
+@@ -1,6 +1,6 @@
+-if (surface_exists(tower_surface[0]))
++for (var i = 0; i < array_length(tower_surface); i++)
+ {
+-    for (var i = 0; i < layers; i++)
++    if (surface_exists(tower_surface[i]))
+     {
+         surface_free(tower_surface[i]);
+     }
+FILE ch5/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -62,14 +62,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.241";
++global.versionno = "v0.0.242";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.241";
++    global.versionno = "v0.0.242";
+ }
+ else if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.241";
++    global.versionno = "v0.0.242";
+ }
+ global.pause_plat = false;
+ global.game_won = false;
+FILE ch5/gml_Object_obj_pink_enemy_Step_0.gml M 18 15
+@@ -55,6 +55,9 @@
+         global.actsimul[myself][1] = 0;
+         global.actsimulsus[myself][0] = 0;
+         global.actsimulral[myself][0] = 0;
++        global.actsimul[myself][2] = 0;
++        global.actsimulsus[myself][1] = 0;
++        global.actsimulral[myself][1] = 0;
+     }
+ }
+ if (introcon == 0)
+@@ -449,6 +452,10 @@
+             }
+             if (datecount == 3)
+             {
++                if (phaseturns > 2)
++                {
++                    phaseturns = 2;
++                }
+                 if (phaseturns == 2)
+                 {
+                     doki = 20;
+@@ -477,13 +484,6 @@
+                     _who_is_talking = "ghost";
+                 }
+             }
+-        }
+-        else if (datecount == 3)
+-        {
+-            msgset(0, pink_battle_dialogue61);
+-            ballooncon = 0;
+-            balloonend = 1;
+-            _who_is_talking = "ghost";
+         }
+         else if (datecount == 2)
+         {
+@@ -1584,7 +1584,7 @@
+     if (scr_isphase("bullets") && attacked == 0)
+     {
+         rtimer += 1;
+-        if (datecount == 3 && phaseturns != 3)
++        if (datecount == 3 && phaseturns < 3)
+         {
+             rtimer = 12;
+         }
+@@ -1617,7 +1617,7 @@
+         }
+         if ((rtimer == 12 && doki < dokimax) || (doki >= dokimax && rtimer == 15))
+         {
+-            if (doki >= dokimax || (datecount == 3 && phaseturns == 3))
++            if (doki >= dokimax || (datecount == 3 && phaseturns >= 3))
+             {
+                 datecount++;
+                 if ((datecount == 1 && i_ex(obj_writer)) || datecount > 1)
+@@ -2275,16 +2275,16 @@
+         }
+         else
+         {
+-            var _r_actstring = stringsetloc("* Susie flirted!", "obj_pink_enemy_slash_Step_0_gml_757_0");
++            var _s_actstring = stringsetloc("* Susie flirted!", "obj_pink_enemy_slash_Step_0_gml_757_0");
+             if (simultotal == 1)
+             {
+-                msgset(0, _r_actstring + "/%");
++                msgset(0, _s_actstring + "/%");
+                 scr_battletext_default();
+                 actconsus = 20;
+             }
+             else
+             {
+-                msgset(0, _r_actstring);
++                msgset(0, _s_actstring);
+                 scr_simultext("susie");
+                 if (simulordersus == 0)
+                 {
+@@ -2346,16 +2346,16 @@
+         }
+         else
+         {
+-            var _r_actstring = stringsetloc("* Susie flirted hard!", "obj_pink_enemy_slash_Step_0_gml_778_0");
++            var _s_actstring = stringsetloc("* Susie flirted hard!", "obj_pink_enemy_slash_Step_0_gml_778_0");
+             if (simultotal == 1)
+             {
+-                msgset(0, _r_actstring + "/%");
++                msgset(0, _s_actstring + "/%");
+                 scr_battletext_default();
+                 actconsus = 20;
+             }
+             else
+             {
+-                msgset(0, _r_actstring);
++                msgset(0, _s_actstring);
+                 scr_simultext("susie");
+                 if (simulordersus == 0)
+                 {
+@@ -2846,6 +2846,9 @@
+             global.actsimul[myself][1] = 0;
+             global.actsimulsus[myself][0] = 0;
+             global.actsimulral[myself][0] = 0;
++            global.actsimul[myself][2] = 0;
++            global.actsimulsus[myself][1] = 0;
++            global.actsimulral[myself][1] = 0;
+         }
+     }
+ }
+FILE ch5/gml_Object_obj_plat_enm_smallglove_Create_0.gml M 4 1
+@@ -115,7 +115,10 @@
+             scr_plat_hitstop_global(2);
+         }
+         timer = 0;
+-        hit_angle = point_direction(obj_plat_player.x, obj_plat_player.y, x, y);
++        if (instance_exists(obj_plat_player))
++        {
++            hit_angle = point_direction(obj_plat_player.x, obj_plat_player.y, x, y);
++        }
+         if (con == 2)
+         {
+             timer = 2;
+FILE ch5/gml_Object_obj_purplecontrols_Step_0.gml M 4 1
+@@ -1208,7 +1208,10 @@
+         var _box_yscale = _scale;
+         if (made == 0)
+         {
+-            surface_effect = surface_create(300, 300);
++            if (!surface_exists(surface_effect))
++            {
++                surface_effect = surface_create(300, 300);
++            }
+             pattern_list = ds_list_create();
+             rotate_speed = 12;
+             pattern_phase = -2;
+FILE ch5/gml_Object_obj_trashy_broom_Step_0.gml M 2 2
+@@ -32,10 +32,10 @@
+                     {
+                         damage++;
+                         damagemessage = "+" + string(damage) + "%";
+-                        global.mercymod[obj_trashy_trio.myself] = scr_approach(global.mercymod[obj_trashy_trio.myself], 100, 1);
++                        global.mercymod[obj_trashy_trio.myself] = scr_approach(global.mercymod[obj_trashy_trio.myself], 99, 1);
+                     }
+                 }
+-                if (global.mercymod[obj_trashy_trio.myself] >= 100)
++                if (global.mercymod[obj_trashy_trio.myself] >= 99)
+                 {
+                     with (obj_trashy_trio)
+                     {
+FILE ch5/gml_Object_obj_trashy_hoop_Create_0.gml M 2 2
+@@ -37,10 +37,10 @@
+             damagemessage = "+" + string(damage) + "%";
+             var _pitch = 1.4;
+             snd_play_x(snd_mercyadd, 0.8, _pitch);
+-            global.mercymod[obj_trashy_trio.myself] = scr_approach(global.mercymod[obj_trashy_trio.myself], 100, arg0);
++            global.mercymod[obj_trashy_trio.myself] = scr_approach(global.mercymod[obj_trashy_trio.myself], 99, arg0);
+         }
+     }
+-    if (global.mercymod[obj_trashy_trio.myself] >= 100)
++    if (global.mercymod[obj_trashy_trio.myself] >= 99)
+     {
+         with (obj_trashy_trio)
+         {
+FILE ch5/gml_Object_obj_trashy_trio_CleanUp_0.gml M 1 0
+@@ -6,3 +6,4 @@
+ {
+     instance_destroy();
+ }
++msgset_clear();
+FILE ch5/gml_Object_obj_trashy_trio_Create_0.gml M 8 0
+@@ -305,6 +305,14 @@
+             d3d_set_fog(false, c_black, 0, 0);
+         }
+     };
++    
++    clean_func = function()
++    {
++        if (surface_exists(my_surface))
++        {
++            surface_free(my_surface);
++        }
++    };
+ }
+ with (trashy_marker)
+ {
+FILE ch5/gml_Object_obj_trashy_trio_Step_0.gml M 14 0
+@@ -1,4 +1,17 @@
+ back = scr_approach(back, 0, 1);
++if (scr_debug())
++{
++    if (keyboard_check_pressed(vk_control))
++    {
++        with (scr_mercyadd(myself, 98))
++        {
++            x += 40;
++            y -= 20;
++            ystart = x;
++            ystart = y;
++        }
++    }
++}
+ if (global.monster[myself] == 1)
+ {
+     if (global.mnfight == 2 && global.turntimer <= -15 && global.mercymod[myself] >= 99 && fight_type != "over")
+@@ -590,6 +603,7 @@
+                     instance_destroy();
+                 }
+             }
++            global.flag[36] = 0;
+             scr_wincombat();
+         });
+         cantalk = true;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_204_PreCreate.gml A 1 0
+extflag = "no_early_jump";

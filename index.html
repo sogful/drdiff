@@ -1,31 +1,37 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>version diff</title>
-<link rel="stylesheet" href="/src/css/style.css">
-<link rel="icon" href="/favicon.png">
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>version diff</title>
+  <link rel="stylesheet" href="/src/css/style.css">
+  <link rel="icon" href="/favicon.png">
+
 </head>
 <body>
 
-<header class="topbar">
-  <div class="versionrail"></div>
-</header>
+  <header class="topbar">
+    <div class="versionrail"></div>
+  </header>
 
-<div class="chapterbar"></div>
+  <div class="chapterbar"></div>
 
-<div class="workspace">
-  <aside class="sidebar">
-    <div class="filelist"></div>
-    <button class="changelogtoggle" type="button">changelog</button>
-  </aside>
-  <main class="content">
-    <div class="hint">pick a version above.</div>
-  </main>
-</div>
+  <div class="workspace">
+    <aside class="sidebar">
+      <div class="filelist"></div>
+      <button class="changelogtoggle" type="button">changelogs</button>
+    </aside>
+    <main class="content"></main>
+  </div>
 
-<script src="/src/js/gml.js"></script>
-<script src="/src/js/app.js"></script>
+  <script type="module">
+    import {pixelize} from "/src/js/font.js";
+    window.pixelize = pixelize;
+    window.dispatchEvent(new Event("fontready"));
+  </script>
+  <script src="/src/js/gml.js"></script>
+  <script src="/src/js/app.js"></script>
+
 </body>
 </html>

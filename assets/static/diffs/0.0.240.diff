@@ -1,0 +1,3618 @@
+FILE root/gml_GlobalScript_scr_chapter_save_file_exists.gml M 1 1
+@@ -99,7 +99,7 @@
+ function get_highest_revealed_chapter()
+ {
+     var highest_revealed = UnknownEnum.Value_1;
+-    for (var i = 0; i < UnknownEnum.Value_4; i++)
++    for (var i = 0; i < UnknownEnum.Value_5; i++)
+     {
+         var chapter = i + 1;
+         if (!scr_is_chapter_revealed(chapter))
+FILE root/gml_GlobalScript_scr_init.gml M 18 9
+@@ -13,19 +13,22 @@
+     switch (arg0)
+     {
+         case UnknownEnum.Value_1:
++            return 2;
++            break;
++        case UnknownEnum.Value_2:
+             return 1;
+             break;
+-        case UnknownEnum.Value_2:
++        case UnknownEnum.Value_3:
++            return 3;
++            break;
++        case UnknownEnum.Value_4:
++            return 5;
++            break;
++        case UnknownEnum.Value_5:
+             return 0;
+             break;
+-        case UnknownEnum.Value_3:
+-            return 2;
+-            break;
+-        case UnknownEnum.Value_4:
++        default:
+             return 4;
+-            break;
+-        default:
+-            return 3;
+             break;
+     }
+ }
+@@ -46,6 +49,9 @@
+         case UnknownEnum.Value_4:
+             return (global.lang == "en") ? "Prophecy" : "予言";
+             break;
++        case UnknownEnum.Value_5:
++            return (global.lang == "en") ? "Festival Day" : "お祭り";
++            break;
+         default:
+             return "- -";
+             break;
+@@ -54,7 +60,7 @@
+ 
+ function get_version()
+ {
+-    var version = "v17";
++    var version = "v22";
+     return version;
+ }
+ 
+@@ -74,6 +80,9 @@
+         case UnknownEnum.Value_4:
+             return UnknownEnum.Value_5;
+             break;
++        case UnknownEnum.Value_5:
++            return UnknownEnum.Value_6;
++            break;
+         default:
+             return UnknownEnum.Value_0;
+             break;
+FILE root/gml_Object_obj_CHAPTER_SELECT_Create_0.gml M 9 1
+@@ -18,7 +18,7 @@
+ init = function()
+ {
+     var max_chapter = UnknownEnum.Value_7;
+-    var max_available_chapter = UnknownEnum.Value_4;
++    var max_available_chapter = UnknownEnum.Value_5;
+     _current_state = UnknownEnum.Value_1;
+     for (var i = 0; i < max_available_chapter; i++)
+     {
+@@ -43,6 +43,14 @@
+     if (_chapter_completed > 0)
+     {
+         _current_state = UnknownEnum.Value_3;
++        if (_chapter_in_progress > _chapter_completed)
++        {
++            _current_state = UnknownEnum.Value_2;
++            if ((_chapter_in_progress - _chapter_completed) >= 2)
++            {
++                _current_state = UnknownEnum.Value_4;
++            }
++        }
+         if (_chapter_completed >= max_available_chapter)
+         {
+             _current_state = UnknownEnum.Value_4;
+FILE root/gml_Object_obj_init_console_Create_0.gml M 1 1
+@@ -94,7 +94,7 @@
+     }
+     if (!scr_has_ura_data())
+     {
+-        for (var i = 0; i < UnknownEnum.Value_4; i++)
++        for (var i = 0; i < UnknownEnum.Value_5; i++)
+         {
+             var chapter = i + 1;
+             scr_convert_ura_data(chapter);
+FILE root/gml_Object_obj_init_console_Other_72.gml M 2 2
+@@ -60,7 +60,7 @@
+                     }
+                     if (!scr_has_ura_data())
+                     {
+-                        for (var i = 0; i < UnknownEnum.Value_4; i++)
++                        for (var i = 0; i < UnknownEnum.Value_5; i++)
+                         {
+                             var chapter = i + 1;
+                             scr_convert_ura_data(chapter);
+@@ -110,7 +110,7 @@
+                     }
+                     if (!scr_has_ura_data())
+                     {
+-                        for (var i = 0; i < UnknownEnum.Value_4; i++)
++                        for (var i = 0; i < UnknownEnum.Value_5; i++)
+                         {
+                             var chapter = i + 1;
+                             scr_convert_ura_data(chapter);
+FILE root/gml_Object_obj_init_pc_Create_0.gml M 1 1
+@@ -61,7 +61,7 @@
+     }
+     if (!scr_has_ura_data())
+     {
+-        for (var i = 0; i < UnknownEnum.Value_4; i++)
++        for (var i = 0; i < UnknownEnum.Value_5; i++)
+         {
+             var chapter = i + 1;
+             scr_convert_ura_data(chapter);
+FILE root/gml_Object_obj_screen_select_list_Create_0.gml M 1 1
+@@ -7,7 +7,7 @@
+ _chapter_index = 0;
+ _fade_in = false;
+ var max_chapter = UnknownEnum.Value_7;
+-var max_available_chapter = UnknownEnum.Value_4;
++var max_available_chapter = UnknownEnum.Value_5;
+ for (var i = 0; i < max_chapter; i++)
+ {
+     var new_chapter = instance_create(0, -10 + (i * 60), obj_ui_chapter);
+FILE root/gml_Object_obj_ui_grid_Create_0.gml M 1 1
+@@ -2,7 +2,7 @@
+ _fade_in = false;
+ _alpha = 0;
+ var highest_chapter_obtained = 0;
+-for (var i = 0; i < UnknownEnum.Value_4; i++)
++for (var i = 0; i < UnknownEnum.Value_5; i++)
+ {
+     var chapter = i + 1;
+     if (scr_fought_secret_boss_any_slot(chapter) && chapter > highest_chapter_obtained)
+FILE root/gml_Object_obj_ui_version_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ _copyright_enabled = false;
+-_copyright_text = "(C) Toby Fox 2018-2025";
++_copyright_text = "(C) Toby Fox 2018-2026";
+ _version_text = "DELTARUNE " + get_version();
+ _scale = 1;
+ _alpha = 1;
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Alarm_0.gml D 0 1
+window_center();
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Alarm_1.gml D 0 1
+ossafe_game_end();
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Alarm_2.gml D 0 21
+audio_stop_all();
+var chapstring = string(chaptertoload_temp);
+var parameters = get_chapter_switch_parameters();
+switch (os_type)
+{
+    case os_windows:
+        game_change("/chapter" + chapstring + "_windows", "-game data.win" + parameters);
+        break;
+    case os_switch:
+        game_change("rom:/chapter" + chapstring + "_switch/", parameters);
+        break;
+    case os_ps4:
+        game_change("", "-game /app0/games/chapter" + chapstring + "_ps4/game.win" + parameters);
+        break;
+    case os_ps5:
+        game_change("", "-game /app0/games/chapter" + chapstring + "_ps5/game.win" + parameters);
+        break;
+    case os_macosx:
+        game_change("chapter" + chapstring + "_mac", parameters);
+        break;
+}
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Create_0.gml D 0 148
+global.is_console = os_type == os_switch || os_type == os_ps4 || os_type == os_ps5;
+global.savedata_async_id = -1;
+global.savedata_async_load = false;
+global.savedata_error = false;
+global.savedata_debuginfo = "";
+global.savedata_pause = false;
+isfullscreen = 0;
+init_loaded = false;
+window_set_caption("DELTARUNE Chapter 1&2");
+if (!global.is_console)
+{
+    window_enable_borderless_fullscreen(true);
+}
+global.launcher = true;
+var launch_data = scr_init_launch_parameters();
+var isoriginallauncher = is_original_launcher(launch_data);
+if (os_type == os_switch && !variable_global_exists("switchlogin"))
+{
+    global.switchlogin = launch_data.switch_id;
+    while (global.switchlogin < 0)
+    {
+        global.switchlogin = switch_accounts_select_account(true, false, false);
+    }
+    if (!switch_accounts_is_user_open(global.switchlogin))
+    {
+        switch_accounts_open_user(global.switchlogin);
+    }
+}
+display_height = display_get_height();
+display_width = display_get_width();
+window_size_multiplier = 1;
+for (var _ww = 2; _ww < 6; _ww += 1)
+{
+    if (display_width > (640 * _ww) && display_height > (480 * _ww))
+    {
+        window_size_multiplier = _ww;
+    }
+}
+if (!window_get_fullscreen())
+{
+    if (window_size_multiplier > 1 && isoriginallauncher)
+    {
+        window_set_size(640 * window_size_multiplier, 480 * window_size_multiplier);
+        alarm[0] = 1;
+    }
+}
+if (global.is_console)
+{
+    application_surface_enable(true);
+    application_surface_draw_enable(false);
+}
+global.debug = 0;
+var _locale = os_get_language();
+var _lang = (substr(_locale, 1, 2) != "ja") ? "en" : "ja";
+global.lang = _lang;
+if (ossafe_file_exists("true_config.ini"))
+{
+    ossafe_ini_open("true_config.ini");
+    global.lang = ini_read_string("LANG", "LANG", _lang);
+    ossafe_ini_close();
+}
+text_font = 2;
+con = "init";
+file_found = false;
+highestUncompletedChapter = 0;
+highestCompletedChapter = 0;
+my_stringset = "0";
+yes = "Yes";
+no = "No";
+mpos = 0;
+chapterselectinit = 0;
+timer = 0;
+drawcolor = c_black;
+yy = room_height / 2;
+xx = room_width / 2;
+fademax = 10;
+fade = fademax;
+chaptertoload = 0;
+chaptertoload_temp = 0;
+console = os_type == os_switch || os_type == os_ps4;
+latestAvailableChapter = 2;
+chapname[0] = " - - ";
+chapname[1] = "The Beginning";
+chapname[2] = "A Cyber's World";
+chapname[3] = " - - ";
+chapname[4] = " - - ";
+chapname[5] = " - - ";
+chapname[6] = " - - ";
+chapname[7] = " - - ";
+roominit = 0;
+scale = 1;
+fadeout = 1;
+xscale = 1;
+yscale = 1;
+spr_aftereffect = 0;
+confirm_choice_index = 0;
+move_noise = false;
+select_noise = false;
+old_savedata_check = false;
+global.versionno = "v2";
+version_text = global.versionno + " ";
+version_text_alpha = 0;
+loop = -4;
+for (i = 0; i < 10; i += 1)
+{
+    global.input_pressed[i] = 0;
+    global.input_held[i] = 0;
+    global.input_released[i] = 0;
+}
+if (global.is_console)
+{
+    if (os_type == os_switch)
+    {
+        switch_controller_support_set_defaults();
+        switch_controller_support_set_singleplayer_only(true);
+        switch_controller_set_supported_styles(7);
+    }
+    if (os_type == os_ps4)
+    {
+        ps4_touchpad_mouse_enable(false);
+    }
+    ossafe_savedata_load();
+}
+else
+{
+    _locale = os_get_language();
+    _lang = (substr(_locale, 1, 2) != "ja") ? "en" : "ja";
+    global.lang = _lang;
+    if (ossafe_file_exists("true_config.ini"))
+    {
+        ossafe_ini_open("true_config.ini");
+        global.lang = ini_read_string("LANG", "LANG", _lang);
+        if (isoriginallauncher)
+        {
+            var is_fullscreen = ini_read_real("SCREEN", "FULLSCREEN", 0) || window_get_fullscreen();
+            window_set_fullscreen(is_fullscreen);
+        }
+        ossafe_ini_close();
+    }
+    text_font = (global.lang == "en") ? 2 : 1;
+    yes = (global.lang == "en") ? "Yes" : "はい";
+    no = (global.lang == "en") ? "No" : "いいえ";
+    chapname[1] = (global.lang == "en") ? "The Beginning" : "はじまり";
+    chapname[2] = (global.lang == "en") ? "A Cyber's World" : "サイバーワールド";
+    scr_controls_default();
+    audio_group_load(0);
+    init_loaded = true;
+}
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Draw_0.gml D 0 614
+if (!audio_group_is_loaded(0))
+{
+    exit;
+}
+if (!init_loaded)
+{
+    exit;
+}
+draw_set_font(text_font);
+draw_set_halign(fa_center);
+draw_set_color(c_gray);
+draw_set_halign(fa_left);
+draw_set_color(c_white);
+if (timer < 20)
+{
+    timer++;
+}
+if (con == "init")
+{
+    if (timer == 15)
+    {
+        con = "start";
+    }
+}
+if (con == "start")
+{
+    file_found = false;
+    if (ossafe_file_exists("dr.ini"))
+    {
+        ossafe_ini_open("dr.ini");
+        ossafe_ini_close();
+    }
+    for (var i = 0; i < 7; i++)
+    {
+        var filename = "filech" + string(i) + "_";
+        if (ossafe_file_exists(filename + string(3)) || ossafe_file_exists(filename + string(4)) || ossafe_file_exists(filename + string(5)))
+        {
+            highestCompletedChapter = i;
+        }
+        if (highestCompletedChapter > 0)
+        {
+            file_found = true;
+        }
+    }
+    for (var i = 0; i < 7; i++)
+    {
+        var filename = "filech" + string(i) + "_";
+        if (ossafe_file_exists(filename + string(0)) || ossafe_file_exists(filename + string(1)) || ossafe_file_exists(filename + string(2)))
+        {
+            highestUncompletedChapter = i;
+        }
+        if (highestUncompletedChapter > 0)
+        {
+            file_found = true;
+        }
+    }
+    if (file_found == false)
+    {
+        con = "nofile";
+        fade = fademax;
+        timer = 0;
+        mpos = 0;
+    }
+    else
+    {
+        con = "filefound";
+        fade = fademax;
+        timer = 0;
+        mpos = 0;
+    }
+}
+if (con == "nofile")
+{
+    if (fade != 0)
+    {
+        fade = lerp(fade, 0, 0.125);
+    }
+    xx = 160 * scale;
+    yy = 110 * scale;
+    mspace = 20 * scale;
+    fadescaled = fade * scale;
+    drawcolor = merge_color(c_white, c_black, fade / fademax);
+    draw_set_color(drawcolor);
+    my_stringset = (global.lang == "en") ? "Would you like to start from Chapter 1?" : "Chapter 1から始めますか？";
+    draw_set_font(text_font);
+    draw_set_halign(fa_center);
+    draw_text_transformed(xx, yy - fadescaled, my_stringset, scale, scale, 0);
+    draw_set_color(c_white);
+    if (mpos == 0)
+    {
+        draw_set_color(c_yellow);
+    }
+    else
+    {
+        draw_set_color(c_white);
+    }
+    draw_text_transformed(xx, (((20 * scale) + yy) - fadescaled) + (mspace * 0), yes, scale, scale, 0);
+    if (mpos == 1)
+    {
+        draw_set_color(c_yellow);
+    }
+    else
+    {
+        draw_set_color(c_white);
+    }
+    draw_text_transformed(xx, (((20 * scale) + yy) - fadescaled) + (mspace * 1), no, scale, scale, 0);
+    if (mpos == 0)
+    {
+        draw_sprite_ext(spr_heart, 0, xx - ((string_width(yes) / 2) * scale) - (13 * scale), (((20 * scale) + yy) - fadescaled) + (mspace * mpos) + (4 * scale), scale, scale, 0, c_white, (fademax - fade) / fademax);
+    }
+    if (mpos == 1)
+    {
+        draw_sprite_ext(spr_heart, 0, xx - ((string_width(no) / 2) * scale) - (13 * scale), (((20 * scale) + yy) - fadescaled) + (mspace * mpos) + (4 * scale), scale, scale, 0, c_white, (fademax - fade) / fademax);
+    }
+    if (up_p())
+    {
+        mpos--;
+        move_noise = true;
+    }
+    if (down_p())
+    {
+        mpos++;
+        move_noise = true;
+    }
+    mpos = clamp(mpos, 0, 1);
+    if (button1_p() && timer > 10)
+    {
+        select_noise = true;
+        switch (mpos)
+        {
+            case 0:
+                chaptertoload = 1;
+                con = "gameload";
+                break;
+            case 1:
+                mpos = 0;
+                con = "chapterselect";
+                break;
+        }
+    }
+}
+if (con == "filefound")
+{
+    fade = fademax;
+    mpos = 0;
+    timer = 0;
+    if (highestCompletedChapter == highestUncompletedChapter)
+    {
+        con = "startNextChapter";
+    }
+    else
+    {
+        con = "continueChapter";
+    }
+}
+if (con == "startNextChapter")
+{
+    if (highestCompletedChapter >= latestAvailableChapter)
+    {
+        con = "chapterselect";
+        exit;
+    }
+    if (fade != 0)
+    {
+        fade = lerp(fade, 0, 0.125);
+    }
+    xx = 160 * scale;
+    yy = 110 * scale;
+    mspace = 20 * scale;
+    fadescaled = fade * scale;
+    drawcolor = merge_color(c_white, c_black, fade / fademax);
+    draw_set_color(drawcolor);
+    my_stringset = "Chapter " + string(highestCompletedChapter) + " was completed.";
+    stringset2 = "Play Chapter " + string(highestCompletedChapter + 1);
+    if (global.lang == "ja")
+    {
+        my_stringset = "Chapter " + string(highestCompletedChapter) + "はクリア済みです。";
+        stringset2 = "Chapter " + string(highestCompletedChapter + 1) + "をプレイ";
+    }
+    draw_set_font(text_font);
+    draw_set_halign(fa_center);
+    draw_text_transformed(xx, (yy - fadescaled) + (mspace * 0), my_stringset, scale, scale, 0);
+    if (mpos == 0)
+    {
+        draw_set_color(c_yellow);
+    }
+    else
+    {
+        draw_set_color(c_white);
+    }
+    draw_text_transformed(xx, (yy - fadescaled) + (mspace * 1), stringset2, scale, scale, 0);
+    if (mpos == 1)
+    {
+        draw_set_color(c_yellow);
+    }
+    else
+    {
+        draw_set_color(c_white);
+    }
+    var select_text = (global.lang == "en") ? "Chapter Select" : "チャプター選択";
+    draw_text_transformed(xx, (yy - fadescaled) + (mspace * 2), select_text, scale, scale, 0);
+    if (mpos == 0)
+    {
+        draw_sprite_ext(spr_heart, 0, xx - ((string_width(stringset2) / 2) * scale) - (13 * scale), (yy - fadescaled) + (mspace * 1) + (4 * scale), scale, scale, 0, c_white, (fademax - fade) / fademax);
+    }
+    if (mpos == 1)
+    {
+        draw_sprite_ext(spr_heart, 0, xx - ((string_width(select_text) / 2) * scale) - (13 * scale), (yy - fadescaled) + (mspace * 2) + (4 * scale), scale, scale, 0, c_white, (fademax - fade) / fademax);
+    }
+    if (up_p())
+    {
+        mpos--;
+        move_noise = true;
+    }
+    if (down_p())
+    {
+        mpos++;
+        move_noise = true;
+    }
+    mpos = clamp(mpos, 0, 1);
+    if (button1_p() && timer > 10)
+    {
+        select_noise = true;
+        switch (mpos)
+        {
+            case 0:
+                chaptertoload = highestCompletedChapter + 1;
+                con = "gameload";
+                break;
+            case 1:
+                timer = 0;
+                mpos = 0;
+                con = "chapterselect";
+                break;
+        }
+    }
+}
+if (con == "continueChapter")
+{
+    if (highestUncompletedChapter == 0 || highestUncompletedChapter > latestAvailableChapter || highestCompletedChapter > latestAvailableChapter)
+    {
+        con = "nofile";
+        exit;
+    }
+    if (fade != 0)
+    {
+        fade = lerp(fade, 0, 0.125);
+    }
+    xx = 160 * scale;
+    yy = 110 * scale;
+    mspace = 20 * scale;
+    fadescaled = fade * scale;
+    drawcolor = merge_color(c_white, c_black, fade / fademax);
+    draw_set_color(drawcolor);
+    my_stringset = "Continue from Chapter " + string(highestUncompletedChapter) + "?";
+    if (global.lang == "ja")
+    {
+        my_stringset = "Chapter " + string(highestUncompletedChapter) + "から続けますか？";
+    }
+    draw_set_font(text_font);
+    draw_set_halign(fa_center);
+    draw_text_transformed(xx, (yy - fadescaled) + (mspace * 0), my_stringset, scale, scale, 0);
+    if (mpos == 0)
+    {
+        draw_set_color(c_yellow);
+    }
+    else
+    {
+        draw_set_color(c_white);
+    }
+    draw_text_transformed(xx, (yy - fadescaled) + (mspace * 1), yes, scale, scale, 0);
+    if (mpos == 1)
+    {
+        draw_set_color(c_yellow);
+    }
+    else
+    {
+        draw_set_color(c_white);
+    }
+    draw_text_transformed(xx, (yy - fadescaled) + (mspace * 2), no, scale, scale, 0);
+    if (mpos == 0)
+    {
+        draw_sprite_ext(spr_heart, 0, xx - ((string_width(yes) / 2) * scale) - (13 * scale), (yy - fadescaled) + (mspace * 1) + (mspace * mpos) + (4 * scale), scale, scale, 0, c_white, (fademax - fade) / fademax);
+    }
+    if (mpos == 1)
+    {
+        draw_sprite_ext(spr_heart, 0, xx - ((string_width(no) / 2) * scale) - (13 * scale), (yy - fadescaled) + (mspace * 1) + (mspace * mpos) + (4 * scale), scale, scale, 0, c_white, (fademax - fade) / fademax);
+    }
+    if (up_p())
+    {
+        mpos--;
+        move_noise = true;
+    }
+    if (down_p())
+    {
+        mpos++;
+        move_noise = true;
+    }
+    mpos = clamp(mpos, 0, 1);
+    if (button1_p() && timer > 10)
+    {
+        timer = 0;
+        select_noise = true;
+        switch (mpos)
+        {
+            case 0:
+                chaptertoload = highestUncompletedChapter;
+                con = "gameload";
+                break;
+            case 1:
+                timer = 0;
+                mpos = 0;
+                con = "chapterselect";
+                break;
+        }
+    }
+}
+if (con == "chapterselect")
+{
+    quit = (global.lang == "en") ? "Quit" : "終了";
+    chapterstring = "Chapter";
+    if (chapterselectinit == 0)
+    {
+        fade = fademax;
+        chapterselectinit = 1;
+        timer = 0;
+        mpos = highestCompletedChapter;
+        if (mpos > (latestAvailableChapter - 1))
+        {
+            mpos = latestAvailableChapter - 1;
+        }
+        loop = audio_play_sound(AUDIO_DRONE, 15, 1);
+    }
+    if (fade != 0)
+    {
+        fade = lerp(fade, 0, 0.125);
+    }
+    fadescaled = fade * scale;
+    space = 30 * scale;
+    for (var i = 0; i < 6; i++)
+    {
+        draw_sprite_ext(spr_horzBar, 0, 0, (36 * scale) + (space * i) + (fadescaled / 2), scale, scale, 0, c_white, 1 - (fade / fademax));
+    }
+    draw_set_halign(fa_center);
+    if (up_p())
+    {
+        move_noise = true;
+        mpos--;
+        if (mpos > (latestAvailableChapter - 1))
+        {
+            mpos = latestAvailableChapter - 1;
+        }
+    }
+    if (down_p())
+    {
+        move_noise = true;
+        mpos++;
+        if (mpos > (latestAvailableChapter - 1))
+        {
+            mpos = global.is_console ? 1 : 7;
+        }
+    }
+    if (console)
+    {
+        mpos = clamp(mpos, 0, 6);
+    }
+    else
+    {
+        mpos = clamp(mpos, 0, 7);
+    }
+    xx = 35 * scale;
+    yy = 10 * scale;
+    mspace = 30 * scale;
+    for (var i = 0; i < 7; i++)
+    {
+        var mycolor = c_gray;
+        if (i < latestAvailableChapter)
+        {
+            mycolor = c_white;
+        }
+        if (mpos == i)
+        {
+            mycolor = c_yellow;
+        }
+        mycolor = merge_color(mycolor, c_black, fade / fademax);
+        draw_sprite_ext(spr_chapterIcon, i, xx + (234 * scale), -fadescaled + yy + (i * 30 * scale), scale, scale, 0, mycolor, 1 - (fade / fademax));
+        draw_set_color(mycolor);
+        draw_set_halign(fa_left);
+        draw_text_transformed(xx, -fadescaled + yy + (mspace * i) + (3 * scale), chapterstring + " " + string(i + 1), scale, scale, 0);
+        draw_set_halign(fa_center);
+        draw_text_transformed(176 * scale, -fadescaled + yy + (mspace * i) + (3 * scale), chapname[i + 1], scale, scale, 0);
+        draw_set_halign(fa_left);
+        draw_set_color(c_white);
+    }
+    var heart_xpos = xx - (15 * scale);
+    var heart_ypos = -fadescaled + yy + (7 * scale) + (mpos * (30 * scale));
+    if (mpos == 7)
+    {
+        heart_ypos -= (5 * scale);
+        heart_xpos = 130 * scale;
+    }
+    draw_sprite_ext(spr_heart, 0, heart_xpos, heart_ypos, scale, scale, 1, c_white, (fademax - fade) / fademax);
+    if (!console)
+    {
+        var mycolor = c_white;
+        if (mpos == 7)
+        {
+            mycolor = c_yellow;
+        }
+        mycolor = merge_color(mycolor, c_black, fade / fademax);
+        draw_set_color(mycolor);
+        draw_set_halign(fa_center);
+        draw_text_transformed(160 * scale, -fadescaled + (218 * scale), quit, scale, scale, 0);
+        draw_set_halign(fa_left);
+    }
+    if (button1_p() && timer > 12)
+    {
+        select_noise = true;
+        timer = 0;
+        if (mpos == 7)
+        {
+            game_end();
+        }
+        else
+        {
+            con = "gameloadConfirm";
+            confirm_choice_index = 0;
+            chaptertoload = mpos + 1;
+        }
+    }
+    draw_set_alpha(0.4);
+    draw_set_halign(fa_right);
+    draw_set_color(c_white);
+    draw_set_font(fnt_main);
+    draw_text_transformed(626, (-fadescaled + yy + 440) - 11, "(C) Toby Fox 2018-2024", 1, 1, 0);
+    draw_set_alpha(1);
+    draw_set_halign(fa_left);
+}
+else if (con == "gameloadConfirm")
+{
+    stringPlay = (global.lang == "en") ? "Play" : "プレイする";
+    stringDoNot = (global.lang == "en") ? "Do Not" : "もどる";
+    space = 30 * scale;
+    for (var i = 0; i < 6; i++)
+    {
+        draw_sprite_ext(spr_horzBar, 0, 0, (36 * scale) + (space * i) + (fadescaled / 2), scale, scale, 0, c_white, 1 - (fade / fademax));
+    }
+    draw_set_halign(fa_center);
+    if (console)
+    {
+        mpos = clamp(mpos, 0, 6);
+    }
+    else
+    {
+        mpos = clamp(mpos, 0, 7);
+    }
+    xx = 35 * scale;
+    yy = 10 * scale;
+    mspace = 30 * scale;
+    if (left_p())
+    {
+        move_noise = true;
+        confirm_choice_index = ((confirm_choice_index - 1) < 0) ? 1 : 0;
+    }
+    if (right_p())
+    {
+        move_noise = true;
+        confirm_choice_index = ((confirm_choice_index + 1) > 1) ? 0 : 1;
+    }
+    var heart_xpos = (116 * scale) + (confirm_choice_index * 75 * scale);
+    if (global.lang == "ja")
+    {
+        heart_xpos = (106 * scale) + (confirm_choice_index * 95 * scale);
+    }
+    var heart_ypos = yy + (7 * scale) + (mpos * 30 * scale);
+    draw_sprite_ext(spr_heart, 0, heart_xpos, heart_ypos, scale, scale, 0, c_white, (fademax - fade) / fademax);
+    for (var i = 0; i < 7; i++)
+    {
+        var mycolor = c_gray;
+        if (i < latestAvailableChapter)
+        {
+            mycolor = c_white;
+        }
+        if (mpos == i)
+        {
+            mycolor = c_yellow;
+        }
+        mycolor = merge_color(mycolor, c_black, fade / fademax);
+        draw_sprite_ext(spr_chapterIcon, i, xx + (234 * scale), (-fade * scale) + yy + (i * 30 * scale), scale, scale, 0, mycolor, 1 - (fade / fademax));
+        draw_set_color(mycolor);
+        draw_set_halign(fa_left);
+        draw_text_transformed(xx, -fade + yy + (mspace * i) + (3 * scale), chapterstring + " " + string(i + 1), scale, scale, 0);
+        draw_set_halign(fa_center);
+        if (mpos == i)
+        {
+            var play_color = (confirm_choice_index == 0) ? c_yellow : c_white;
+            draw_set_color(play_color);
+            if (global.lang == "en")
+            {
+                draw_text_transformed(146 * scale, (-fade * scale) + yy + (mspace * i) + (3 * scale), stringPlay, scale, scale, 0);
+            }
+            else
+            {
+                draw_text_transformed(156 * scale, (-fade * scale) + yy + (mspace * i) + (3 * scale), stringPlay, scale, scale, 0);
+            }
+            var not_color = (confirm_choice_index == 1) ? c_yellow : c_white;
+            draw_set_color(not_color);
+            if (global.lang == "en")
+            {
+                draw_text_transformed(226 * scale, (-fade * scale) + yy + (mspace * i) + (3 * scale), stringDoNot, scale, scale, 0);
+            }
+            else
+            {
+                draw_text_transformed(236 * scale, (-fade * scale) + yy + (mspace * i) + (3 * scale), stringDoNot, scale, scale, 0);
+            }
+        }
+        else
+        {
+            draw_text_transformed(176 * scale, -fade + yy + (mspace * i) + (3 * scale), chapname[i + 1], scale, scale, 0);
+        }
+        draw_set_halign(fa_left);
+        draw_set_color(c_white);
+    }
+    draw_set_alpha(0.4);
+    draw_set_halign(fa_right);
+    draw_set_color(c_white);
+    draw_set_font(fnt_main);
+    draw_text_transformed(626, 449, "(C) Toby Fox 2018-2024", 1, 1, 0);
+    draw_set_alpha(1);
+    draw_set_halign(fa_left);
+    if (!console)
+    {
+        var mycolor = c_white;
+        if (mpos == 7)
+        {
+            mycolor = c_yellow;
+        }
+        mycolor = merge_color(mycolor, c_black, fade / fademax);
+        draw_set_color(mycolor);
+        draw_set_halign(fa_center);
+        draw_text_transformed(160 * scale, (-fade * scale) + (218 * scale), quit, scale, scale, 0);
+        draw_set_halign(fa_left);
+    }
+    if (button1_p() && timer > 12)
+    {
+        timer = 0;
+        select_noise = true;
+        if (confirm_choice_index == 0)
+        {
+            con = "gameload";
+        }
+        else
+        {
+            con = "chapterselect";
+        }
+    }
+    if (button2_p() && timer > 12)
+    {
+        timer = 0;
+        select_noise = true;
+        con = "chapterselect";
+    }
+}
+if (spr_aftereffect == 0)
+{
+    version_text_alpha = lerp(version_text_alpha, 0.4, 0.1);
+    draw_set_alpha(version_text_alpha);
+    draw_set_halign(fa_left);
+    draw_set_color(c_white);
+    draw_set_font(fnt_main);
+    draw_text_transformed(14, 449, "DELTARUNE " + version_text, 1, 1, 0);
+    draw_set_alpha(1);
+    draw_set_halign(fa_left);
+}
+if (con == "gameload")
+{
+    if (spr_aftereffect == 0)
+    {
+        spr_aftereffect = sprite_create_from_surface(application_surface, 0, 0, room_width, room_height, false, false, 0, 0);
+        sprite_set_offset(spr_aftereffect, room_width / 2, room_height / 2);
+        yy = room_height / 2;
+    }
+    if (chaptertoload != 0)
+    {
+        audio_sound_gain(loop, 0, 500);
+        switch (chaptertoload)
+        {
+            case 1:
+                audio_play_sound(AUDIO_APPEARANCE, 50, 0);
+                break;
+            case 2:
+                audio_play_sound(snd_queen_bitcrushlaugh, 50, 0);
+                break;
+        }
+        chaptertoload_temp = chaptertoload;
+        chaptertoload = 0;
+        alarm[2] = 60;
+    }
+    draw_sprite_ext(spr_aftereffect, 0, room_width / 2, yy, xscale, yscale, 0, c_white, fadeout);
+    fadeout = lerp(fadeout, 0, 0.125);
+    xscale *= 0.95;
+    yscale *= 0.99;
+    yy *= 0.99;
+}
+if (move_noise)
+{
+    move_noise = false;
+    audio_play_sound(snd_menumove, 50, 0);
+}
+if (select_noise)
+{
+    select_noise = false;
+    audio_play_sound(snd_select, 50, 0);
+}
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Draw_76.gml D 0 21
+var ww = window_get_width();
+var wh = window_get_height();
+var sw = surface_get_width(application_surface);
+var sh = surface_get_height(application_surface);
+var scale_w = ww / sw;
+var scale_h = wh / sh;
+if (os_type == os_switch || os_type == os_ps4)
+{
+    if (os_type == os_switch && wh == 720)
+    {
+        global.window_scale = 4/3;
+    }
+    else
+    {
+        global.window_scale = floor(min(scale_w, scale_h));
+    }
+}
+else
+{
+    global.window_scale = min(scale_w, scale_h);
+}
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Draw_77.gml D 0 45
+if (os_type == os_switch || os_type == os_ps4)
+{
+    var ww = window_get_width();
+    var wh = window_get_height();
+    var sw = surface_get_width(application_surface);
+    var sh = surface_get_height(application_surface);
+    var xx = floor((ww - (sw * global.window_scale)) / 2);
+    var yy = floor((wh - (sh * global.window_scale)) / 2);
+    global.window_xofs = xx;
+    global.window_yofs = yy;
+    if (os_type == os_switch && wh == 720)
+    {
+        texture_set_interpolation(true);
+    }
+    else
+    {
+        texture_set_interpolation(false);
+    }
+    draw_enable_alphablend(false);
+    draw_surface_ext(application_surface, xx, yy, global.window_scale, global.window_scale, 0, c_white, 1);
+    draw_enable_alphablend(true);
+    texture_set_interpolation(false);
+}
+else
+{
+    global.window_xofs = 0;
+    global.window_yofs = 0;
+}
+if (!global.is_console)
+{
+    var nowfullscreen = window_get_fullscreen();
+    if (nowfullscreen != isfullscreen)
+    {
+        ini_open("true_config.ini");
+        ini_write_real("SCREEN", "FULLSCREEN", nowfullscreen);
+        ini_close();
+        show_debug_message("fullscreen switched:" + string(nowfullscreen));
+        if (!nowfullscreen)
+        {
+            window_set_size(640 * window_size_multiplier, 480 * window_size_multiplier);
+            alarm[2] = 1;
+        }
+    }
+    isfullscreen = nowfullscreen;
+}
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Other_72.gml D 0 58
+if (ds_map_find_value(async_load, "id") == global.savedata_async_id)
+{
+    global.savedata_async_id = -1;
+    if (global.savedata_async_load)
+    {
+        global.savedata_async_load = false;
+        if (ds_map_find_value(async_load, "status") == false)
+        {
+            if (!old_savedata_check)
+            {
+                old_savedata_check = true;
+                ossafe_savedata_load_old_check();
+                exit;
+            }
+            else
+            {
+                global.savedata_error = true;
+                global.savedata_debuginfo = "load failed: " + string(ds_map_find_value(async_load, "status"));
+                global.savedata = ds_map_create();
+            }
+        }
+        else
+        {
+            global.savedata_error = false;
+            global.savedata_debuginfo = "load succeeded";
+            var json = buffer_read(global.savedata_buffer, buffer_string);
+            global.savedata = json_decode(json);
+        }
+        buffer_delete(global.savedata_buffer);
+        global.savedata_buffer = undefined;
+        global.lang = "en";
+        var _locale = os_get_language();
+        var _lang;
+        if (os_type == os_switch)
+        {
+            _lang = substr(switch_language_get_desired_language(), 1, 2);
+        }
+        else
+        {
+            _lang = (substr(_locale, 1, 2) != "ja") ? "en" : "ja";
+        }
+        global.lang = _lang;
+        scr_controls_default();
+        audio_group_load(0);
+        if (ossafe_file_exists("true_config.ini"))
+        {
+            ossafe_ini_open("true_config.ini");
+            global.lang = ini_read_string("LANG", "LANG", _lang);
+            ossafe_ini_close();
+        }
+        text_font = (global.lang == "en") ? 2 : 1;
+        yes = (global.lang == "en") ? "Yes" : "はい";
+        no = (global.lang == "en") ? "No" : "いいえ";
+        chapname[1] = (global.lang == "en") ? "The Beginning" : "はじまり";
+        chapname[2] = (global.lang == "en") ? "A Cyber's World" : "サイバーワールド";
+        init_loaded = true;
+    }
+}
+FILE root/gml_Object_obj_CHAPTER_SELECT_old_Step_1.gml D 0 85
+if (!audio_group_is_loaded(0))
+{
+    exit;
+}
+if (!init_loaded)
+{
+    exit;
+}
+if (roominit == 0)
+{
+    surface_resize(application_surface, room_width, room_height);
+    if (room == PLACE_CHAPTER_SELECT_2x)
+    {
+        scale = 2;
+    }
+    roominit = 1;
+}
+for (var i = 0; i < 10; i += 1)
+{
+    global.input_released[i] = 0;
+    global.input_pressed[i] = 0;
+}
+if (obj_gamecontroller.gamepad_active == 1)
+{
+    for (var i = 0; i < 4; i += 1)
+    {
+        if (keyboard_check(global.input_k[i]) || (instance_exists(obj_gamecontroller) && (gamepad_button_check(obj_gamecontroller.gamepad_id, global.input_g[i]) || scr_gamepad_axis_check(obj_gamecontroller.gamepad_id, i))))
+        {
+            if (global.input_held[i] == 0)
+            {
+                global.input_pressed[i] = 1;
+            }
+            global.input_held[i] = 1;
+        }
+        else
+        {
+            if (global.input_held[i] == 1)
+            {
+                global.input_released[i] = 1;
+            }
+            global.input_held[i] = 0;
+        }
+    }
+    for (var i = 4; i < 10; i += 1)
+    {
+        if (keyboard_check(global.input_k[i]) || (instance_exists(obj_gamecontroller) && gamepad_button_check(obj_gamecontroller.gamepad_id, global.input_g[i])))
+        {
+            if (global.input_held[i] == 0)
+            {
+                global.input_pressed[i] = 1;
+            }
+            global.input_held[i] = 1;
+        }
+        else
+        {
+            if (global.input_held[i] == 1)
+            {
+                global.input_released[i] = 1;
+            }
+            global.input_held[i] = 0;
+        }
+    }
+}
+else
+{
+    for (var i = 0; i < 10; i += 1)
+    {
+        if (keyboard_check(global.input_k[i]))
+        {
+            if (global.input_held[i] == 0)
+            {
+                global.input_pressed[i] = 1;
+            }
+            global.input_held[i] = 1;
+        }
+        else
+        {
+            if (global.input_held[i] == 1)
+            {
+                global.input_released[i] = 1;
+            }
+            global.input_held[i] = 0;
+        }
+    }
+}
+FILE ch1/gml_Object_DEVICE_MENU_Draw_0.gml M 1 1
+@@ -359,7 +359,7 @@
+     {
+         draw_set_alpha(0.4);
+         draw_set_color(c_white);
+-        draw_text_transformed(195, 230, "DELTARUNE " + version_text + "(C) Toby Fox 2018-2025 ", 0.5, 0.5, 0);
++        draw_text_transformed(195, 230, "DELTARUNE " + version_text + "(C) Toby Fox 2018-2026 ", 0.5, 0.5, 0);
+     }
+     else
+     {
+FILE ch1/gml_Object_obj_credits_Step_0.gml M 2 2
+@@ -107,7 +107,7 @@
+     line[4] = "Gregg Tavares (PC)";
+     line[5] = "Sarah O'Donnell (Console)";
+     line[6] = "Fred Wood";
+-    line[7] = "Henri Beeres (Enjl)";
++    line[7] = "Enjl";
+     if (global.lang == "ja")
+     {
+         line[0] = "ローカライズプロデューサー";
+@@ -115,7 +115,7 @@
+         line[4] = "Gregg Tavares (PC版)";
+         line[5] = "Sarah O'Donnell (コンシューマー版)";
+         line[6] = "Fred Wood";
+-        line[7] = "Henri Beeres (Enjl)";
++        line[7] = "Enjl";
+     }
+     lyric = scr_84_get_lang_string("obj_credits_slash_Step_0_gml_108_0");
+ }
+FILE ch1/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -61,14 +61,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.41";
++global.version = "1.43";
+ if (scr_is_switch_os())
+ {
+-    global.version = "1.29";
++    global.version = "1.31";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.version = "1.29";
++    global.version = "1.31";
+ }
+ old_savedata_check = false;
+ if (global.is_console)
+FILE ch2/gml_Object_DEVICE_MENU_Draw_0.gml M 1 1
+@@ -431,7 +431,7 @@
+     {
+         draw_set_alpha(0.4);
+         draw_set_color(c_white);
+-        draw_text_transformed(195, 230, "DELTARUNE " + version_text + " (C) Toby Fox 2018-2025 ", 0.5, 0.5, 0);
++        draw_text_transformed(195, 230, "DELTARUNE " + version_text + " (C) Toby Fox 2018-2026 ", 0.5, 0.5, 0);
+     }
+     else
+     {
+FILE ch2/gml_Object_obj_credits_2_Step_0.gml M 1 1
+@@ -210,7 +210,7 @@
+ {
+     line[0] = stringsetloc("-Platform Programming-", "obj_credits_2_slash_Step_0_gml_231_0");
+     line[1] = stringset("Sarah O'Donnell");
+-    line[2] = stringset("Henri Beeres (Enjl)");
++    line[2] = stringset("Enjl");
+     line[3] = stringsetloc("-Programming Support-", "obj_credits_2_slash_Step_0_gml_234_0");
+     line[4] = stringset("Gregg Tavares");
+     line[5] = stringset(" ");
+FILE ch2/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -65,14 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.47";
++global.version = "1.49";
+ if (scr_is_switch_os())
+ {
+-    global.version = "1.35";
++    global.version = "1.37";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.version = "1.35";
++    global.version = "1.37";
+ }
+ global.game_won = false;
+ global.chapter = 2;
+FILE ch3/gml_GlobalScript_scr_credit.gml M 2 2
+@@ -18,10 +18,10 @@
+     credits[7] = [new scr_credit([stringsetloc("-Chef Minigame Program-", "scr_credit_slash_scr_credit_gml_153_0")], [stringset("ondydev")]), new scr_credit([stringsetloc("-Cowboy Program & Other Detail-", "scr_credit_slash_scr_credit_gml_160_0")], [stringset("James Begg")]), new scr_credit([stringsetloc("-Tenna VHS Final Scene Assist-", "scr_credit_slash_scr_credit_gml_167_0")], [stringset("Smallbu Animation")]), new scr_credit([stringsetloc("-Additional Puzzle Design-", "scr_credit_slash_scr_credit_gml_174_0")], [stringset("NamaTakahashi")])];
+     credits[8] = [new scr_credit([stringsetloc("-Japanese Localization-", "scr_credit_slash_scr_credit_gml_170_0")], [stringsetloc("8-4, Ltd.", "scr_credit_slash_scr_credit_gml_173_0")]), new scr_credit([stringsetloc("-Translator-", "scr_credit_slash_scr_credit_gml_177_0")], [stringset("Keiko Fukuichi")])];
+     credits[9] = [new scr_credit([stringsetloc("-Localization Producers-", "scr_credit_slash_scr_credit_gml_187_0")], [stringset("Tina Carter"), stringset("John Ricciardi")]), new scr_credit([stringsetloc("-Localization Support-", "scr_credit_slash_scr_credit_gml_195_0")], [stringset("Hiroyuki Matsushita"), stringset("Yutaka Ohbuchi"), stringset("Sami Ragone"), stringset("Alissa Staples"), stringset("JP Wentz")])];
+-    credits[10] = [new scr_credit([stringsetloc("-Platform Programming-", "scr_credit_slash_scr_credit_gml_207_0")], [stringset("Sarah O'Donnell"), stringset("Henri Beeres (Enjl)")]), new scr_credit([stringsetloc("-Programming Support-", "scr_credit_slash_scr_credit_gml_214_0")], [stringset("Gregg Tavares")]), new scr_credit([stringsetloc("-Japanese Graphics-", "scr_credit_slash_scr_credit_gml_221_0")], [stringset("256graph"), stringset("Satoshi Maruyama")])];
++    credits[10] = [new scr_credit([stringsetloc("-Platform Programming-", "scr_credit_slash_scr_credit_gml_207_0")], [stringset("Sarah O'Donnell"), stringset("Enjl")]), new scr_credit([stringsetloc("-Programming Support-", "scr_credit_slash_scr_credit_gml_214_0")], [stringset("Gregg Tavares")]), new scr_credit([stringsetloc("-Japanese Graphics-", "scr_credit_slash_scr_credit_gml_221_0")], [stringset("256graph"), stringset("Satoshi Maruyama")])];
+     credits[11] = [new scr_credit([stringsetloc("-QA-", "scr_credit_slash_scr_credit_gml_231_0"), stringsetloc("DIGITAL HEARTS Co., Ltd.", "scr_credit_slash_scr_credit_gml_234_0")], [stringset("Yoshikazu Hironaka"), stringset("Riku Shimizu"), stringset("Akira Ishiki"), stringset("Hidemi Miyauchi"), stringset("Kazutaka Kawahara"), stringset("Yuta Nishimura"), stringset("Daisuke Nakaie"), stringset("Shinji Yasue"), stringset("Taishi Mukaigawara"), stringset("Hiromasa Tokida"), stringset("Yuki Takeuchi"), stringset("Yu Takamori"), stringset("Yuta Doi"), stringset("Yuki Wada"), stringset("Satoru Watanuki"), stringset("Monami Katayama")], 2)];
+     credits[12] = [new scr_credit([stringsetloc("-Super Tester-", "scr_credit_slash_scr_credit_gml_245_0")], [stringset("Esteban Criado (DruidVorse)")]), new scr_credit([stringsetloc("-Website-", "scr_credit_slash_scr_credit_gml_253_0")], [stringset("Brian Coia")])];
+     credits[13] = [new scr_credit([stringsetloc("-Trailers & All Video Editing-", "scr_credit_slash_scr_credit_gml_277_0")], [stringset("Everdraed")]), new scr_credit([stringsetloc("-Tenna's Typography and Logos-", "scr_credit_slash_scr_credit_gml_91_0")], [stringset("Audrey Waner")])];
+-    credits[14] = [new scr_credit([stringsetloc("-Special Thanks-", "scr_credit_slash_scr_credit_gml_287_0")], [stringset("Hiroko Minamoto"), stringset("Graeme Howard"), stringset("Yutaka Sato (Happy Ruika)"), stringsetloc("All 8-4 & Fangamer Staff", "scr_credit_slash_scr_credit_gml_293_0"), stringset("Claire & Andrew"), stringset("Brian Lee"), stringset("YoYo Games")])];
++    credits[14] = [new scr_credit([stringsetloc("-Special Thanks-", "scr_credit_slash_scr_credit_gml_287_0")], [stringset("Hiroko Minamoto"), stringset("Graeme Howard"), stringset("Fontworks Inc."), stringset("Yutaka Sato (Happy Ruika)"), stringsetloc("All 8-4 & Fangamer Staff", "scr_credit_slash_scr_credit_gml_293_0"), stringset("Claire & Andrew"), stringset("Brian Lee"), stringset("YoYo Games")])];
+     return credits;
+ }
+FILE ch3/gml_Object_DEVICE_MENU_Draw_0.gml M 1 1
+@@ -433,7 +433,7 @@
+         draw_set_color(c_white);
+         draw_set_halign(fa_right);
+         draw_set_valign(fa_bottom);
+-        draw_text_transformed(313, 236, "DELTARUNE " + global.versionno + " (C) Toby Fox 2018-2025 ", 0.5, 0.5, 0);
++        draw_text_transformed(313, 236, "DELTARUNE " + global.versionno + " (C) Toby Fox 2018-2026 ", 0.5, 0.5, 0);
+         draw_set_halign(fa_left);
+         draw_set_valign(fa_top);
+     }
+FILE ch3/gml_Object_obj_ch3_couch_video_Create_0.gml M 30 2
+@@ -1,3 +1,6 @@
++_video_enabled = false;
++_vid_surface = -4;
++_chroma_surface = -4;
+ var offset = scr_is_switch_os() ? 0.015 : 0;
+ text_list = [new scr_video_caption(stringsetloc("It's now time for our feature presentation", "obj_ch3_couch_video_slash_Create_0_gml_4_0"), 0.02 + offset, 0.13 + offset), new scr_video_caption(stringsetloc("Coming straight from your house", "obj_ch3_couch_video_slash_Create_0_gml_6_0"), 0.22 + offset, 0.27 + offset), new scr_video_caption(stringsetloc("Coming straight from YOUR house", "obj_ch3_couch_video_slash_Create_0_gml_7_0"), 0.28 + offset, 0.32 + offset), new scr_video_caption(stringsetloc("He's the One", "obj_ch3_couch_video_slash_Create_0_gml_8_0"), 0.34 + offset, 0.39 + offset), new scr_video_caption(stringsetloc("He's GROOVY and NEVER glooby!", "obj_ch3_couch_video_slash_Create_0_gml_9_0"), 0.44 + offset, 0.51 + offset), new scr_video_caption(stringsetloc("You can't get this from an EGG!", "obj_ch3_couch_video_slash_Create_0_gml_10_0"), 0.52 + offset, 0.57 + offset), new scr_video_caption(stringsetloc("The sensation of your screen", "obj_ch3_couch_video_slash_Create_0_gml_11_0"), 0.58 + offset, 0.62 + offset), new scr_video_caption(stringsetloc("The show that makes you scream", "obj_ch3_couch_video_slash_Create_0_gml_12_0"), 0.63 + offset, 0.67 + offset), new scr_video_caption(stringsetloc("Say it with him, folks!", "obj_ch3_couch_video_slash_Create_0_gml_13_0"), 0.68 + offset, 0.73 + offset)];
+ if (global.lang == "ja")
+@@ -10,9 +13,10 @@
+ var file_name = (global.lang == "ja") ? "tennaIntroJPf1_compressed_28" : "tennaIntroF1_compressed_28";
+ video_open("vid/" + file_name + ".mp4");
+ video_enable_loop(false);
++video_set_volume(global.flag[17]);
+ if (!global.is_console)
+ {
+-    video_set_volume(0.3);
++    video_set_volume(clamp(0.3 * global.flag[17], 0, 0.3));
+ }
+ videochromasampler = -4;
+ var _format = video_get_format();
+@@ -20,7 +24,31 @@
+ {
+     videochromasampler = shader_get_sampler_index(shd_video_yuv, "v_chroma");
+ }
+-target_duration = 0;
++
++clean_up = function()
++{
++    if (os_type == os_ps4 || os_type == os_ps5)
++    {
++        var _status = video_get_status();
++        if (_status != 0)
++        {
++            video_close();
++        }
++    }
++    else
++    {
++        video_close();
++    }
++    if (surface_exists(_vid_surface))
++    {
++        surface_free(_vid_surface);
++    }
++    if (surface_exists(_chroma_surface))
++    {
++        surface_free(_chroma_surface);
++    }
++};
++
+ if (scr_is_switch_os())
+ {
+     target_duration = 1224;
+FILE ch3/gml_Object_obj_ch3_couch_video_Draw_0.gml M 11 6
+@@ -1,3 +1,7 @@
++if (!_video_enabled)
++{
++    exit;
++}
+ var _video_data = video_draw();
+ var _video_status = _video_data[0];
+ if (_video_status == 0)
+@@ -5,16 +9,17 @@
+     switch (video_get_format())
+     {
+         case 0:
+-            draw_surface(_video_data[1], 0, 0);
++            _vid_surface = _video_data[1];
++            draw_surface(_vid_surface, 0, 0);
+             break;
+         case 1:
+-            var _surf = _video_data[1];
+-            var _chromasurf = _video_data[2];
+-            if (surface_exists(_surf) && surface_exists(_chromasurf))
++            _vid_surface = _video_data[1];
++            _chroma_surface = _video_data[2];
++            if (surface_exists(_vid_surface) && surface_exists(_chroma_surface))
+             {
+                 shader_set(shd_video_yuv);
+-                var _tex_id = surface_get_texture(_surf);
+-                var _chroma_tex_id = surface_get_texture(_chromasurf);
++                var _tex_id = surface_get_texture(_vid_surface);
++                var _chroma_tex_id = surface_get_texture(_chroma_surface);
+                 texture_set_stage(videochromasampler, _chroma_tex_id);
+                 gpu_set_texfilter(false);
+                 var sw = surface_get_width(application_surface);
+FILE ch3/gml_Object_obj_ch3_couch_video_Other_70.gml M 12 4
+@@ -1,7 +1,15 @@
+ var _type = ds_map_find_value(async_load, "type");
+-if (_type == "video_end")
++if (_type == "video_start")
+ {
+-    video_close();
+-    scr_set_vhs_ini_value(0);
+-    room_goto(room_dw_tv_cutscene1g);
++    _video_enabled = true;
+ }
++else if (_type == "video_end")
++{
++    if (_type == "video_end")
++    {
++        _video_enabled = false;
++        scr_set_vhs_ini_value(0);
++        clean_up();
++        room_goto(room_dw_tv_cutscene1g);
++    }
++}
+FILE ch3/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -65,14 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.099";
++global.versionno = "v0.0.103";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.096";
++    global.versionno = "v0.0.100";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.098";
++    global.versionno = "v0.0.102";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch3/gml_Object_obj_ch3_couch_video_Other_5.gml A 1 0
+clean_up();
+FILE ch4/gml_GlobalScript_scr_credit.gml M 3 3
+@@ -10,7 +10,7 @@
+     var credits = [];
+     credits[0] = [new scr_credit([stringsetloc("-Main Artist-", "scr_credit_slash_scr_credit_gml_18_0"), stringsetloc("-Main Animator-", "scr_credit_slash_scr_credit_gml_19_0")], [stringset("Temmie Chang")])];
+     credits[1] = [new scr_credit([stringsetloc("-Main Team-", "scr_credit_slash_scr_credit_gml_29_0")], [stringset("Sarah O'Donnell"), stringset("Juju (Taxiderby)"), stringset("Fred Wood"), stringset("Jean Canellas"), stringset("AlexMdle"), stringset("PureQuestion")])];
+-    credits[2] = [new scr_credit([stringsetloc("-Main Team-", "scr_credit_slash_scr_credit_gml_44_0_b")], [stringset("Henri Beeres (Enjl)"), stringset("Joost (waddle)"), stringset("Sara Spalding (SaraJS)"), stringset("Robert Sephazon (Producer)")]), new scr_credit([stringsetloc("Mike Maker (PC ver.)", "scr_credit_slash_scr_credit_gml_54_0_b")], [stringset("Andy Brophy")])];
++    credits[2] = [new scr_credit([stringsetloc("-Main Team-", "scr_credit_slash_scr_credit_gml_44_0_b")], [stringset("Enjl"), stringset("Joost (waddle)"), stringset("Sara Spalding (SaraJS)"), stringset("Robert Sephazon (Producer)")]), new scr_credit([stringsetloc("Mike Maker (PC ver.)", "scr_credit_slash_scr_credit_gml_54_0_b")], [stringset("Andy Brophy")])];
+     credits[3] = [new scr_credit([stringset("-BG, Costume, Titan Concept Art-")], [stringset("Gigi DG")]), new scr_credit([stringsetloc("-Old Man's Theme Arrangement-", "scr_credit_slash_scr_credit_gml_71_0")], [stringset("Alex Rosetti")]), new scr_credit([stringset("-Vocals (Sanctuary, Credits)-")], [stringset("Itoki Hana")])];
+     if (global.lang == "ja")
+     {
+@@ -27,10 +27,10 @@
+     credits[7] = [new scr_credit([stringsetloc("-3D Assets, Anim, Posing-", "scr_credit_slash_scr_credit_gml_129_0")], [stringset("Chelsea Saunders (pixelatedcrown)")]), new scr_credit([stringsetloc("-Development Tools (Cool)-", "scr_credit_slash_scr_credit_gml_164_0")], [stringset("Juju Adams")]), new scr_credit([stringsetloc("-UT Character Design-", "scr_credit_slash_scr_credit_gml_171_0")], [stringset("Betty Kwong (Temmie)"), stringset("Magnolia Porter (Snowdrake, Monster Kid)")])];
+     credits[8] = [new scr_credit([stringsetloc("-Japanese Localization-", "scr_credit_slash_scr_credit_gml_170_0")], [stringsetloc("8-4, Ltd.", "scr_credit_slash_scr_credit_gml_173_0")]), new scr_credit([stringsetloc("-Translator-", "scr_credit_slash_scr_credit_gml_177_0")], [stringset("Keiko Fukuichi")])];
+     credits[9] = [new scr_credit([stringsetloc("-Localization Producers-", "scr_credit_slash_scr_credit_gml_187_0")], [stringset("Tina Carter"), stringset("John Ricciardi")]), new scr_credit([stringsetloc("-Localization Support-", "scr_credit_slash_scr_credit_gml_195_0")], [stringset("Hiroyuki Matsushita"), stringset("Yutaka Ohbuchi"), stringset("Sami Ragone"), stringset("Alissa Staples"), stringset("JP Wentz")])];
+-    credits[10] = [new scr_credit([stringsetloc("-Platform Programming-", "scr_credit_slash_scr_credit_gml_207_0")], [stringset("Sarah O'Donnell"), stringset("Henri Beeres (Enjl)")]), new scr_credit([stringsetloc("-Programming Support-", "scr_credit_slash_scr_credit_gml_214_0")], [stringset("Gregg Tavares")]), new scr_credit([stringsetloc("-Japanese Graphics-", "scr_credit_slash_scr_credit_gml_221_0")], [stringset("256graph"), stringset("Satoshi Maruyama")])];
++    credits[10] = [new scr_credit([stringsetloc("-Platform Programming-", "scr_credit_slash_scr_credit_gml_207_0")], [stringset("Sarah O'Donnell"), stringset("Enjl")]), new scr_credit([stringsetloc("-Programming Support-", "scr_credit_slash_scr_credit_gml_214_0")], [stringset("Gregg Tavares")]), new scr_credit([stringsetloc("-Japanese Graphics-", "scr_credit_slash_scr_credit_gml_221_0")], [stringset("256graph"), stringset("Satoshi Maruyama")])];
+     credits[11] = [new scr_credit([stringsetloc("-QA-", "scr_credit_slash_scr_credit_gml_231_0"), stringsetloc("DIGITAL HEARTS Co., Ltd.", "scr_credit_slash_scr_credit_gml_234_0")], [stringset("Yoshikazu Hironaka"), stringset("Riku Shimizu"), stringset("Akira Ishiki"), stringset("Hidemi Miyauchi"), stringset("Kazutaka Kawahara"), stringset("Yuta Nishimura"), stringset("Daisuke Nakaie"), stringset("Shinji Yasue"), stringset("Taishi Mukaigawara"), stringset("Hiromasa Tokida"), stringset("Yuki Takeuchi"), stringset("Yu Takamori"), stringset("Yuta Doi"), stringset("Yuki Wada"), stringset("Satoru Watanuki"), stringset("Monami Katayama")], 2)];
+     credits[12] = [new scr_credit([stringsetloc("-Super Testers-", "scr_credit_slash_scr_credit_gml_245_0")], [stringset("Esteban Criado (DruidVorse)")]), new scr_credit([stringsetloc("-Website-", "scr_credit_slash_scr_credit_gml_253_0")], [stringset("Brian Coia")])];
+     credits[13] = [new scr_credit([stringsetloc("-Fangamer Testing-", "scr_credit_slash_scr_credit_gml_263_0")], [stringset("Chris Warriner"), stringset("Ryan Alyea"), stringset("Alexandro Arvizu"), stringset("Dan Moore"), stringset("Jack Murphy"), stringset("heavenchai"), stringset("Charlie Verdin"), stringset("Steven Thompson")], 2), new scr_credit([stringsetloc("-Trailers & All Video Editing-", "scr_credit_slash_scr_credit_gml_277_0")], [stringset("Everdraed")])];
+-    credits[14] = [new scr_credit([stringsetloc("-Special Thanks-", "scr_credit_slash_scr_credit_gml_287_0")], [stringset("Hiroko Minamoto"), stringset("Graeme Howard"), stringset("Yutaka Sato (Happy Ruika)"), stringsetloc("All 8-4 & Fangamer Staff", "scr_credit_slash_scr_credit_gml_293_0"), stringset("Claire & Andrew"), stringset("Brian Lee"), stringset("YoYo Games")])];
++    credits[14] = [new scr_credit([stringsetloc("-Special Thanks-", "scr_credit_slash_scr_credit_gml_287_0")], [stringset("Hiroko Minamoto"), stringset("Graeme Howard"), stringset("Fontworks Inc."), stringset("Yutaka Sato (Happy Ruika)"), stringsetloc("All 8-4 & Fangamer Staff", "scr_credit_slash_scr_credit_gml_293_0"), stringset("Claire & Andrew"), stringset("Brian Lee"), stringset("YoYo Games")])];
+     return credits;
+ }
+FILE ch4/gml_GlobalScript_scr_get_border.gml M 1 1
+@@ -19,7 +19,7 @@
+         {
+             _border_image = border_lw_town_night;
+         }
+-        var castle_town_rooms = [room_legend, 1399, PLACE_MENU, PLACE_LOGO, room_dw_castle_area_1, room_dw_castle_rooms_kris_susie, room_castle_tutorial, room_dw_castle_east_door, room_dw_castle_west_cliff, room_dw_ralsei_castle_front, room_dw_castle_restaurant, room_dw_castle_cafe, room_dw_castle_dojo, room_dw_ralsei_castle_1f, room_dw_ralsei_castle_2f, room_dw_ralsei_castle_3f, room_dw_castle_dungeon, room_dw_castle_rooms_kris, room_dw_castle_rooms_susie, room_dw_castle_rooms_ralsei, room_dw_castle_rooms_queen, room_dw_castle_rooms_tenna, room_dw_castle_tv_rhythm, room_dw_castle_tv_zone_1, room_dw_castle_tv_zone_2, room_dw_castle_tv_zone_3, room_dw_castle_tv_zone_battle, room_dw_castle_tv_zone_minigame, room_dw_castle_tv, room_dw_castle_town, room_dw_rhythm, room_dw_rhythm_countdown, room_dw_rhythm_empty];
++        var castle_town_rooms = [room_legend, 1400, PLACE_MENU, PLACE_LOGO, room_dw_castle_area_1, room_dw_castle_rooms_kris_susie, room_castle_tutorial, room_dw_castle_east_door, room_dw_castle_west_cliff, room_dw_ralsei_castle_front, room_dw_castle_restaurant, room_dw_castle_cafe, room_dw_castle_dojo, room_dw_ralsei_castle_1f, room_dw_ralsei_castle_2f, room_dw_ralsei_castle_3f, room_dw_castle_dungeon, room_dw_castle_rooms_kris, room_dw_castle_rooms_susie, room_dw_castle_rooms_ralsei, room_dw_castle_rooms_queen, room_dw_castle_rooms_tenna, room_dw_castle_tv_rhythm, room_dw_castle_tv_zone_1, room_dw_castle_tv_zone_2, room_dw_castle_tv_zone_3, room_dw_castle_tv_zone_battle, room_dw_castle_tv_zone_minigame, room_dw_castle_tv, room_dw_castle_town, room_dw_rhythm, room_dw_rhythm_countdown, room_dw_rhythm_empty];
+         for (var i = 0; i < array_length(castle_town_rooms); i++)
+         {
+             if (arg0 != castle_town_rooms[i])
+FILE ch4/gml_GlobalScript_scr_get_outline_color.gml M 1 1
+@@ -38,7 +38,7 @@
+             return 8421504;
+         }
+     }
+-    if (object_get_parent(arg0.object_index) == 1276)
++    if (object_get_parent(arg0.object_index) == 1277)
+     {
+         if (arg0.object_index == obj_herokris)
+         {
+FILE ch4/gml_GlobalScript_scr_heromarker.gml M 5 5
+@@ -3,14 +3,14 @@
+     var ____foundmarker = -4;
+     var xpos = -1;
+     var ypos = -1;
+-    var objindextocheck = 1365;
++    var objindextocheck = 1366;
+     if (string_pos("kr", arg0) != 0)
+     {
+-        objindextocheck = 544;
++        objindextocheck = 545;
+     }
+     if (string_pos("su", arg0) != 0)
+     {
+-        objindextocheck = 522;
++        objindextocheck = 523;
+     }
+     if (string_pos("ra", arg0) != 0)
+     {
+@@ -18,11 +18,11 @@
+     }
+     if (string_pos("no", arg0) != 0)
+     {
+-        objindextocheck = 933;
++        objindextocheck = 934;
+     }
+     if (string_pos("gen", arg0) != 0)
+     {
+-        objindextocheck = 1365;
++        objindextocheck = 1366;
+     }
+     with (objindextocheck)
+     {
+FILE ch4/gml_Object_DEVICE_MENU_Draw_0.gml M 1 1
+@@ -433,7 +433,7 @@
+         draw_set_color(c_white);
+         draw_set_halign(fa_right);
+         draw_set_valign(fa_bottom);
+-        draw_text_transformed(313, 236, "DELTARUNE " + global.versionno + " (C) Toby Fox 2018-2025 ", 0.5, 0.5, 0);
++        draw_text_transformed(313, 236, "DELTARUNE " + global.versionno + " (C) Toby Fox 2018-2026 ", 0.5, 0.5, 0);
+         draw_set_halign(fa_left);
+         draw_set_valign(fa_top);
+     }
+FILE ch4/gml_Object_obj_bookshelf_moveable2x2_Step_0.gml M 1 1
+@@ -131,7 +131,7 @@
+             if (met == -4)
+             {
+                 var _list = ds_list_create();
+-                var _num = instance_place_list(x + (px * i), y + (py * i), 1031, _list, false);
++                var _num = instance_place_list(x + (px * i), y + (py * i), 1032, _list, false);
+                 if (_num > 0)
+                 {
+                     for (var j = 0; j < _num; j++)
+FILE ch4/gml_Object_obj_bookshelf_moveable_Step_0.gml M 1 1
+@@ -116,7 +116,7 @@
+             if (met == -4)
+             {
+                 var _list = ds_list_create();
+-                var _num = instance_place_list(x + (px * i), y + (py * i), 1031, _list, false);
++                var _num = instance_place_list(x + (px * i), y + (py * i), 1032, _list, false);
+                 if (_num > 0)
+                 {
+                     for (var j = 0; j < _num; j++)
+FILE ch4/gml_Object_obj_border_controller_Create_0.gml M 1 1
+@@ -83,7 +83,7 @@
+         {
+             set_border(room_border);
+         }
+-        if (room_id == room_legend || room_id == 1399 || room_id == PLACE_MENU)
++        if (room_id == room_legend || room_id == 1400 || room_id == PLACE_MENU)
+         {
+             stop_custom_effect();
+             if (scr_completed_chapter_any_slot(global.chapter))
+FILE ch4/gml_Object_obj_border_controller_Draw_77.gml M 1 1
+@@ -128,7 +128,7 @@
+     {
+         global.disable_border = false;
+     }
+-    if (room_id == PLACE_CONTACT || room_id == 1391 || room_id == PLACE_MENU || room_id == room_gameover || room_id == PLACE_DOG)
++    if (room_id == PLACE_CONTACT || room_id == 1392 || room_id == PLACE_MENU || room_id == room_gameover || room_id == PLACE_DOG)
+     {
+         global.disable_border = true;
+     }
+FILE ch4/gml_Object_obj_camera_advanced_Create_0.gml M 2 2
+@@ -7,7 +7,7 @@
+ remFinalX = 0;
+ remFinalY = 0;
+ remCurrentView = 0;
+-remTargetObject = 1049;
++remTargetObject = 1050;
+ lerpProgress = 0;
+ startLerpX = 0;
+ startLerpY = 0;
+@@ -52,7 +52,7 @@
+     panLimitBottom[i] = room_height - cameraheight();
+     ignoreFreezeArea[i] = -2;
+ }
+-targetObject[0] = 1049;
++targetObject[0] = 1050;
+ if (global.darkzone == 0)
+ {
+     targetObjectCenter[0] = 0;
+FILE ch4/gml_Object_obj_camera_area_PreCreate_0.gml M 2 2
+@@ -1,6 +1,6 @@
+ event_inherited();
+-collisionObject = 1049;
+-targetObject = 1049;
++collisionObject = 1050;
++targetObject = 1050;
+ hasTargetObject = true;
+ overrideDefaultValues = true;
+ leaveAreaPixelLeeway = 40;
+FILE ch4/gml_Object_obj_caterpillar_generic_Create_0.gml M 1 1
+@@ -10,7 +10,7 @@
+ walktimer = 0;
+ name = "susie";
+ targetdist = 12;
+-daddy = 1049;
++daddy = 1050;
+ pd = daddy.dsprite;
+ pr = daddy.rsprite;
+ pl = daddy.lsprite;
+FILE ch4/gml_Object_obj_ch4_DCA01_Step_0.gml M 2 2
+@@ -279,13 +279,13 @@
+     c_waitcustom_end();
+     c_var_instance(id, "chase_start", false);
+     c_var_instance(id, "wind_push", false);
+-    c_var_lerp_to_instance(1049, "battlealpha", 0, 5);
++    c_var_lerp_to_instance(1050, "battlealpha", 0, 5);
+     c_sel(kr);
+     c_setxy(obj_mainchara.x, obj_mainchara.y);
+     c_sprite(obj_mainchara.sprite_index);
+     c_halt();
+     c_visible(1);
+-    c_var_instance(1049, "visible", 0);
++    c_var_instance(1050, "visible", 0);
+     c_wait(15);
+     c_msgside("bottom");
+     c_speaker("susie");
+FILE ch4/gml_Object_obj_ch4_DCA01_fall_Create_0.gml M 1 1
+@@ -2,7 +2,7 @@
+ {
+     instance_create(0, 0, obj_roomglow);
+ }
+-roomglow = 942;
++roomglow = 943;
+ con = 0;
+ timer = 0;
+ window_con = 0;
+FILE ch4/gml_Object_obj_ch4_DCA08D_Create_0.gml M 1 1
+@@ -73,7 +73,7 @@
+         krlight = instance_create(x, y, obj_light_following);
+         with (krlight)
+         {
+-            target = 1049;
++            target = 1050;
+             preset = 1;
+             setxy(899, 678);
+         }
+FILE ch4/gml_Object_obj_ch4_DCA08D_Step_0.gml M 2 2
+@@ -11,7 +11,7 @@
+     darkness_overlay = instance_find(obj_darkness_overlay, 0);
+     with (obj_light_following)
+     {
+-        if (target == 1049)
++        if (target == 1050)
+         {
+             other.follow_light = id;
+         }
+@@ -40,7 +40,7 @@
+     {
+         with (obj_light_following)
+         {
+-            if (target == 1049)
++            if (target == 1050)
+             {
+                 other.follow_light = id;
+             }
+FILE ch4/gml_Object_obj_ch4_DCB02_Create_0.gml M 1 1
+@@ -60,7 +60,7 @@
+     statue_fx.statue_target = debris;
+     statue_fx.susie_target = susie_instance;
+     statue_fx.ralsei_target = ralsei_instance;
+-    statue_fx.kris_target = 1049;
++    statue_fx.kris_target = 1050;
+     with (statue_fx)
+     {
+         target_characters = [statue_target, ralsei_target, susie_target, kris_target];
+FILE ch4/gml_Object_obj_ch4_DCB02_Step_0.gml M 1 1
+@@ -718,7 +718,7 @@
+     }
+     statue_fx.susie_target = susie_instance;
+     statue_fx.ralsei_target = ralsei_instance;
+-    statue_fx.kris_target = 1049;
++    statue_fx.kris_target = 1050;
+     with (statue_fx)
+     {
+         target_characters = [statue_target, ralsei_target, susie_target, kris_target];
+FILE ch4/gml_Object_obj_ch4_DCC03_Step_0.gml M 1 1
+@@ -144,7 +144,7 @@
+     c_sel(ra);
+     c_sprite(spr_ralsei_shocked_subtle_right);
+     c_var_instance(final_prophecy, "destroy", 1);
+-    c_instance(3220 + camerawidth(), su_actor.y, 524);
++    c_instance(3220 + camerawidth(), su_actor.y, 525);
+     c_wait(1);
+     c_customfunc(function()
+     {
+FILE ch4/gml_Object_obj_ch4_PDC10A_Step_0.gml M 1 1
+@@ -85,7 +85,7 @@
+     c_imageindex(16);
+     c_wait(10);
+     c_imagespeed(0);
+-    c_instance(204, 116, 1273);
++    c_instance(204, 116, 1274);
+     c_soundplay(snd_break1);
+     c_soundplay(snd_grab);
+     c_imageindex(38);
+FILE ch4/gml_Object_obj_ch4_PDC13D_Step_0.gml M 2 2
+@@ -305,7 +305,7 @@
+     c_walkdirect_wait(360, su_actor.ystart, 20);
+     c_walkdirect_wait(360, su_actor.ystart - 40, 15);
+     c_walkdirect_wait(270, su_actor.ystart - 40, 20);
+-    c_var_instance(568, "visible", 1);
++    c_var_instance(569, "visible", 1);
+     c_var_instance(angel_marker, "visible", 0);
+     c_mus2("volume", 0, 30);
+     c_pannable(1);
+@@ -335,7 +335,7 @@
+     snd_free_all();
+     with (overlay)
+     {
+-        set_heart_target(568);
++        set_heart_target(569);
+         set_angel_mode();
+         radius_offset = 0;
+     }
+FILE ch4/gml_Object_obj_ch4_PDC14A_bathroom_Step_0.gml M 1 1
+@@ -111,7 +111,7 @@
+     c_shake();
+     c_imageindex(13);
+     c_imagespeed(0.5);
+-    c_instance(210, 122, 1273);
++    c_instance(210, 122, 1274);
+     c_soundplay(snd_grab);
+     c_soundplay(snd_hurt1);
+     c_wait(14);
+FILE ch4/gml_Object_obj_ch4_PDC14A_noelle_Step_0.gml M 1 1
+@@ -217,7 +217,7 @@
+         if (auto_text_stop)
+         {
+             auto_text_buffer--;
+-            if (variable_instance_exists(1026, "button1") && obj_writer.button1 == 1)
++            if (variable_instance_exists(1027, "button1") && obj_writer.button1 == 1)
+             {
+                 auto_text_start = false;
+             }
+FILE ch4/gml_Object_obj_chainbullet_Create_0.gml M 1 1
+@@ -11,5 +11,5 @@
+ totalBullets = 8;
+ bulletsSpawned = 0;
+ shotRotation = 0;
+-childBullet = 1275;
++childBullet = 1276;
+ visible = 0;
+FILE ch4/gml_Object_obj_choicer_neo_Alarm_0.gml M 2 2
+@@ -1,9 +1,9 @@
+-var dialoguerObj = 350;
++var dialoguerObj = 351;
+ if (global.chapter == 3)
+ {
+     if (i_ex(obj_board_writer))
+     {
+-        dialoguerObj = 1248;
++        dialoguerObj = 1249;
+     }
+ }
+ with (dialoguerObj)
+FILE ch4/gml_Object_obj_choicer_neo_Create_0.gml M 1 1
+@@ -23,7 +23,7 @@
+ {
+     if (i_ex(obj_board_writer))
+     {
+-        boardwriter = 1248;
++        boardwriter = 1249;
+         d = obj_board_writer.side;
+     }
+ }
+FILE ch4/gml_Object_obj_climb_cloudspeedcontroller_Collision_obj_climb_kris.gml M 2 2
+@@ -4,7 +4,7 @@
+ }
+ if (i_ex(obj_cloud_controller_new))
+ {
+-    scr_lerp_instance_var(349, "minspeed", obj_cloud_controller_new.minspeed, minspeed, 30);
+-    scr_lerp_instance_var(349, "maxspeed", obj_cloud_controller_new.maxspeed, maxspeed, 30);
++    scr_lerp_instance_var(350, "minspeed", obj_cloud_controller_new.minspeed, minspeed, 30);
++    scr_lerp_instance_var(350, "maxspeed", obj_cloud_controller_new.maxspeed, maxspeed, 30);
+ }
+ con = 1;
+FILE ch4/gml_Object_obj_climb_cloudspeedcontroller_Collision_obj_mainchara.gml M 2 2
+@@ -4,7 +4,7 @@
+ }
+ if (i_ex(obj_cloud_controller_new))
+ {
+-    scr_lerp_instance_var(349, "minspeed", obj_cloud_controller_new.minspeed, minspeed, 30);
+-    scr_lerp_instance_var(349, "maxspeed", obj_cloud_controller_new.maxspeed, maxspeed, 30);
++    scr_lerp_instance_var(350, "minspeed", obj_cloud_controller_new.minspeed, minspeed, 30);
++    scr_lerp_instance_var(350, "maxspeed", obj_cloud_controller_new.maxspeed, maxspeed, 30);
+ }
+ con = 1;
+FILE ch4/gml_Object_obj_climb_destructableclimbarea_Step_0.gml M 1 1
+@@ -11,7 +11,7 @@
+     var target = 27;
+     if (extflag == "susie")
+     {
+-        target = 731;
++        target = 732;
+     }
+     if (always_break_on_timer)
+     {
+FILE ch4/gml_Object_obj_climb_enemyspawner_Step_0.gml M 3 3
+@@ -35,10 +35,10 @@
+ spawntimer++;
+ if (spawntimer >= spawnrate)
+ {
+-    var spawnobj = 1341;
++    var spawnobj = 1342;
+     if (spawntype == 0 || spawntype == 1 || spawntype == 2)
+     {
+-        spawnobj = 990;
++        spawnobj = 991;
+     }
+     var moveenemy = false;
+     var makeenemy = false;
+@@ -154,7 +154,7 @@
+         with (enemy)
+         {
+             ignoreblocked = true;
+-            if (spawnobj == 990)
++            if (spawnobj == 991)
+             {
+                 if (other.spawntype == 0)
+                 {
+FILE ch4/gml_Object_obj_climb_kris_Step_0.gml M 1 1
+@@ -236,7 +236,7 @@
+ if (global.interact == 0)
+ {
+     var _list = ds_list_create();
+-    var _num = instance_place_list(x, y, 538, _list, false);
++    var _num = instance_place_list(x, y, 539, _list, false);
+     if (ds_list_size(_list) > 0)
+     {
+         for (var i = 0; i < ds_list_size(_list); i++)
+FILE ch4/gml_Object_obj_climb_susie_Draw_0.gml M 1 1
+@@ -1,6 +1,6 @@
+ if (onrotatingtower)
+ {
+-    var tower = 1010;
++    var tower = 1011;
+     var adjustment = -304;
+     if (tower.appearance == 1)
+     {
+FILE ch4/gml_Object_obj_cloud_controller_new_Step_2.gml M 1 1
+@@ -6,7 +6,7 @@
+     }
+     exit;
+ }
+-var _hero_obj = 1049;
++var _hero_obj = 1050;
+ if (i_ex(obj_climb_kris))
+ {
+     _hero_obj = 27;
+FILE ch4/gml_Object_obj_cloud_render_new_Draw_0.gml M 1 1
+@@ -32,7 +32,7 @@
+ var _dist = front ? _dist_min : _dist_max;
+ var _sign = front ? 1 : -1;
+ var _cnum = array_length(obj_cloud_controller_new.clouds);
+-var _hero_obj = 1049;
++var _hero_obj = 1050;
+ if (i_ex(obj_climb_kris))
+ {
+     _hero_obj = 27;
+FILE ch4/gml_Object_obj_credits_ch4_Create_0.gml M 0 3
+@@ -19,9 +19,6 @@
+ title_credit[2] = stringset(" ");
+ title_credit[3] = stringsetloc("by Toby Fox", "obj_credits_ch3_slash_Create_0_gml_21_0");
+ continued_text[0] = stringsetloc("To be continued", "obj_credits_ch3_slash_Create_0_gml_23_0");
+-continued_text[1] = stringsetloc("in Chapter 5", "obj_credits_ch4_slash_Create_0_gml_24_0");
+-continued_text[2] = stringset(" ");
+-continued_text[3] = stringsetloc("2026", "obj_credits_ch4_slash_Create_0_gml_26_0");
+ year_alpha = 0;
+ credit_index = -1;
+ credits = generate_credits();
+FILE ch4/gml_Object_obj_credits_ch4_Step_0.gml M 13 9
+@@ -74,17 +74,23 @@
+     if (con == 50 && !i_ex(obj_writer))
+     {
+         con = 51;
+-        scr_delay_var("con", 52, 90);
++        scr_delay_var("con", 52, 30);
+     }
+     if (con == 52 && !i_ex(obj_writer))
+     {
+         con = 53;
+-        scr_delay_var("con", 54, 180);
++        scr_delay_var("con", 54, 90);
+         credit_index++;
+         creditalpha = 1;
+-        scr_lerpvar("year_alpha", -1, 1, 120);
++        scr_lerpvar("year_alpha", -1, 1, 30);
+     }
+-    if (con == 54 && !i_ex(obj_writer))
++    if (con == 54)
++    {
++        con = -1;
++        scr_delay_var("con", 55, 90);
++        scr_lerpvar("year_alpha", 1, 0, 30);
++    }
++    if (con == 55 && !i_ex(obj_writer))
+     {
+         if (audio_is_playing(song1))
+         {
+@@ -93,22 +99,20 @@
+             var current_measure = floor(measure_progress);
+             if (current_measure == 26)
+             {
+-                con = 59;
+-                scr_delay_var("con", 60, 60);
++                con = 60;
+                 creditalpha = 0;
+             }
+         }
+         else
+         {
+-            con = 59;
+-            scr_delay_var("con", 60, 60);
++            con = 60;
+             creditalpha = 0;
+         }
+     }
+     if (con == 60)
+     {
+         con = -1;
+-        game_restart();
++        room_goto(room_chapter_continue);
+     }
+     if (auto_text)
+     {
+FILE ch4/gml_Object_obj_cutscene_stairlooper_Create_0.gml M 1 1
+@@ -12,7 +12,7 @@
+ if (room == room_dw_church_intro3)
+ {
+     xpoint = 640;
+-    cutscene_object = 681;
++    cutscene_object = 682;
+ }
+ if (room == room_dw_church_intro_guei)
+ {
+FILE ch4/gml_Object_obj_darkness_bullet_Other_15.gml M 1 1
+@@ -1,4 +1,4 @@
+-if (active && scr_in_light(1214, 10, 10) == lightBullet)
++if (active && scr_in_light(1215, 10, 10) == lightBullet)
+ {
+     snd_stop(snd_hurt1);
+     snd_play(snd_hurt1);
+FILE ch4/gml_Object_obj_dojo_shaveeffect_Create_0.gml M 1 1
+@@ -1,4 +1,4 @@
+-creator = 1355;
++creator = 1356;
+ creator_x = creator.x + (creator.sprite_width / 2);
+ creator_y = creator.y + (creator.sprite_height / 2);
+ depth = creator.depth - 1;
+FILE ch4/gml_Object_obj_dw_bluebook_Step_0.gml M 1 1
+@@ -64,7 +64,7 @@
+         spd = lerp(spd, maxspd, accel);
+         var myxoff = x + 48 + 4;
+         var myyoff = y + 40 + 8;
+-        var obj2 = 1049;
++        var obj2 = 1050;
+         var point2x = obj2.bbox_left + ((obj2.bbox_right - obj2.bbox_left) / 2);
+         var point2y = obj2.bbox_top + ((obj2.bbox_bottom - obj2.bbox_top) / 2);
+         var dir = point_direction(myxoff, myyoff, point2x, point2y);
+FILE ch4/gml_Object_obj_dw_church_arena_bg_Step_0.gml M 1 1
+@@ -2,7 +2,7 @@
+ {
+     image_alpha += 0.15;
+ }
+-var hammer = 1435;
++var hammer = 1436;
+ if (con == 4 || con == 5)
+ {
+     timer++;
+FILE ch4/gml_Object_obj_dw_church_bookshelfpuzzle_Step_0.gml M 4 4
+@@ -207,7 +207,7 @@
+         {
+             if (scr_getmsgno() == 1)
+             {
+-                var raface = direction_to_object_bbox(undefined, 1049, 1);
++                var raface = direction_to_object_bbox(undefined, 1050, 1);
+                 switch (raface)
+                 {
+                     case 3:
+@@ -230,7 +230,7 @@
+     }
+     if (myinteract == 10 && global.choice != -1)
+     {
+-        var raface = direction_to_object_bbox(undefined, 1049, 1);
++        var raface = direction_to_object_bbox(undefined, 1050, 1);
+         switch (raface)
+         {
+             case 3:
+@@ -323,7 +323,7 @@
+         {
+             if (scr_getmsgno() == 0)
+             {
+-                var suface = direction_to_object_bbox(undefined, 1049, 1);
++                var suface = direction_to_object_bbox(undefined, 1050, 1);
+                 switch (suface)
+                 {
+                     case 3:
+@@ -376,7 +376,7 @@
+         {
+             if (scr_getmsgno() == 0)
+             {
+-                var suface = direction_to_object_bbox(undefined, 1049, 1);
++                var suface = direction_to_object_bbox(undefined, 1050, 1);
+                 switch (suface)
+                 {
+                     case 3:
+FILE ch4/gml_Object_obj_dw_church_climbingcup_Step_0.gml M 1 1
+@@ -1,4 +1,4 @@
+-var watchboy = 1049;
++var watchboy = 1050;
+ with (obj_climb_kris)
+ {
+     watchboy = id;
+FILE ch4/gml_Object_obj_dw_church_dark_maze_controller_Create_0.gml M 1 1
+@@ -33,7 +33,7 @@
+         krlight = instance_create(x, y, obj_light_following);
+         with (krlight)
+         {
+-            target = 1049;
++            target = 1050;
+             preset = 1;
+             setxy(899, 678);
+         }
+FILE ch4/gml_Object_obj_dw_church_darkmaze_Step_0.gml M 2 2
+@@ -8,7 +8,7 @@
+         hidecater = 1;
+         gcon = 0;
+         ccon = 0;
+-        setxy(746, 384, 1049);
++        setxy(746, 384, 1050);
+         con = 10;
+     }
+ }
+@@ -636,7 +636,7 @@
+     c_var_instance(germark, "hspeed", -6);
+     c_wait(60);
+     c_pannable(1);
+-    c_panobj(1049, 30);
++    c_panobj(1050, 30);
+     c_wait(30);
+     c_var_instance(id, "gcon", 5.2);
+     c_pannable(0);
+FILE ch4/gml_Object_obj_dw_church_holywatercooler_Step_0.gml M 1 1
+@@ -7,7 +7,7 @@
+     if (keyboard_check(ord("W")) && keyboard_check_pressed(ord("1")))
+     {
+         var pos = scr_heromarker("kris", "holywaterexit");
+-        setxy(pos[0], pos[1], 1049);
++        setxy(pos[0], pos[1], 1050);
+     }
+ }
+ with (npc)
+FILE ch4/gml_Object_obj_dw_church_intro_gerson_Step_0.gml M 2 2
+@@ -97,10 +97,10 @@
+ {
+     if (keyboard_check_pressed(ord("W")))
+     {
+-        setxy(1660, 800, 1049);
++        setxy(1660, 800, 1050);
+     }
+     if (keyboard_check_pressed(ord("E")))
+     {
+-        setxy(1760, 1080, 1049);
++        setxy(1760, 1080, 1050);
+     }
+ }
+FILE ch4/gml_Object_obj_dw_church_intro_guei_Create_0.gml M 1 1
+@@ -16,7 +16,7 @@
+         global.plot = 126;
+         global.facing = 1;
+         global.tempflag[90] = 0;
+-        setxy(2936, 860, 1049);
++        setxy(2936, 860, 1050);
+         scr_setparty(1, 1);
+     }
+     if (keyboard_check(vk_shift))
+FILE ch4/gml_Object_obj_dw_church_intro_guei_Step_0.gml M 2 2
+@@ -6,8 +6,8 @@
+         var pos = scr_heromarker("kris", "loopend");
+         if (obj_mainchara.x < pos[0])
+         {
+-            setxy(pos[0], pos[1], 1049);
+-            setxy(pos[0], pos[1], 1235);
++            setxy(pos[0], pos[1], 1050);
++            setxy(pos[0], pos[1], 1236);
+             scr_caterpillar_interpolate("all");
+         }
+     }
+FILE ch4/gml_Object_obj_dw_church_magicalglass_breakable_Create_0.gml M 3 3
+@@ -6,9 +6,9 @@
+ nosound = false;
+ idlealpha = 0.2;
+ clientlist = [];
+-array_push(clientlist, 1049);
+-array_push(clientlist, 1235);
+-array_push(clientlist, 1409);
++array_push(clientlist, 1050);
++array_push(clientlist, 1236);
++array_push(clientlist, 1410);
+ clientlist_length = array_length(clientlist);
+ if (i_ex(obj_dw_churchc_dodge) && global.entrance != 12)
+ {
+FILE ch4/gml_Object_obj_dw_church_magicalglass_breakable_Step_0.gml M 1 1
+@@ -30,7 +30,7 @@
+     }
+     if (specialcase)
+     {
+-        clientlist = [1409];
++        clientlist = [1410];
+         clientlist_length = 1;
+     }
+     if (targalpha == idlealpha)
+FILE ch4/gml_Object_obj_dw_church_magicalglass_superprophecy_Step_0.gml M 3 3
+@@ -7,9 +7,9 @@
+     }
+ }
+ var clientlist = [];
+-array_push(clientlist, 1049);
+-array_push(clientlist, 1235);
+-array_push(clientlist, 1409);
++array_push(clientlist, 1050);
++array_push(clientlist, 1236);
++array_push(clientlist, 1410);
+ with (obj_dw_churchb_darkclimb)
+ {
+     if (i_ex(sujumpoff))
+FILE ch4/gml_Object_obj_dw_church_mizzleencounter_Step_0.gml M 1 1
+@@ -26,7 +26,7 @@
+         {
+             pos = id;
+         }
+-        setxy(bell.x, pos.y, 1049);
++        setxy(bell.x, pos.y, 1050);
+     }
+ }
+ if (belltime == 0)
+FILE ch4/gml_Object_obj_dw_church_organ_Create_0.gml M 3 3
+@@ -14,7 +14,7 @@
+     if (keyboard_check(ord("2")))
+     {
+         debug_print("Returned here after closing eyes with ralsei.");
+-        setxy(1200, 252, 1049);
++        setxy(1200, 252, 1050);
+         scr_keyitemremove(30);
+         global.flag[847] = 0;
+         global.plot = 180;
+@@ -22,14 +22,14 @@
+     if (keyboard_check(ord("3")))
+     {
+         debug_print("Returned here after getting the music sheet.");
+-        setxy(1200, 252, 1049);
++        setxy(1200, 252, 1050);
+         scr_keyitemget(30);
+         global.plot = 180;
+     }
+     if (keyboard_check(ord("4")))
+     {
+         debug_print("Returned here after using the music sheet.");
+-        setxy(1200, 252, 1049);
++        setxy(1200, 252, 1050);
+         scr_keyitemget(30);
+         global.flag[847] = 1;
+         global.plot = 180;
+FILE ch4/gml_Object_obj_dw_church_organikchaser_Step_0.gml M 1 1
+@@ -106,7 +106,7 @@
+ {
+     if (global.interact == 0)
+     {
+-        dir = direction_to_object_bbox(undefined, 1049);
++        dir = direction_to_object_bbox(undefined, 1050);
+         facing = 0;
+         if (dir < 90 || dir > 270)
+         {
+FILE ch4/gml_Object_obj_dw_church_pianopiece_right_Step_0.gml M 3 3
+@@ -119,7 +119,7 @@
+         global.choicemsg[3] = stringset("");
+         if (!sitting)
+         {
+-            var face = direction_to_object_bbox(undefined, 1049, 1);
++            var face = direction_to_object_bbox(undefined, 1050, 1);
+             switch (face)
+             {
+                 case 3:
+@@ -258,7 +258,7 @@
+         }
+         if (!sitting)
+         {
+-            var face = direction_to_object_bbox(undefined, 1049, 1);
++            var face = direction_to_object_bbox(undefined, 1050, 1);
+             switch (face)
+             {
+                 case 3:
+@@ -304,7 +304,7 @@
+         }
+         else
+         {
+-            switch (direction_to_object_bbox(undefined, 1049, 1))
++            switch (direction_to_object_bbox(undefined, 1050, 1))
+             {
+                 case 2:
+                     marker.sprite_index = spr_ralsei_walk_up;
+FILE ch4/gml_Object_obj_dw_church_rippleworship_Other_10.gml M 2 2
+@@ -43,7 +43,7 @@
+     if (extflag == "shortcutkiller")
+     {
+         var _list = ds_list_create();
+-        var _num = instance_place_list(x, y, 376, _list, false);
++        var _num = instance_place_list(x, y, 377, _list, false);
+         for (var i = 0; i < _num; i++)
+         {
+             with (ds_list_find_value(_list, i))
+@@ -53,7 +53,7 @@
+         }
+         ds_list_destroy(_list);
+         _list = ds_list_create();
+-        _num = instance_place_list(x, y, 1031, _list, false);
++        _num = instance_place_list(x, y, 1032, _list, false);
+         for (var i = 0; i < _num; i++)
+         {
+             with (ds_list_find_value(_list, i))
+FILE ch4/gml_Object_obj_dw_church_ripseq1_Create_0.gml M 1 1
+@@ -9,7 +9,7 @@
+     scr_setparty(1, 1);
+     if (keyboard_check(ord("P")))
+     {
+-        setxy(2850, 1040, 1049);
++        setxy(2850, 1040, 1050);
+         con = 3;
+     }
+ }
+FILE ch4/gml_Object_obj_dw_church_ripseq1_Step_0.gml M 5 5
+@@ -6,13 +6,13 @@
+         {
+             con = 1;
+             var pos = scr_heromarker("kris", "debugwarp1");
+-            setxy(pos[0], pos[1], 1049);
++            setxy(pos[0], pos[1], 1050);
+         }
+         if (keyboard_check_pressed(ord("2")))
+         {
+             con = 2;
+             var pos = scr_heromarker("kris", "debugwarp2");
+-            setxy(pos[0], pos[1], 1049);
++            setxy(pos[0], pos[1], 1050);
+         }
+     }
+     if (global.tempflag[90] == 6)
+@@ -21,7 +21,7 @@
+         {
+             global.tempflag[90] = 0;
+             var pos = scr_heromarker("kris", "endofcutscene");
+-            setxy(pos[0], pos[1], 1049);
++            setxy(pos[0], pos[1], 1050);
+             con = 3;
+         }
+     }
+@@ -236,8 +236,8 @@
+     var _maxPt = 103;
+     var minClamp = 0.75;
+     var maxClamp = 1;
+-    var input = distance_to_object_bbox(id, 1049);
+-    var prog = scr_progress(distance_to_object_bbox(id, 1049), 39.2, 103, 0.75, 1);
++    var input = distance_to_object_bbox(id, 1050);
++    var prog = scr_progress(distance_to_object_bbox(id, 1050), 39.2, 103, 0.75, 1);
+     lightindex = lerp(lightindex, prog, 0.25);
+     image_blend = merge_color(c_white, c_black, lightindex);
+ }
+FILE ch4/gml_Object_obj_dw_church_ripseq2_Step_0.gml M 1 1
+@@ -7,7 +7,7 @@
+         {
+             global.tempflag[90] = 0;
+             var pos = scr_heromarker("kris", "cutsceneEnd");
+-            setxy(pos[0], pos[1], 1049);
++            setxy(pos[0], pos[1], 1050);
+             con = 1;
+         }
+     }
+FILE ch4/gml_Object_obj_dw_church_savepoint_Step_0.gml M 1 1
+@@ -17,7 +17,7 @@
+ }
+ if (lightinit == 0)
+ {
+-    if (scr_checklocation(1049, 2220, 258, 40))
++    if (scr_checklocation(1050, 2220, 258, 40))
+     {
+         roomglow.active = true;
+         roomglow.actind = 1;
+FILE ch4/gml_Object_obj_dw_church_sideclimb_Create_0.gml M 3 3
+@@ -18,7 +18,7 @@
+     if (keyboard_check(ord("3")))
+     {
+         var loc = findspriteinfo(spr_krisd_heart, "DEBUG_ASSETS");
+-        setxy(loc.x, loc.y, 1049);
++        setxy(loc.x, loc.y, 1050);
+         with (obj_caterpillarchara)
+         {
+             setxy(loc.x, loc.y);
+@@ -106,8 +106,8 @@
+     setxy(room_width, room_height, npc3);
+ }
+ init = 0;
+-stufftomove[0] = 601;
+-array_push(stufftomove, 202);
++stufftomove[0] = 602;
++array_push(stufftomove, 203);
+ r1leavetopentrance = 0;
+ r1leavebottomentrance = 0;
+ r2leavetopentrance = 0;
+FILE ch4/gml_Object_obj_dw_church_sideclimb_Step_0.gml M 2 2
+@@ -6,7 +6,7 @@
+         if (keyboard_check_pressed(ord("2")))
+         {
+             var pos = scr_heromarker("kr", "debugwarp2");
+-            setxy(pos[0], pos[1], 1049);
++            setxy(pos[0], pos[1], 1050);
+             with (obj_caterpillarchara)
+             {
+                 setxy(pos[0], pos[1]);
+@@ -22,7 +22,7 @@
+         if (keyboard_check_pressed(ord("3")))
+         {
+             var pos = scr_heromarker("kr", "debugwarp3");
+-            setxy(pos[0], pos[1], 1049);
++            setxy(pos[0], pos[1], 1050);
+             with (obj_caterpillarchara)
+             {
+                 setxy(pos[0], pos[1]);
+FILE ch4/gml_Object_obj_dw_church_tallbookcases_Step_0.gml M 4 4
+@@ -99,19 +99,19 @@
+         }
+         else
+         {
+-            if (scr_checklocation(1049, ent1.x, ent1.y, 40))
++            if (scr_checklocation(1050, ent1.x, ent1.y, 40))
+             {
+                 gueitoskip = 2;
+             }
+-            if (scr_checklocation(1049, ent3.x, ent3.y, 40))
++            if (scr_checklocation(1050, ent3.x, ent3.y, 40))
+             {
+                 gueitoskip = 2;
+             }
+-            if (scr_checklocation(1049, ent4.x, ent4.y, 40))
++            if (scr_checklocation(1050, ent4.x, ent4.y, 40))
+             {
+                 gueitoskip = 0;
+             }
+-            if (scr_checklocation(1049, ent14.x, ent14.y, 40))
++            if (scr_checklocation(1050, ent14.x, ent14.y, 40))
+             {
+                 gueitoskip = 4;
+             }
+FILE ch4/gml_Object_obj_dw_church_watercooler_Step_0.gml M 1 1
+@@ -6,7 +6,7 @@
+         alertrad = 90;
+         foughtbefore = true;
+         var _list = ds_list_create();
+-        var _num = instance_place_list(x, y, 334, _list, false);
++        var _num = instance_place_list(x, y, 335, _list, false);
+         if (_num > 0)
+         {
+             for (var i = 0; i < _num; i++)
+FILE ch4/gml_Object_obj_dw_church_waterfallchaser_Step_0.gml M 2 2
+@@ -36,7 +36,7 @@
+     {
+         offscreen = true;
+     }
+-    var targ = 1049;
++    var targ = 1050;
+     move_towards_point(targ.x + 40, targ.y + 60, chasespeed);
+     var lerprate = 0.1;
+     if (x > (cx + 640))
+@@ -152,7 +152,7 @@
+ siner++;
+ if ((siner % sinertarg) == 0)
+ {
+-    var hittarget = 1049;
++    var hittarget = 1050;
+     if (i_ex(obj_ch4_DCA04))
+     {
+         with (obj_actor)
+FILE ch4/gml_Object_obj_dw_church_waterfallchaser_churchc_Step_0.gml M 4 4
+@@ -27,8 +27,8 @@
+     {
+         chasespeed = 24;
+     }
+-    var targ = 1049;
+-    var player_in_light = scr_in_light(1214, 10, 10);
++    var targ = 1050;
++    var player_in_light = scr_in_light(1215, 10, 10);
+     if (player_in_light)
+     {
+         siner = random_range(0, 48);
+@@ -138,7 +138,7 @@
+     {
+         offscreen = true;
+     }
+-    var player_in_light = scr_in_light(1214, 10, 10);
++    var player_in_light = scr_in_light(1215, 10, 10);
+     if (!player_in_light && !offscreen)
+     {
+         con = 0;
+@@ -164,7 +164,7 @@
+ if (siner >= sinertarg)
+ {
+     siner = 0;
+-    var target = 1049;
++    var target = 1050;
+     var speedd = 2;
+     if (i_ex(obj_ch4_DCA04))
+     {
+FILE ch4/gml_Object_obj_dw_church_waterfallroom_Step_0.gml M 4 4
+@@ -22,7 +22,7 @@
+         var debugwarp = scr_heromarker("kr", "debugwarp1");
+         if (i_ex(debugwarp[2]))
+         {
+-            setxy(debugwarp[0], debugwarp[1], 1049);
++            setxy(debugwarp[0], debugwarp[1], 1050);
+             snd_free_all();
+             con = 0;
+             global.interact = 0;
+@@ -34,7 +34,7 @@
+         var debugwarp = scr_heromarker("kr", "debugwarp");
+         if (i_ex(debugwarp[2]))
+         {
+-            setxy(debugwarp[0], debugwarp[1], 1049);
++            setxy(debugwarp[0], debugwarp[1], 1050);
+             snd_free_all();
+             con = 5;
+         }
+@@ -323,7 +323,7 @@
+         snd_play_delay(snd_tspawn, 2, 0.2, 0.8);
+         snd_play_delay(snd_tspawn, 4, 0.1, 0.6);
+     }
+-    var target = 1049;
++    var target = 1050;
+     var _hhsp = lengthdir_x(2, direction == point_direction(x, y, target.x + 40, target.y + 60));
+     var _vvsp = lengthdir_y(2, direction == point_direction(x, y, target.x + 40, target.y + 60));
+     scr_fancy_ripple_alt(camerax() + 640 + 40, cameray() - 40, 60, 255, 300, 1, 12, target.depth, _hhsp, _vvsp, 0);
+@@ -334,7 +334,7 @@
+     snd_play_delay(snd_tspawn, 2, 0.5, 0.8);
+     snd_play_delay(snd_tspawn, 4, 0.3, 0.6);
+     snd_play_delay(snd_tspawn, 6, 0.1, 0.4);
+-    var target = 1049;
++    var target = 1050;
+     var _hhsp = lengthdir_x(2, direction == point_direction(x, y, target.x + 40, target.y + 60));
+     var _vvsp = lengthdir_y(2, direction == point_direction(x, y, target.x + 40, target.y + 60));
+     scr_fancy_ripple_alt(camerax() + 640 + 40, cameray() - 40, 255, 30, 360, 1, 12, target.depth, _hhsp, _vvsp, 0);
+FILE ch4/gml_Object_obj_dw_church_worshiproom_Step_0.gml M 1 1
+@@ -225,7 +225,7 @@
+                 setxy(xstart, ystart);
+                 if (place_meeting(x, y, obj_mainchara))
+                 {
+-                    setxy(obj_mainchara.x, 246, 1049);
++                    setxy(obj_mainchara.x, 246, 1050);
+                     scr_caterpillar_interpolate("all");
+                 }
+             }
+FILE ch4/gml_Object_obj_dw_churchb_darkclimb_Step_0.gml M 1 1
+@@ -85,7 +85,7 @@
+             global.tempflag[90] = 0;
+             scr_setparty(0);
+             var pos = scr_heromarker("kris", "top");
+-            setxy(pos[0], pos[1], 1049);
++            setxy(pos[0], pos[1], 1050);
+             pos = scr_heromarker("susie", "top");
+             sujumpoff = scr_marker_ext(pos[0], pos[1], spr_susie_walk_left_dw, 2, 2, undefined, undefined, undefined, undefined, 1);
+             con = 32;
+FILE ch4/gml_Object_obj_dw_churchb_fireplace_Step_0.gml M 2 2
+@@ -14,8 +14,8 @@
+     if (global.tempflag[90] == 1)
+     {
+         pos = scr_heromarker("kris", "warp1");
+-        setxy(pos[0], pos[1], 1049);
+-        setxy(pos[0], pos[1], 1235);
++        setxy(pos[0], pos[1], 1050);
++        setxy(pos[0], pos[1], 1236);
+         scr_caterpillar_interpolate("all");
+         global.facing = pos[2].image_index;
+         global.tempflag[90] = 0;
+FILE ch4/gml_Object_obj_dw_churchb_fountain_Step_0.gml M 4 4
+@@ -3,13 +3,13 @@
+     shadinit = 1;
+     with (instance_create(0, 0, obj_floorshadow))
+     {
+-        target = 1049;
++        target = 1050;
+         yoff = -8;
+         stretch = 3;
+     }
+     with (instance_create(0, 0, obj_floorshadow))
+     {
+-        target = 1235;
++        target = 1236;
+         yoff = -4;
+         stretch = 3;
+     }
+@@ -23,12 +23,12 @@
+     }
+     with (instance_create(0, 0, obj_sprhighlight))
+     {
+-        target = 1049;
++        target = 1050;
+         yoffset = 4;
+     }
+     with (instance_create(0, 0, obj_sprhighlight))
+     {
+-        target = 1235;
++        target = 1236;
+         yoffset = 4;
+     }
+ }
+FILE ch4/gml_Object_obj_dw_churchb_gallery_Step_0.gml M 2 2
+@@ -28,8 +28,8 @@
+     if (global.tempflag[90] == 1)
+     {
+         pos = scr_heromarker("kris", "warp1");
+-        setxy(pos[0], pos[1], 1049);
+-        setxy(pos[0], pos[1], 1235);
++        setxy(pos[0], pos[1], 1050);
++        setxy(pos[0], pos[1], 1236);
+         global.facing = pos[2].image_index;
+         global.tempflag[90] = 0;
+         scr_caterpillar_interpolate("all");
+FILE ch4/gml_Object_obj_dw_churchb_gersonchase_Create_0.gml M 1 1
+@@ -27,7 +27,7 @@
+     }
+     if (keyboard_check(ord("O")))
+     {
+-        setxy(room_width / 2, room_height / 2, 1049);
++        setxy(room_width / 2, room_height / 2, 1050);
+         qcon = 41;
+         global.interact = 1;
+         con = -1;
+FILE ch4/gml_Object_obj_dw_churchb_gersonchase_Step_0.gml M 3 3
+@@ -43,7 +43,7 @@
+     {
+         global.tempflag[90] = 0;
+         pos = scr_heromarker("kris", "debugwarp1");
+-        setxy(pos[0], pos[1], 1049);
++        setxy(pos[0], pos[1], 1050);
+         setxy(pos[0], pos[1], 93);
+         scr_caterpillar_interpolate("all");
+         con = 11;
+@@ -52,7 +52,7 @@
+     {
+         global.tempflag[90] = 0;
+         pos = scr_heromarker("kris", "debugwarp1");
+-        setxy(pos[0], pos[1], 1049);
++        setxy(pos[0], pos[1], 1050);
+         setxy(pos[0], pos[1], 93);
+         scr_caterpillar_interpolate("all");
+         qcon = 41;
+@@ -235,7 +235,7 @@
+             instance_destroy();
+         }
+         safe_delete(blackout);
+-        setxy(room_width / 2, room_height / 2, 1049);
++        setxy(room_width / 2, room_height / 2, 1050);
+         layer_set_visible("TILES_WALL", 0);
+         with (obj_solidblock)
+         {
+FILE ch4/gml_Object_obj_dw_churchb_gersonstudy_Step_0.gml M 2 2
+@@ -98,8 +98,8 @@
+         {
+             global.tempflag[90] = 0;
+             var pos = scr_heromarker("kris", "debugwarp");
+-            setxy(pos[0], pos[1], 1049);
+-            setxy(pos[0] + 80, pos[1], 1235);
++            setxy(pos[0], pos[1], 1050);
++            setxy(pos[0] + 80, pos[1], 1236);
+             scr_caterpillar_interpolate("all");
+         }
+     }
+FILE ch4/gml_Object_obj_dw_churchb_library_Create_0.gml M 5 0
+@@ -23,6 +23,11 @@
+ if (global.plot > 237)
+ {
+     cutscene = -1;
++}
++var flag = global.flag[1584];
++if (flag >= 524288)
++{
++    global.flag[1584] = 524287;
+ }
+ scr_walkntalk_create();
+ var spritesArray = layer_get_all_elements("DEBUG_ASSETS");
+FILE ch4/gml_Object_obj_dw_churchb_libraryconnector_Step_0.gml M 4 4
+@@ -38,8 +38,8 @@
+     if (global.tempflag[90] == 1)
+     {
+         pos = scr_heromarker("kris", "warp1");
+-        setxy(pos[0], pos[1], 1049);
+-        setxy(pos[0], pos[1], 1235);
++        setxy(pos[0], pos[1], 1050);
++        setxy(pos[0], pos[1], 1236);
+         global.facing = pos[2].image_index;
+         global.tempflag[90] = 0;
+         global.plot = 238;
+@@ -48,8 +48,8 @@
+     if (global.tempflag[90] == 2)
+     {
+         pos = scr_heromarker("kris", "warp2");
+-        setxy(pos[0], pos[1], 1049);
+-        setxy(pos[0], pos[1], 1235);
++        setxy(pos[0], pos[1], 1050);
++        setxy(pos[0], pos[1], 1236);
+         global.facing = pos[2].image_index;
+         global.tempflag[90] = 0;
+         scr_caterpillar_interpolate("all");
+FILE ch4/gml_Object_obj_dw_churchb_ripplepost_Step_0.gml M 1 1
+@@ -2,7 +2,7 @@
+ {
+     global.tempflag[90] = 0;
+     var pos = scr_heromarker("kris", "warp");
+-    setxy(pos[0], pos[1], 1049);
++    setxy(pos[0], pos[1], 1050);
+     with (obj_caterpillarchara)
+     {
+         var targx = pos[0] - global.tempflag[52];
+FILE ch4/gml_Object_obj_dw_churchb_rotatingtower_Step_0.gml M 5 5
+@@ -19,7 +19,7 @@
+     prop2.fade_edges = true;
+     if (global.plot <= 238.6)
+     {
+-        var tower = 1010;
++        var tower = 1011;
+         tower.col_blend = 0;
+         towercon = 0;
+     }
+@@ -34,7 +34,7 @@
+     {
+         global.tempflag[90] = 0;
+         var pos = scr_heromarker("kris", "top");
+-        setxy(pos[0], pos[1], 1049);
++        setxy(pos[0], pos[1], 1050);
+     }
+     init = 1;
+ }
+@@ -70,7 +70,7 @@
+     if (keyboard_check(ord("W")) && keyboard_check_pressed(ord("2")))
+     {
+         var pos = scr_heromarker("kris", "top");
+-        setxy(pos[0], pos[1], 1049);
++        setxy(pos[0], pos[1], 1050);
+         scr_setparty(0);
+         if (con < 2)
+         {
+@@ -403,7 +403,7 @@
+ }
+ if (towercon == 0)
+ {
+-    var tower = 1010;
++    var tower = 1011;
+     if (floor(tower.tower_angle) != 294)
+     {
+         towercon = 1;
+@@ -411,7 +411,7 @@
+ }
+ else if (towercon < 10)
+ {
+-    var tower = 1010;
++    var tower = 1011;
+     towercon++;
+     tower.col_blend = towercon / 10;
+     global.plot = 238.61;
+FILE ch4/gml_Object_obj_dw_churchc_angelprophecy_Step_0.gml M 1 1
+@@ -19,7 +19,7 @@
+         var stren = 0;
+         with (obj_sprhighlight)
+         {
+-            if (target == 1049)
++            if (target == 1050)
+             {
+                 stren = strength;
+                 hiimgalp = image_alpha;
+FILE ch4/gml_Object_obj_dw_churchc_darkswords_Create_0.gml M 2 2
+@@ -153,13 +153,13 @@
+     light_player = instance_create(320, 4280, obj_light_following);
+     light_player_size = 320;
+     light_player.size = light_player_size;
+-    light_player.target = 1049;
++    light_player.target = 1050;
+     light_player.xoff = 18;
+     light_player.yoff = 44;
+     light_player.lightalpha = 0.08;
+     light_player_b = instance_create(320, 4280, obj_light_following);
+     light_player_b.size = 0;
+-    light_player_b.target = 1049;
++    light_player_b.target = 1050;
+     light_player_b.xoff = 18;
+     light_player_b.yoff = 44;
+     light_player_b.lightalpha = 0;
+FILE ch4/gml_Object_obj_dw_churchc_darkswords_Step_0.gml M 2 2
+@@ -351,11 +351,11 @@
+             global.interact = 0;
+             with (light_player)
+             {
+-                target = 1049;
++                target = 1050;
+             }
+             with (light_player_b)
+             {
+-                target = 1049;
++                target = 1050;
+             }
+             with (obj_mainchara)
+             {
+FILE ch4/gml_Object_obj_dw_churchc_darkswords_Step_2.gml M 3 3
+@@ -1,7 +1,7 @@
+ if (con < 99)
+ {
+     var _animspeed = 0.30000000000000004;
+-    var _kristarget = 1049;
++    var _kristarget = 1050;
+     var _hx = obj_mainchara.x + 12;
+     var _hy = obj_mainchara.y + 40;
+     var _cx = camerax();
+@@ -154,11 +154,11 @@
+     {
+         with (light_player)
+         {
+-            target = 1049;
++            target = 1050;
+         }
+         with (light_player_b)
+         {
+-            target = 1049;
++            target = 1050;
+         }
+     }
+     with (flash)
+FILE ch4/gml_Object_obj_dw_churchc_encounter2_Other_11.gml M 1 1
+@@ -13,7 +13,7 @@
+             scr_lerpvar("image_alpha", 0, 1, 6);
+         }
+         var _list = ds_list_create();
+-        var _num = instance_place_list(x, y, 769, _list, false);
++        var _num = instance_place_list(x, y, 770, _list, false);
+         if (_num > 0)
+         {
+             for (var i = 0; i < _num; i++)
+FILE ch4/gml_Object_obj_dw_churchc_encounter2_Step_0.gml M 2 2
+@@ -15,7 +15,7 @@
+             }
+             if (i_ex(pos))
+             {
+-                setxy(pos.x, pos.y, 1049);
++                setxy(pos.x, pos.y, 1050);
+                 forcedark = true;
+             }
+         }
+@@ -32,7 +32,7 @@
+             loc = id;
+         }
+     }
+-    if (scr_checklocation(1049, loc.x, loc.y, 40))
++    if (scr_checklocation(1050, loc.x, loc.y, 40))
+     {
+         forcedark = 1;
+         with (obj_dw_church_organikchaser)
+FILE ch4/gml_Object_obj_dw_churchc_insidetitan_Step_0.gml M 1 1
+@@ -61,7 +61,7 @@
+     c_var_lerp_to_instance(id, "extra_y", 50, _xease, 2, "in");
+     c_var_lerp_to_instance(id, "susie_y", 600, _xease, 2, "out");
+     c_var_lerp_to_instance(id, "fall_speed", 1, _xease, 5, "in");
+-    c_var_lerp_to_instance(1229, "fall_speed", 2, 30);
++    c_var_lerp_to_instance(1230, "fall_speed", 2, 30);
+     c_wait(5);
+     c_var_lerp_to_instance(id, "spread", 50, 300);
+     c_customfunc(function()
+FILE ch4/gml_Object_obj_dw_churchc_titanclimb1_post_Create_0.gml M 1 1
+@@ -132,7 +132,7 @@
+     {
+         visible = 0;
+     }
+-    overlay_controller.target = 1049;
++    overlay_controller.target = 1050;
+ };
+ 
+ lose_control = function()
+FILE ch4/gml_Object_obj_dw_churchc_titanclimb2_post_Step_0.gml M 8 8
+@@ -353,8 +353,8 @@
+         c_wait_talk();
+         c_wait(30);
+         c_var_instance(id, "wind_track_fade", true);
+-        c_var_instance(211, "introcon", 0);
+-        c_var_instance(211, "introtimer", 0);
++        c_var_instance(212, "introcon", 0);
++        c_var_instance(212, "introtimer", 0);
+         c_wait(90);
+         c_mus2("initloop", "GALLERY.ogg", 0);
+         c_mus2("pitch", 0.75, 1);
+@@ -415,8 +415,8 @@
+         c_facing("r");
+         c_addxy(-8, -58);
+         c_wait(4);
+-        c_var_instance(211, "introcon", 2);
+-        c_var_instance(211, "introtimer", 0);
++        c_var_instance(212, "introcon", 2);
++        c_var_instance(212, "introtimer", 0);
+         c_wait(150);
+         c_speaker("susie");
+         c_msgsetloc(0, "\\El* Kris^1! Ralsei^1! Let's go!!/%", "obj_dw_churchc_titanclimb2_post_slash_Step_0_gml_541_0");
+@@ -430,11 +430,11 @@
+     {
+         c_var_instance(id, "wind_track_fade", true);
+         c_wait(camera_pan_time);
+-        c_var_instance(211, "introcon", 0);
+-        c_var_instance(211, "introtimer", 0);
++        c_var_instance(212, "introcon", 0);
++        c_var_instance(212, "introtimer", 0);
+         c_wait(90);
+-        c_var_instance(211, "introcon", 2);
+-        c_var_instance(211, "introtimer", 0);
++        c_var_instance(212, "introcon", 2);
++        c_var_instance(212, "introtimer", 0);
+         c_wait(150);
+     }
+     c_waitcustom();
+FILE ch4/gml_Object_obj_elnina_lanino_rematch_controller_Step_0.gml M 2 2
+@@ -922,10 +922,10 @@
+     rtimer += 1;
+     if (rtimer == 12)
+     {
+-        var _a = 1372;
++        var _a = 1373;
+         if (!i_ex(obj_lanino_rematch_enemy))
+         {
+-            _a = 717;
++            _a = 718;
+         }
+         global.typer = 6;
+         global.fc = 0;
+FILE ch4/gml_Object_obj_encounter_guei_Step_0.gml M 1 1
+@@ -29,7 +29,7 @@
+     {
+         chasespeed = lerp(chasespeed, maxchase, 0.0125);
+     }
+-    var targ = 1049;
++    var targ = 1050;
+     with (chaser)
+     {
+         if (global.interact == 0)
+FILE ch4/gml_Object_obj_encounter_guei_alt_Step_0.gml M 1 1
+@@ -82,7 +82,7 @@
+     {
+         chasespeed = lerp(chasespeed, maxchase, 0.0125);
+     }
+-    var targ = 1049;
++    var targ = 1050;
+     with (chaser)
+     {
+         if (global.interact == 0)
+FILE ch4/gml_Object_obj_encounter_incenseturtle_Step_0.gml M 1 1
+@@ -1,4 +1,4 @@
+-var targ = 1049;
++var targ = 1050;
+ if (con == 0)
+ {
+     timer++;
+FILE ch4/gml_Object_obj_gerson_rudebuster_Step_0.gml M 1 1
+@@ -106,7 +106,7 @@
+         snd_play(snd_rudebuster_swing);
+         blast = instance_create((obj_heroparent.x + 180) - 36, (obj_heroparent.y + 60) - 18, obj_rudebuster_bolt);
+         blast.caster = 0;
+-        blast.target = 1435;
++        blast.target = 1436;
+         blast.damage = ceil(((global.battlemag[1] * 5) + (global.battleat[1] * 11)) - (global.monsterdf[0] * 3));
+         blast.star = 0;
+         blast.speedmax = 10;
+FILE ch4/gml_Object_obj_hammer_of_justice_enemy_Draw_0.gml M 1 1
+@@ -294,7 +294,7 @@
+     {
+         blast = instance_create(x - 40, y + 20, obj_gerson_rudebuster);
+         blast.battlemode = 0;
+-        blast.target = 1280;
++        blast.target = 1281;
+         blast.image_alpha = 1;
+         snd_play(snd_rudebuster_swing);
+         obj_hammer_of_justice_enemy.rudebusterhitcount++;
+FILE ch4/gml_Object_obj_homealone_basement_convo_Step_0.gml M 1 1
+@@ -91,7 +91,7 @@
+         if (auto_text_stop)
+         {
+             auto_text_buffer--;
+-            if (variable_instance_exists(1026, "button1") && obj_writer.button1 == 1)
++            if (variable_instance_exists(1027, "button1") && obj_writer.button1 == 1)
+             {
+                 auto_text_start = false;
+             }
+FILE ch4/gml_Object_obj_homealone_basement_convo_susie_Step_0.gml M 1 1
+@@ -54,7 +54,7 @@
+         if (auto_text_stop)
+         {
+             auto_text_buffer--;
+-            if (variable_instance_exists(1026, "button1") && obj_writer.button1 == 1)
++            if (variable_instance_exists(1027, "button1") && obj_writer.button1 == 1)
+             {
+                 auto_text_start = false;
+             }
+FILE ch4/gml_Object_obj_homealone_bathroom_convo_Step_0.gml M 1 1
+@@ -78,7 +78,7 @@
+         if (auto_text_stop)
+         {
+             auto_text_buffer--;
+-            if (variable_instance_exists(1026, "button1") && obj_writer.button1 == 1)
++            if (variable_instance_exists(1027, "button1") && obj_writer.button1 == 1)
+             {
+                 auto_text_start = false;
+             }
+FILE ch4/gml_Object_obj_homealone_dess_convo_Step_0.gml M 1 1
+@@ -73,7 +73,7 @@
+         if (auto_text_stop)
+         {
+             auto_text_buffer--;
+-            if (variable_instance_exists(1026, "button1") && obj_writer.button1 == 1)
++            if (variable_instance_exists(1027, "button1") && obj_writer.button1 == 1)
+             {
+                 auto_text_start = false;
+             }
+FILE ch4/gml_Object_obj_homealone_kitchen_Step_0.gml M 2 2
+@@ -562,7 +562,7 @@
+                     {
+                         if (x != (obj_homealone_heart.x - 8) || y != (obj_homealone_heart.y - sprite_height))
+                         {
+-                            scr_obj_movetowards_obj(568, 10, -8, -sprite_height);
++                            scr_obj_movetowards_obj(569, 10, -8, -sprite_height);
+                         }
+                         else
+                         {
+@@ -572,7 +572,7 @@
+                     }
+                     else if (x != (obj_homealone_heart.x - 30) || y != (obj_homealone_heart.y - sprite_height))
+                     {
+-                        scr_obj_movetowards_obj(568, 10, -30, -sprite_height);
++                        scr_obj_movetowards_obj(569, 10, -30, -sprite_height);
+                     }
+                     else
+                     {
+FILE ch4/gml_Object_obj_homealone_north_convo_Step_0.gml M 1 1
+@@ -78,7 +78,7 @@
+         if (auto_text_stop)
+         {
+             auto_text_buffer--;
+-            if (variable_instance_exists(1026, "button1") && obj_writer.button1 == 1)
++            if (variable_instance_exists(1027, "button1") && obj_writer.button1 == 1)
+             {
+                 auto_text_start = false;
+             }
+FILE ch4/gml_Object_obj_homealone_vent_loader_Step_0.gml M 3 3
+@@ -68,15 +68,15 @@
+             }
+             if (loaded_type == "bottom")
+             {
+-                scr_lerpvar_instance(568, "y", obj_homealone_heart.y, obj_homealone_heart.y + 3, 5);
++                scr_lerpvar_instance(569, "y", obj_homealone_heart.y, obj_homealone_heart.y + 3, 5);
+             }
+             if (loaded_type == "right")
+             {
+-                scr_lerpvar_instance(568, "x", obj_homealone_heart.x, obj_homealone_heart.x + 3, 5);
++                scr_lerpvar_instance(569, "x", obj_homealone_heart.x, obj_homealone_heart.x + 3, 5);
+             }
+             if (loaded_type == "left")
+             {
+-                scr_lerpvar_instance(568, "x", obj_homealone_heart.x, obj_homealone_heart.x - 3, 5);
++                scr_lerpvar_instance(569, "x", obj_homealone_heart.x, obj_homealone_heart.x - 3, 5);
+             }
+             alarm[0] = 5;
+         }
+FILE ch4/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -66,14 +66,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.100";
++global.versionno = "v0.0.105";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.098";
++    global.versionno = "v0.0.103";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.098";
++    global.versionno = "v0.0.103";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch4/gml_Object_obj_krisyard_night_overlay_Draw_0.gml M 2 2
+@@ -2,11 +2,11 @@
+ {
+     if (i_ex(obj_mainchara))
+     {
+-        kr_target = 1049;
++        kr_target = 1050;
+     }
+     if (i_ex(obj_caterpillarchara))
+     {
+-        su_target = 1235;
++        su_target = 1236;
+     }
+     if (kr_target != -4 && su_target != -4)
+     {
+FILE ch4/gml_Object_obj_light_following_Step_0.gml M 1 1
+@@ -5,7 +5,7 @@
+     target = -4;
+     if (preset == 1)
+     {
+-        target = 1049;
++        target = 1050;
+         xoff = 18;
+         yoff = 38;
+     }
+FILE ch4/gml_Object_obj_mike_controller_Step_0.gml M 1 1
+@@ -509,7 +509,7 @@
+                     if (ob == ob3)
+                     {
+                         var li = ds_list_create();
+-                        instance_place_list(x, y, 594, li, false);
++                        instance_place_list(x, y, 595, li, false);
+                         for (var i = 0; i < ds_list_size(li); i++)
+                         {
+                             instance_destroy(ds_list_find_value(li, i));
+FILE ch4/gml_Object_obj_mike_hand_Step_0.gml M 1 1
+@@ -39,7 +39,7 @@
+         var ob2 = -1;
+         if (i_ex(obj_mouse_drawer) && mx > obj_mouse_drawer.bbox_left && mx < obj_mouse_drawer.bbox_right && my > obj_mouse_drawer.bbox_top && my < obj_mouse_drawer.bbox_bottom && obj_mouse_drawer.act < 3)
+         {
+-            ob2 = 651;
++            ob2 = 652;
+         }
+         if (i_ex(obj_mouse_hat))
+         {
+FILE ch4/gml_Object_obj_mike_minigame_controller_Create_0.gml M 1 1
+@@ -221,7 +221,7 @@
+     
+     draw_func = function()
+     {
+-        var contr = 240;
++        var contr = 241;
+         if (!contr.shelter_has_time_limit)
+         {
+             exit;
+FILE ch4/gml_Object_obj_mike_minigame_controller_Step_0.gml M 2 2
+@@ -474,10 +474,10 @@
+                 {
+                     _newy = choose(cave_last_top.y + irandom_range(cave_height * 0.35, cave_height * 0.85), cave_last_bottom.y - irandom_range(cave_height * 0.35, cave_height * 0.85));
+                 }
+-                var _cat = 378;
++                var _cat = 379;
+                 if (_vol < 0.1)
+                 {
+-                    _cat = choose(378, 378, 788);
++                    _cat = choose(379, 379, 789);
+                 }
+                 instance_create_depth(room_width + 80, _newy, depth - 2, _cat);
+             }
+FILE ch4/gml_Object_obj_mike_raindrop_Alarm_4.gml M 1 1
+@@ -1,7 +1,7 @@
+ var target = -4;
+ if (i_ex(obj_mike_minigame_controller))
+ {
+-    target = 719;
++    target = 720;
+ }
+ else
+ {
+FILE ch4/gml_Object_obj_mike_raindrop_Step_0.gml M 2 2
+@@ -1,4 +1,4 @@
+-var controller = 240;
++var controller = 241;
+ var shelterwidth = 120;
+ if (place_meeting(x, y + 60, obj_mike_catbasket))
+ {
+@@ -14,7 +14,7 @@
+         scr_doom(self, 7);
+     }
+     vspeed = min(vspeed, 6);
+-    if (controller == 240)
++    if (controller == 241)
+     {
+         var seg = clamp(floor((x - camerax()) / 92), 0, 6);
+         snd_play(snds[seg], random_range(0.8, 1.1), 1);
+FILE ch4/gml_Object_obj_movingBookshelf_Alarm_2.gml M 1 1
+@@ -4,7 +4,7 @@
+     cameraActive = 0;
+     ignoreFreeze = 1;
+     panStyle[0] = 1;
+-    targetObject[0] = 1049;
++    targetObject[0] = 1050;
+     targetObjectCenter[0] = 1;
+     targetXRelative[0] = 0;
+     targetYRelative[0] = 0;
+FILE ch4/gml_Object_obj_multiboss_controller_Step_0.gml M 3 3
+@@ -59,15 +59,15 @@
+             var attackingenemy = 0;
+             if (global.monster[0] == 1)
+             {
+-                attackingenemy = 851;
++                attackingenemy = 852;
+             }
+             else if (global.monster[1] == 1)
+             {
+-                attackingenemy = 871;
++                attackingenemy = 872;
+             }
+             else if (global.monster[2] == 1)
+             {
+-                attackingenemy = 872;
++                attackingenemy = 873;
+             }
+             if (myattackchoice == 0)
+             {
+FILE ch4/gml_Object_obj_negasolid_Step_0.gml M 1 1
+@@ -1,6 +1,6 @@
+ image_alpha = 0.1;
+ var _list = ds_list_create();
+-var _num = instance_place_list(x, y, 1285, _list, false);
++var _num = instance_place_list(x, y, 1286, _list, false);
+ if (_num > 0)
+ {
+     for (var i = 0; i < _num; i++)
+FILE ch4/gml_Object_obj_noellehouse_basement_Step_0.gml M 2 2
+@@ -26,7 +26,7 @@
+     init_heart = true;
+     with (overlay)
+     {
+-        set_heart_target(568);
++        set_heart_target(569);
+     }
+     if (scr_sideb_active() && global.plot == 63)
+     {
+@@ -566,7 +566,7 @@
+         with (overlay)
+         {
+             set_fall_mode(false);
+-            set_heart_target(568);
++            set_heart_target(569);
+         }
+     }
+     if (angel_fall_timer == 90)
+FILE ch4/gml_Object_obj_noellehouse_dess_Step_0.gml M 25 25
+@@ -142,7 +142,7 @@
+             instance_destroy();
+         }
+         set_alpha(0.3);
+-        set_heart_target(568);
++        set_heart_target(569);
+         heart_glow_show();
+     }
+     if (scr_debug())
+@@ -388,7 +388,7 @@
+     c_shakeobj();
+     c_wait(2);
+     c_var_instance(kris_marker, "image_index", 2);
+-    c_var_instance(568, "visible", 0);
++    c_var_instance(569, "visible", 0);
+     c_wait(2);
+     c_var_instance(kris_marker, "x", 172);
+     c_var_instance(kris_marker, "y", 88);
+@@ -443,24 +443,24 @@
+     c_var_instance(kris_marker, "image_speed", 0);
+     c_var_instance(kris_marker, "depth", 5200);
+     c_wait(6);
+-    c_var_instance(191, "dess_closet_cover", true);
+-    c_var_instance(850, "con", 1);
++    c_var_instance(192, "dess_closet_cover", true);
++    c_var_instance(851, "con", 1);
+     c_snd_play(snd_wing);
+-    c_var_instance(850, "open_closet", true);
++    c_var_instance(851, "open_closet", true);
+     c_wait(6);
+-    c_var_instance(191, "dess_closet_cover", false);
++    c_var_instance(192, "dess_closet_cover", false);
+     c_var_instance(kris_marker, "image_speed", 0.2);
+     c_var_lerp_to_instance(kris_marker, "y", 80, 6);
+     c_wait(6);
+     c_var_instance(kris_marker, "image_index", 0);
+     c_var_instance(kris_marker, "image_speed", 0);
+-    c_var_instance(310, "kris_sprite", 3535);
+-    c_var_instance(310, "kris_x", 190);
+-    c_var_instance(310, "kris_y", 80);
+-    c_var_instance(310, "kris_active", true);
++    c_var_instance(311, "kris_sprite", 3535);
++    c_var_instance(311, "kris_x", 190);
++    c_var_instance(311, "kris_y", 80);
++    c_var_instance(311, "kris_active", true);
+     c_var_instance(kris_marker, "visible", 0);
+     c_snd_play(snd_wing);
+-    c_var_instance(850, "close_closet", true);
++    c_var_instance(851, "close_closet", true);
+     c_wait(4);
+     c_snd_play(snd_dooropen);
+     c_sel(no);
+@@ -711,10 +711,10 @@
+     c_facing("u");
+     c_wait(30);
+     c_snd_play(snd_wing);
+-    c_var_instance(310, "kris_sprite", 3821);
+-    c_var_instance(310, "kris_x", 213);
+-    c_var_instance(310, "kris_y", 89);
+-    c_var_instance(310, "open_door", true);
++    c_var_instance(311, "kris_sprite", 3821);
++    c_var_instance(311, "kris_x", 213);
++    c_var_instance(311, "kris_y", 89);
++    c_var_instance(311, "open_door", true);
+     c_wait(30);
+     c_speaker("susie");
+     c_msgsetloc(0, "\\EH* (Dude^1, stop making so much goddamn noise!)/", "obj_noellehouse_dess_slash_Step_0_gml_892_0");
+@@ -726,11 +726,11 @@
+     c_sprite(spr_susie_guitar_grab_up);
+     c_lerp_var_instance(su_actor, "image_index", 0, 4, 16);
+     c_wait(8);
+-    c_var_instance(310, "kris_sprite", 4636);
+-    c_var_instance(310, "kris_index", 0);
++    c_var_instance(311, "kris_sprite", 4636);
++    c_var_instance(311, "kris_index", 0);
+     c_wait(45);
+     c_snd_play(snd_wing);
+-    c_var_instance(310, "close_door", true);
++    c_var_instance(311, "close_door", true);
+     c_wait(15);
+     c_sel(no);
+     c_autowalk(0);
+@@ -824,17 +824,17 @@
+         }
+     });
+     c_snd_play(snd_noise);
+-    c_var_instance(310, "kris_x", kris_closet_x);
+-    c_var_instance(310, "kris_y", 80);
+-    c_var_instance(310, "kris_sprite", 1461);
+-    c_var_lerp_to_instance(310, "door_xpos", obj_noellehouse_dess_closet.door_xpos - 14, 15);
++    c_var_instance(311, "kris_x", kris_closet_x);
++    c_var_instance(311, "kris_y", 80);
++    c_var_instance(311, "kris_sprite", 1461);
++    c_var_lerp_to_instance(311, "door_xpos", obj_noellehouse_dess_closet.door_xpos - 14, 15);
+     c_wait(30);
+     c_var_instance(kris_marker, "x", kris_closet_x);
+     c_var_instance(kris_marker, "y", 80);
+     c_var_instance(kris_marker, "sprite_index", spr_kris_walk_hide_arm);
+     c_var_instance(kris_marker, "visible", 1);
+     c_var_instance(kris_marker, "depth", 29000);
+-    c_var_instance(310, "kris_active", false);
++    c_var_instance(311, "kris_active", false);
+     c_var_instance(kris_marker, "image_speed", 0.2);
+     c_var_lerp_to_instance(kris_marker, "x", kris_closet_x - 10, 15);
+     c_wait(15);
+@@ -880,7 +880,7 @@
+     c_delaycmd(28, "imageindex", 0);
+     c_walkdirect(202, 80, 30);
+     c_snd_play(snd_wing);
+-    c_var_lerp_to_instance(310, "door_xpos", obj_noellehouse_dess_closet.door_xpos - 14 - 10, 30);
++    c_var_lerp_to_instance(311, "door_xpos", obj_noellehouse_dess_closet.door_xpos - 14 - 10, 30);
+     c_wait(90);
+     c_waitcustom();
+ }
+@@ -901,7 +901,7 @@
+     c_waitcustom_end();
+     c_wait(30);
+     c_snd_play(snd_wing);
+-    c_var_lerp_to_instance(310, "door_xpos", obj_noellehouse_dess_closet.door_xpos + 14 + 10, 15);
++    c_var_lerp_to_instance(311, "door_xpos", obj_noellehouse_dess_closet.door_xpos + 14 + 10, 15);
+     c_sel(kr);
+     c_autodepth(0);
+     c_depth(10000);
+FILE ch4/gml_Object_obj_noellehouse_main_Create_0.gml M 1 1
+@@ -201,7 +201,7 @@
+         with (overlay)
+         {
+             set_alpha(0.5);
+-            set_heart_target(568);
++            set_heart_target(569);
+             heart_glow_show();
+         }
+         table_marker = scr_marker(470, 551, spr_noellehouse_table_tray);
+FILE ch4/gml_Object_obj_organ_vertical_pillar_manager_Alarm_0.gml M 1 1
+@@ -108,7 +108,7 @@
+             var randoff = choose(12.5, 137.5);
+             for (a = 0; a < 6; a++)
+             {
+-                scr_script_delayed(scr_fire_bullet, 16, x, (y - 75) + (((25 * a) + randoff) % 150), 1438, (a % 2) * 180, 0);
++                scr_script_delayed(scr_fire_bullet, 16, x, (y - 75) + (((25 * a) + randoff) % 150), 1439, (a % 2) * 180, 0);
+             }
+         }
+         alarm[0] = other.interval + 4;
+FILE ch4/gml_Object_obj_overworld_danmaku_spawner_PreCreate_0.gml M 1 1
+@@ -2,7 +2,7 @@
+ spreader = false;
+ range = 180;
+ fire_type = 0;
+-child_bullet = 1230;
++child_bullet = 1231;
+ fire_rate = 3;
+ shot_count = 1;
+ spread_angle = 0;
+FILE ch4/gml_Object_obj_proxycandle_Step_0.gml M 1 1
+@@ -1,6 +1,6 @@
+ if (!on && (instance_exists(obj_mainchara) || instance_exists(obj_climb_kris)))
+ {
+-    var _char = instance_exists(obj_climb_kris) ? 27 : 1049;
++    var _char = instance_exists(obj_climb_kris) ? 27 : 1050;
+     var _xx = _char.bbox_left + (_char.sprite_width / 2);
+     var _yy = _char.bbox_bottom - (_char.sprite_height / 2);
+     var _top = bbox_top;
+FILE ch4/gml_Object_obj_rotating_kris_controller_new_Draw_0.gml M 1 1
+@@ -10,7 +10,7 @@
+         if (con == 2)
+         {
+             other.depth = 1000;
+-            var tower = 1010;
++            var tower = 1011;
+             var adjustment = 0;
+             var _tilex = (x / tower.tile_width_fine) + adjustment;
+             if (_tilex > (tower.horizontaltilecount - 1))
+FILE ch4/gml_Object_obj_rotating_tower_controller_new_Draw_0.gml M 2 2
+@@ -129,8 +129,8 @@
+     var col = scr_make_color_hsv(current_time / 400, 50, (sin(current_time / 1600) * 10) + 70);
+     draw_sprite_ext(bg_fountain1, 0, tower_x - (tower_radius * indent), camera_get_view_y(view_camera[0]), (tower_radius * 2 * indent) / sprite_get_width(bg_fountain1), 480 / sprite_get_height(bg_fountain1), 0, col, 1);
+     shader_reset();
+-    obj_rotating_tower_controller_new.render_big_eye(625);
+-    obj_rotating_tower_controller_new.render_big_eye(1332);
++    obj_rotating_tower_controller_new.render_big_eye(626);
++    obj_rotating_tower_controller_new.render_big_eye(1333);
+     surface_set_target(tilesurface);
+     draw_clear_alpha(c_black, 0);
+     len = array_length(visible_indices);
+FILE ch4/gml_Object_obj_savepoint_Step_0.gml M 1 1
+@@ -11,7 +11,7 @@
+     image_alpha = 0.5;
+     if (instance_exists(obj_mainchara))
+     {
+-        var dist = distance_to_object_bbox(id, 1049);
++        var dist = distance_to_object_bbox(id, 1050);
+         if (dist <= 40)
+         {
+             image_alpha = (1 - (dist / 40)) + 0.5;
+FILE ch4/gml_Object_obj_screen_loading_Create_0.gml M 8 1
+@@ -44,5 +44,12 @@
+ 
+ get_font = function()
+ {
+-    return (global.lang == "en") ? 8 : 16;
++    if (room == room_chapter_continue)
++    {
++        return (global.lang == "en") ? 7 : 13;
++    }
++    else
++    {
++        return (global.lang == "en") ? 8 : 16;
++    }
+ };
+FILE ch4/gml_Object_obj_solid_temp_edge_Step_2.gml M 1 1
+@@ -10,7 +10,7 @@
+         sendaway = true;
+     }
+     var _list = ds_list_create();
+-    var _num = instance_place_list(x, y, 264, _list, false);
++    var _num = instance_place_list(x, y, 265, _list, false);
+     if (_num > 0)
+     {
+         for (var i = 0; i < _num; i++)
+FILE ch4/gml_Object_obj_solidblock_soft_Step_2.gml M 1 1
+@@ -21,7 +21,7 @@
+ if (push_cat)
+ {
+     var _list = ds_list_create();
+-    var _num = instance_place_list(x, y, 1235, _list, false);
++    var _num = instance_place_list(x, y, 1236, _list, false);
+     if (_num > 0)
+     {
+         for (var i = 0; i < _num; i++)
+FILE ch4/gml_Object_obj_sprhighlight_tester_Step_0.gml M 2 2
+@@ -1,9 +1,9 @@
+ if (init == false && i_ex(obj_caterpillarchara))
+ {
+-    var _highlight = scr_sprhighlight(1049);
++    var _highlight = scr_sprhighlight(1050);
+     _highlight.darkness = 1;
+     var _shadow = instance_create(x, y, obj_floorshadow);
+-    _shadow.target = 1049;
++    _shadow.target = 1050;
+     _shadow.image_alpha = 0;
+     _shadow.name = "kris";
+     with (obj_caterpillarchara)
+FILE ch4/gml_Object_obj_texturescroller_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ surf_textured = -1;
+-tile_object = 455;
++tile_object = 456;
+ base_texture = 88;
+ scroll_texture = 992;
+ fade_time_seconds = 4;
+FILE ch4/gml_Object_obj_texturescroller_dark_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ surf_textured = -1;
+-tile_object = 455;
++tile_object = 456;
+ base_texture = 4435;
+ scroll_texture = 4544;
+ fade_time_seconds = 1;
+FILE ch4/gml_Object_obj_texturescroller_library_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ surf_textured = -1;
+-tile_object = 455;
++tile_object = 456;
+ base_texture = 5773;
+ scroll_texture = 4383;
+ fade_time_seconds = 4;
+FILE ch4/gml_Object_obj_texturescroller_prophecy_Create_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ surf_textured = -1;
+-tile_object = 364;
++tile_object = 365;
+ base_texture = 88;
+ scroll_texture = 992;
+ fade_time_seconds = 4;
+FILE ch4/gml_Object_obj_tower_falling_piece_object_Draw_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ var ladder_index = 4;
+-var tower = 1010;
++var tower = 1011;
+ var tile_angle1 = tower.tile_angle[i] + tower.tower_angle;
+ while (tile_angle1 < 0)
+ {
+FILE ch4/gml_Object_obj_window_shadow_maker_PreCreate_0.gml M 1 1
+@@ -1,3 +1,3 @@
+ event_inherited();
+ stretch = 1;
+-silhouette_obj = 505;
++silhouette_obj = 506;
+FILE ch4/gml_Object_obj_window_silhouette_maker_Create_0.gml M 1 1
+@@ -1,6 +1,6 @@
+ if (silhouette_obj == 0)
+ {
+-    silhouette_obj = 505;
++    silhouette_obj = 506;
+ }
+ if (stretch == 0)
+ {
+FILE ch4/gml_Object_obj_window_silhouette_maker_PreCreate_0.gml M 1 1
+@@ -1,3 +1,3 @@
+ event_inherited();
+ stretch = 1;
+-silhouette_obj = 505;
++silhouette_obj = 506;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_14_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 26;
++flagbit = 18;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_16_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 25;
++flagbit = 12;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_17_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 23;
++flagbit = 12;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_21_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 24;
++flagbit = 12;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_22_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 22;
++flagbit = 12;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_62_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 20;
++flagbit = 12;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_63_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 19;
++flagbit = 12;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_64_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 21;
++flagbit = 12;
+FILE ch4/gml_RoomCC_room_dw_churchb_library_6_PreCreate.gml M 1 1
+@@ -1,2 +1,2 @@
+ flagno = 1584;
+-flagbit = 18;
++flagbit = 12;
+FILE ch4/gml_RoomCC_room_overworld_darkmaku_blocks_0_PreCreate.gml M 1 1
+@@ -4,7 +4,7 @@
+ fire_rate = 4;
+ range = 360;
+ spread_angle = 0;
+-child_bullet = 252;
++child_bullet = 253;
+ angle_bullet = false;
+ start_angle = 0;
+ rotation = 0;
+FILE ch4/gml_RoomCC_room_overworld_darkmaku_blocks_1_PreCreate.gml M 1 1
+@@ -4,6 +4,6 @@
+ fire_rate = 4;
+ range = 0;
+ spread_angle = 0;
+-child_bullet = 252;
++child_bullet = 253;
+ angle_bullet = false;
+ rotation = 0;
+FILE ch4/gml_RoomCC_room_overworld_darkmaku_blocks_2_PreCreate.gml M 1 1
+@@ -4,7 +4,7 @@
+ fire_rate = 4;
+ range = 360;
+ spread_angle = 0;
+-child_bullet = 252;
++child_bullet = 253;
+ angle_bullet = false;
+ start_angle = 0;
+ rotation = 0;
+FILE ch4/gml_RoomCC_room_overworld_darkmaku_blocks_3_PreCreate.gml M 1 1
+@@ -4,6 +4,6 @@
+ fire_rate = 4;
+ range = 360;
+ spread_angle = 0;
+-child_bullet = 252;
++child_bullet = 253;
+ angle_bullet = false;
+ rotation = 0;
+FILE ch4/gml_RoomCC_room_overworld_darkmaku_blocks_4_PreCreate.gml M 1 1
+@@ -4,6 +4,6 @@
+ fire_rate = 4;
+ range = 360;
+ spread_angle = 0;
+-child_bullet = 252;
++child_bullet = 253;
+ angle_bullet = false;
+ rotation = 0;
+FILE ch4/gml_RoomCC_room_overworld_darkmaku_blocks_5_PreCreate.gml M 1 1
+@@ -4,6 +4,6 @@
+ fire_rate = 4;
+ range = 360;
+ spread_angle = 0;
+-child_bullet = 252;
++child_bullet = 253;
+ angle_bullet = false;
+ rotation = 0;
+FILE ch4/gml_RoomCC_room_overworld_darkmakumaze_0_PreCreate.gml M 1 1
+@@ -5,7 +5,7 @@
+ fire_rate = 90;
+ range = 360;
+ spread_angle = 360;
+-child_bullet = 252;
++child_bullet = 253;
+ angle_bullet = false;
+ special = 1;
+ rotation = 6;
+FILE ch4/gml_Object_obj_chapter_continue_Alarm_0.gml A 18 0
+if (choice_index == 0)
+{
+    var next_chapter = global.chapter + 1;
+    if (global.is_console)
+    {
+        var _loading = instance_create(0, 0, obj_screen_loading);
+        _loading.show_loading_screen(next_chapter, scr_chapterswitch);
+        _loading.depth = -1000;
+    }
+    else
+    {
+        scr_chapterswitch(next_chapter);
+    }
+}
+if (choice_index == 1)
+{
+    game_restart_true();
+}
+FILE ch4/gml_Object_obj_chapter_continue_Alarm_1.gml A 1 0
+game_end();
+FILE ch4/gml_Object_obj_chapter_continue_Create_0.gml A 14 0
+var chapter = string(global.chapter);
+var next_chapter = string(global.chapter + 1);
+choice_text[0] = (global.lang == "en") ? stringsetsub("Continue to Chapter ~1", next_chapter) : stringsetsub("Chapter ~1へ進む", next_chapter);
+choice_text[1] = (global.lang == "en") ? stringsetsub("Keep Playing Chapter ~1", chapter) : stringsetsub("このままChapter ~1をプレイ", chapter);
+choice_index = 0;
+confirmed_selection = false;
+text_alpha = 0;
+move_noise = false;
+select_noise = false;
+base_text_ypos = __view_get(e__VW.YView, 0) + 180;
+base_heart_ypos = __view_get(e__VW.YView, 0) + 195;
+ypos_offset = 40;
+init = 0;
+snd_free_all();
+FILE ch4/gml_Object_obj_chapter_continue_Draw_0.gml A 12 0
+draw_set_color(c_white);
+draw_set_font(scr_84_get_font("mainbig"));
+draw_set_halign(fa_center);
+draw_set_halign(fa_left);
+for (var i = 0; i < array_length_1d(choice_text); i++)
+{
+    var text_color = (choice_index == i) ? c_yellow : c_white;
+    draw_set_color(text_color);
+    draw_text_color(__view_get(e__VW.XView, 0) + 220, base_text_ypos + (i * 40) + ypos_offset, choice_text[i], text_color, text_color, text_color, text_color, text_alpha);
+}
+draw_set_color(c_white);
+draw_sprite_ext(spr_heart_centered, 0, __view_get(e__VW.XView, 0) + 200, base_heart_ypos + (choice_index * 40) + ypos_offset, 1, 1, 0, c_white, text_alpha);
+FILE ch4/gml_Object_obj_chapter_continue_Step_0.gml A 40 0
+if (init < 40)
+{
+    init++;
+    text_alpha = clamp(text_alpha + 0.05, 0, 1);
+    ypos_offset = clamp(ypos_offset - 3, 0, 40);
+    exit;
+}
+if (!confirmed_selection)
+{
+    if (up_p())
+    {
+        move_noise = true;
+        choice_index = ((choice_index - 1) < 0) ? 1 : 0;
+    }
+    if (down_p())
+    {
+        move_noise = true;
+        choice_index = ((choice_index + 1) > 1) ? 0 : 1;
+    }
+    if (button1_p())
+    {
+        select_noise = true;
+        confirmed_selection = true;
+        alarm[0] = 30;
+    }
+}
+if (confirmed_selection)
+{
+    text_alpha = clamp(text_alpha - 0.5, 0, 1);
+}
+if (move_noise)
+{
+    move_noise = false;
+    snd_play(snd_menumove);
+}
+if (select_noise)
+{
+    select_noise = false;
+    snd_play(snd_select);
+}

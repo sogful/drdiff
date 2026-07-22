@@ -1,0 +1,107 @@
+FILE ch5/gml_Object_obj_dw_fcastle_pinkshop_Create_0.gml M 17 1
+@@ -255,7 +255,23 @@
+             }
+             if (con == 0)
+             {
+-                if (instance_exists(obj_choicer_neo) || scr_getmsgno_d() == trig)
++                var targetmessagenumber = trig;
++                var goahead = false;
++                if (instance_exists(obj_choicer_neo))
++                {
++                    goahead = true;
++                }
++                with (obj_dialoguer)
++                {
++                    with (writer)
++                    {
++                        if (msgno >= targetmessagenumber)
++                        {
++                            goahead = true;
++                        }
++                    }
++                }
++                if (goahead)
+                 {
+                     con = 1;
+                 }
+FILE ch5/gml_Object_obj_dw_fcastle_pinkshop_Step_0.gml M 9 12
+@@ -603,6 +603,7 @@
+     var rawait = scr_returnwait_instance(ra1, ra2, 6);
+     var krwait = scr_returnwait_instance(kr1, kr2, 6);
+     var dawait = max(krwait, suwait, rawait);
++    dawait = min(dawait, 30);
+     c_sel(ra);
+     c_walkto(ra2, dawait, "u");
+     c_sel(su);
+@@ -621,26 +622,22 @@
+     });
+     c_wait(15);
+     c_wait(15);
+-    scr_speaker("blue");
+-    msgsetsubloc(0, "~1* Did you choose wisely?/", (global.lang == "ja") ? "\\m5\t\t\t" : "\\m5\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_fcastle_pinkshop_slash_Step_0_gml_571_0");
+-    msgnextsubloc("~1* It seems that there are~2no more pink shards./", (global.lang == "ja") ? "\\m5\t\t\t" : "\\m5\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_fcastle_pinkshop_slash_Step_0_gml_572_0");
+-    msgnextsubloc("~1* Therefore^1, this is as far~2as we can help you in~2this dream.../", (global.lang == "ja") ? "\\m5\t\t\t" : "\\m5\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_fcastle_pinkshop_slash_Step_0_gml_573_0");
+-    msgnextsubloc("~1* ..^1. unless someone else~2decides to come to your aid./%", (global.lang == "ja") ? "\\m5\t\t\t" : "\\m5\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_fcastle_pinkshop_slash_Step_0_gml_574_0");
++    c_speaker("blue");
++    c_msgsetsubloc(0, "~1* Did you choose wisely?/", (global.lang == "ja") ? "\\m5\t\t\t" : "\\m5\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_fcastle_pinkshop_slash_Step_0_gml_571_0");
++    c_msgnextsubloc("~1* It seems that there are~2no more pink shards./", (global.lang == "ja") ? "\\m5\t\t\t" : "\\m5\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_fcastle_pinkshop_slash_Step_0_gml_572_0");
++    c_msgnextsubloc("~1* Therefore^1, this is as far~2as we can help you in~2this dream.../", (global.lang == "ja") ? "\\m5\t\t\t" : "\\m5\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_fcastle_pinkshop_slash_Step_0_gml_573_0");
++    c_msgnextsubloc("~1* ..^1. unless someone else~2decides to come to your aid./%", (global.lang == "ja") ? "\\m5\t\t\t" : "\\m5\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_fcastle_pinkshop_slash_Step_0_gml_574_0");
+     c_msgfunc(function()
+     {
+         with (a_blue)
+         {
+             scr_lerpvar("image_alpha", 1, 0, 30, 1, "in");
+-            scr_doom(id, 30);
+-        }
+-        delay_function(function()
+-        {
+-            c_waitcustom_end();
+-        }, 30);
++        }
+     });
+     c_talk();
+     c_wait_talk();
+-    c_waitcustom();
++    c_wait_if(a_blue, "image_alpha", "<=", 0.01);
++    c_var_instance(a_blue, "x", room_width * 4);
+     var su3 = 
+     {
+         x: kr2.x - 6,
+FILE ch5/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -62,14 +62,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.243";
++global.versionno = "v0.0.244";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.243";
++    global.versionno = "v0.0.244";
+ }
+ else if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.243";
++    global.versionno = "v0.0.244";
+ }
+ global.pause_plat = false;
+ global.game_won = false;
+FILE ch5/gml_Object_obj_scissors_act_controller_Create_0.gml M 1 0
+@@ -1,5 +1,6 @@
+ timer = 0;
+ con = 0;
++failsafe_timer = 0;
+ init = 0;
+ type = 0;
+ acttimerstart = false;
+FILE ch5/gml_Object_obj_scissors_act_controller_Draw_0.gml M 5 0
+@@ -1,3 +1,8 @@
++failsafe_timer++;
++if (failsafe_timer >= 900)
++{
++    acttimerstart = true;
++}
+ if (acttimerstart)
+ {
+     acttimer++;

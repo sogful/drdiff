@@ -1,0 +1,2518 @@
+FILE combined/gml_GlobalScript_scr_gameover.gml M 7 0
+@@ -5,6 +5,13 @@
+         if (room == room_dw_mansion_b_west_2f)
+         {
+             global.tempflag[33]++;
++        }
++        if (room == room_dw_mansion_east_4f_d && i_ex(obj_queen_enemy))
++        {
++            global.hp[1] = global.maxhp[1];
++            global.hp[2] = global.maxhp[2];
++            global.hp[3] = global.maxhp[3];
++            scr_tempsave();
+         }
+     }
+     if (global.flag[35] == 0)
+FILE combined/gml_GlobalScript_scr_get_input_name.gml M 9 4
+@@ -1,8 +1,9 @@
+ function scr_get_input_name(arg0)
+ {
++    var _control = "[?]";
+     if (global.is_console || obj_gamecontroller.gamepad_active)
+     {
+-        var _control = global.input_g[arg0];
++        _control = global.input_g[arg0];
+         if (_control == gp_padr)
+         {
+             return "\\*D  ";
+@@ -32,11 +33,15 @@
+             return "\\*C  ";
+         }
+     }
++    var left_bracket = (global.lang == "en") ? "[" : "[";
++    var right_bracket = (global.lang == "en") ? "]" : "]";
++    _control = left_bracket + global.asc_def[global.input_k[arg0]] + right_bracket;
++    if (!is_string(_control))
++    {
++        _control = "[?]";
++    }
+     else
+     {
+-        var left_bracket = (global.lang == "en") ? "[" : "[";
+-        var right_bracket = (global.lang == "en") ? "]" : "]";
+-        var _control = left_bracket + global.asc_def[global.input_k[arg0]] + right_bracket;
+         return _control;
+     }
+ }
+FILE combined/gml_GlobalScript_scr_getbuttonsprite.gml M 1 1
+@@ -4,7 +4,7 @@
+     var isString = arg1;
+     var button = noone;
+     var is_dualshock = os_type == os_ps4 || obj_gamecontroller.gamepad_type == 1;
+-    var button_sprite = -4;
++    var button_sprite = button_questionmark;
+     var invert = is_dualshock && (global.typer == 50 || global.typer == 70 || global.typer == 71);
+     if (isString)
+     {
+FILE combined/gml_GlobalScript_scr_getbuttonsprite_ch1.gml M 1 1
+@@ -4,7 +4,7 @@
+     var isString = arg1;
+     var button = noone;
+     var is_dualshock = os_type == os_ps4 || obj_gamecontroller.gamepad_type == 1;
+-    var button_sprite = -4;
++    var button_sprite = button_questionmark;
+     if (isString)
+     {
+         if (control == "A")
+FILE combined/gml_GlobalScript_scr_kana_check.gml M 3 3
+@@ -1,10 +1,10 @@
+-function scr_kana_check()
++function scr_kana_check(arg0)
+ {
+     var kanafound = 0;
+-    var ___stringlength = string_length(argument0);
++    var ___stringlength = string_length(arg0);
+     for (var ___i = 1; ___i <= ___stringlength; ___i++)
+     {
+-        if (ord(string_char_at(argument0, ___i)) >= 12352)
++        if (ord(string_char_at(arg0, ___i)) >= 12352)
+         {
+             kanafound = 1;
+             break;
+FILE combined/gml_GlobalScript_scr_musicalbattlebullet.gml M 3 3
+@@ -3,9 +3,9 @@
+     var _bulletDepth = 0;
+     var _bpm = 60;
+     var _yTop = -40;
+-    var _instruments = [264, 265, 266, 267, 268, 269, 270];
+-    var _instrumentsB = [271, 272, 273, 274, 275, 276, 277];
+-    var _instrumentsAlt = [261, 262, 263];
++    var _instruments = [265, 266, 267, 268, 269, 270, 271];
++    var _instrumentsB = [272, 273, 274, 275, 276, 277, 278];
++    var _instrumentsAlt = [262, 263, 264];
+     var _xLanes = [180, 220, 260, 300, 340, 380, 420, 460];
+     var _yLanes = [280, 280, 280, 280, 280, 280, 280, 280];
+     var _laneType = [1, 1, 0, 0, 0, 0, 1, 1];
+FILE combined/gml_GlobalScript_scr_spell.gml M 20 14
+@@ -449,26 +449,32 @@
+             var healamount = 10;
+             for (var __j = 0; __j < 3; __j++)
+             {
+-                healamount = 10;
+-                star = __j;
+-                if (global.hp[global.char[star]] <= 0)
+-                {
+-                    healamount = ceil(global.maxhp[global.char[star]] / 4) + abs(global.hp[global.char[star]]);
+-                }
+-                scr_healitemspell(healamount);
++                if (global.char[__j] > 0)
++                {
++                    healamount = 10;
++                    star = __j;
++                    if (global.hp[global.char[star]] <= 0)
++                    {
++                        healamount = ceil(global.maxhp[global.char[star]] / 4) + abs(global.hp[global.char[star]]);
++                    }
++                    scr_healitemspell(healamount);
++                }
+             }
+             break;
+         case 231:
+             var healamount = 50;
+             for (var __j = 0; __j < 3; __j++)
+             {
+-                healamount = 50;
+-                star = __j;
+-                if (global.hp[global.char[star]] <= 0)
+-                {
+-                    healamount = 999;
+-                }
+-                scr_healitemspell(healamount);
++                if (global.char[__j] > 0)
++                {
++                    healamount = 50;
++                    star = __j;
++                    if (global.hp[global.char[star]] <= 0)
++                    {
++                        healamount = 999;
++                    }
++                    scr_healitemspell(healamount);
++                }
+             }
+             break;
+         case 232:
+FILE combined/gml_GlobalScript_scr_text.gml M 1 1
+@@ -5378,6 +5378,7 @@
+         case 1134:
+             if (global.choice == 0)
+             {
++                scr_tempsave();
+                 scr_speaker("no_name");
+                 msgsetloc(0, "* (You put the disk into the broken down mechanism.)/", "scr_text_slash_scr_text_gml_5662_0");
+                 msgnextloc("* (...)/", "scr_text_slash_scr_text_gml_5663_0");
+@@ -5396,7 +5397,6 @@
+                     read = 0;
+                 }
+                 global.flag[309] = 8;
+-                scr_tempsave();
+             }
+             if (global.choice == 1)
+             {
+FILE combined/gml_GlobalScript_scr_texttype_ch1.gml M 62 62
+@@ -17,161 +17,161 @@
+             font_set = 0;
+             break;
+         case 1:
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 357, 8, 18, 0);
++            break;
++        case 2:
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 492, 8, 18, 0);
++            break;
++        case 3:
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 357, 8, 18, 1);
++            break;
++        case 4:
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 357, 16, 28, 1);
++            extra_ja_vspace = 2;
++            break;
++        case 5:
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 357, 8, 18, 0);
++            break;
++        case 6:
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 357, 16, 36, 1);
++            break;
++        case 7:
+             scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 356, 8, 18, 0);
+             break;
+-        case 2:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 491, 8, 18, 0);
+-            break;
+-        case 3:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 356, 8, 18, 1);
+-            break;
+-        case 4:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 356, 16, 28, 1);
+-            extra_ja_vspace = 2;
+-            break;
+-        case 5:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 356, 8, 18, 0);
+-            break;
+-        case 6:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 356, 16, 36, 1);
+-            break;
+-        case 7:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 355, 8, 18, 0);
+-            break;
+         case 8:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 355, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 356, 8, 18, 0);
+             break;
+         case 10:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 347, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 348, 8, 18, 0);
+             break;
+         case 11:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 347, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 348, 8, 18, 0);
+             break;
+         case 12:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 348, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 349, 8, 18, 0);
+             break;
+         case 13:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 349, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 350, 8, 18, 0);
+             break;
+         case 14:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("comicsans"), 16777215, x, y, 33, 0, 1, 345, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("comicsans"), 16777215, x, y, 33, 0, 1, 346, 8, 18, 0);
+             break;
+         case 15:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 356, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 357, 8, 18, 0);
+             break;
+         case 16:
+             font_set = 0;
+             break;
+         case 17:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 346, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 347, 8, 18, 0);
+             break;
+         case 18:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 343, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 344, 8, 18, 0);
+             break;
+         case 19:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 356, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 357, 8, 18, 0);
+             break;
+         case 20:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 354, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 355, 8, 18, 0);
+             break;
+         case 21:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 354, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 355, 8, 18, 0);
+             break;
+         case 22:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("tinynoelle"), 16777215, x, y + 7, 33, 0, 1, 354, 6, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("tinynoelle"), 16777215, x, y + 7, 33, 0, 1, 355, 6, 18, 0);
+             break;
+         case 23:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("tinynoelle"), 16777215, x, y + 7, 33, 0, 1, 348, 6, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("tinynoelle"), 16777215, x, y + 7, 33, 0, 1, 349, 6, 18, 0);
+             break;
+         case 30:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 347, 16, 36, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 348, 16, 36, 1);
+             break;
+         case 31:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 350, 16, 36, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 351, 16, 36, 1);
+             break;
+         case 32:
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 354, 16, 36, 1);
++            break;
++        case 33:
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 405, 16, 36, 1);
++            break;
++        case 35:
+             scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 353, 16, 36, 1);
+             break;
+-        case 33:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 404, 16, 36, 1);
+-            break;
+-        case 35:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 352, 16, 36, 1);
+-            break;
+         case 36:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 491, 16, 36, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 492, 16, 36, 1);
+             break;
+         case 37:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 3, 347, 18, 36, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 3, 348, 18, 36, 1);
+             break;
+         case 40:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 491, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 492, 8, 18, 0);
+             break;
+         case 41:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 3, 491, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 3, 492, 8, 18, 0);
+             break;
+         case 42:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 2, 491, 16, 36, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 2, 492, 16, 36, 1);
+             break;
+         case 45:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 350, 16, 28, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 351, 16, 28, 1);
+             extra_ja_vspace = 2;
+             break;
+         case 46:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 353, 16, 28, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 354, 16, 28, 1);
+             extra_ja_vspace = 2;
+             break;
+         case 47:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 347, 16, 28, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 348, 16, 28, 1);
+             extra_ja_vspace = 2;
+             break;
+         case 48:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 404, 16, 28, 1);
++            scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 1, 405, 16, 28, 1);
+             extra_ja_vspace = 2;
+             break;
+         case 50:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("dotumche"), 0, x, y, 33, 0, 1, 356, 9, 20, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("dotumche"), 0, x, y, 33, 0, 1, 357, 9, 20, 0);
+             break;
+         case 51:
+             if (global.lang == "ja")
+             {
+-                scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 14, 356, 16, 36, 1);
++                scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 14, 357, 16, 36, 1);
+             }
+             else
+             {
+-                scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 10, 356, 16, 36, 1);
++                scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 10, 357, 16, 36, 1);
+             }
+             break;
+         case 52:
+             if (global.lang == "ja")
+             {
+-                scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 6, 356, 16, 36, 1);
++                scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 6, 357, 16, 36, 1);
+             }
+             else
+             {
+-                scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 4, 356, 16, 36, 1);
++                scr_textsetup_ch1(scr_84_get_font_ch1("mainbig"), 16777215, x, y, 33, 0, 4, 357, 16, 36, 1);
+             }
+             break;
+         case 53:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("dotumche"), 0, x, y, 33, 0, 1, 347, 9, 20, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("dotumche"), 0, x, y, 33, 0, 1, 348, 9, 20, 0);
+             break;
+         case 54:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("dotumche"), 0, x, y, 33, 0, 2, 347, 9, 20, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("dotumche"), 0, x, y, 33, 0, 2, 348, 9, 20, 0);
+             break;
+         case 55:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 351, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 1, 352, 8, 18, 0);
+             break;
+         case 60:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 8, 491, 8, 18, 0);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 8, 492, 8, 18, 0);
+             break;
+         case 666:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 4, 491, 12, 20, 2);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 4, 492, 12, 20, 2);
+             break;
+         case 667:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 491, 12, 20, 2);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 2, 492, 12, 20, 2);
+             break;
+         case 999:
+-            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 4, 488, 8, 18, 3);
++            scr_textsetup_ch1(scr_84_get_font_ch1("main"), 16777215, x, y, 33, 0, 4, 489, 8, 18, 3);
+             break;
+         default:
+             font_set = 0;
+FILE combined/gml_Object_DEVICE_MENU_Create_0.gml M 1 1
+@@ -113,7 +113,7 @@
+ THREAT = 0;
+ TEMPMESSAGE = " ";
+ MESSAGETIMER = 0;
+-version_text = "1.00";
++version_text = "1.05";
+ if (os_type == os_switch)
+ {
+     version_text = "1.03a";
+FILE combined/gml_Object_DEVICE_MENU_Other_15.gml M 5 5
+@@ -25,9 +25,9 @@
+ if (!global.is_console)
+ {
+     file_copy("filech" + CH + "_" + string(MENUCOORD[2]), "filech" + CH + "_" + string(MENUCOORD[3]));
+-    if (file_exists("config_" + string(MENUCOORD[2]) + ".ini"))
++    if (file_exists("keyconfig_" + string(MENUCOORD[2]) + ".ini"))
+     {
+-        file_copy("config_" + string(MENUCOORD[2]) + ".ini", "config_" + string(MENUCOORD[3]) + ".ini");
++        file_copy("keyconfig_" + string(MENUCOORD[2]) + ".ini", "keyconfig_" + string(MENUCOORD[3]) + ".ini");
+     }
+ }
+ else
+@@ -38,9 +38,9 @@
+     ds_map_set(new_file, "data", file_to_copy);
+     ossafe_file_text_close(new_file);
+     ossafe_savedata_save();
+-    if (ossafe_file_exists("config_" + string(MENUCOORD[2]) + ".ini"))
++    if (ossafe_file_exists("keyconfig_" + string(MENUCOORD[2]) + ".ini"))
+     {
+-        ossafe_ini_open("config_" + string(MENUCOORD[2]) + ".ini");
++        ossafe_ini_open("keyconfig_" + string(MENUCOORD[2]) + ".ini");
+         var copy_border = ini_read_string("BORDER", "TYPE", global.screen_border_id);
+         var copy_controls_list = [];
+         var shoulder_reassign = obj_gamecontroller.gamepad_shoulderlb_reassign;
+@@ -50,7 +50,7 @@
+         }
+         shoulder_reassign = ini_read_real("SHOULDERLB_REASSIGN", "SHOULDERLB_REASSIGN", obj_gamecontroller.gamepad_shoulderlb_reassign);
+         ossafe_ini_close();
+-        ossafe_ini_open("config_" + string(MENUCOORD[3]) + ".ini");
++        ossafe_ini_open("keyconfig_" + string(MENUCOORD[3]) + ".ini");
+         ini_write_string("BORDER", "TYPE", copy_border);
+         for (var i = 0; i < 10; i += 1)
+         {
+FILE combined/gml_Object_DEVICE_MENU_Step_0.gml M 14 7
+@@ -73,9 +73,9 @@
+                     f = instance_create(0, 0, obj_persistentfadein);
+                     f.image_xscale = 1000;
+                     f.image_yscale = 1000;
+-                    if (ossafe_file_exists("config_" + string(global.filechoice) + ".ini"))
+-                    {
+-                        ossafe_ini_open("config_" + string(global.filechoice) + ".ini");
++                    if (ossafe_file_exists("keyconfig_" + string(global.filechoice) + ".ini"))
++                    {
++                        ossafe_ini_open("keyconfig_" + string(global.filechoice) + ".ini");
+                         for (i = 0; i < 10; i += 1)
+                         {
+                             readval = ini_read_real("KEYBOARD_CONTROLS", string(i), -1);
+@@ -211,9 +211,9 @@
+                 ini_write_real(scr_ini_chapter(global.chapter, MENUCOORD[5]), "UraBoss", 0);
+                 ossafe_ini_close();
+                 ossafe_savedata_save();
+-                if (ossafe_file_exists("config_" + string(MENUCOORD[5]) + ".ini"))
+-                {
+-                    ossafe_file_delete("config_" + string(MENUCOORD[5]) + ".ini");
++                if (ossafe_file_exists("keyconfig_" + string(MENUCOORD[5]) + ".ini"))
++                {
++                    ossafe_file_delete("keyconfig_" + string(MENUCOORD[5]) + ".ini");
+                 }
+                 TEMPCOMMENT = stringsetloc("IT WAS AS IF IT WAS NEVER THERE AT ALL.", "DEVICE_MENU_slash_Step_0_gml_126_0");
+                 if (TYPE == 1)
+@@ -609,7 +609,14 @@
+         if (MENUCOORD[M] == 8 && CANQUIT)
+         {
+             SELNOISE = 1;
+-            ossafe_game_end();
++            if (global.is_console)
++            {
++                ossafe_game_end();
++            }
++            else
++            {
++                game_end();
++            }
+         }
+     }
+     if (button2_p() && TWOBUFFER < 0)
+FILE combined/gml_Object_DEVICE_MENU_ch1_Create_0.gml M 1 1
+@@ -75,7 +75,7 @@
+ THREAT = 0;
+ TEMPMESSAGE = " ";
+ MESSAGETIMER = 0;
+-version_text = "";
++version_text = "1.05 ";
+ if (os_type == os_switch)
+ {
+     version_text = "1.03a ";
+FILE combined/gml_Object_DEVICE_MENU_ch1_Other_15.gml M 5 5
+@@ -26,9 +26,9 @@
+ if (!global.is_console)
+ {
+     file_copy("filech1_" + string(MENUCOORD[2]), "filech1_" + string(MENUCOORD[3]));
+-    if (file_exists("config_" + string(MENUCOORD[2]) + ".ini"))
++    if (file_exists("keyconfig_" + string(MENUCOORD[2]) + ".ini"))
+     {
+-        file_copy("config_" + string(MENUCOORD[2]) + ".ini", "config_" + string(MENUCOORD[3]) + ".ini");
++        file_copy("keyconfig_" + string(MENUCOORD[2]) + ".ini", "keyconfig_" + string(MENUCOORD[3]) + ".ini");
+     }
+ }
+ else
+@@ -39,9 +39,9 @@
+     ds_map_set(new_file, "data", file_to_copy);
+     ossafe_file_text_close_ch1(new_file);
+     ossafe_savedata_save_ch1();
+-    if (ossafe_file_exists_ch1("config_" + string(MENUCOORD[2]) + ".ini"))
++    if (ossafe_file_exists_ch1("keyconfig_" + string(MENUCOORD[2]) + ".ini"))
+     {
+-        ossafe_ini_open_ch1("config_" + string(MENUCOORD[2]) + ".ini");
++        ossafe_ini_open_ch1("keyconfig_" + string(MENUCOORD[2]) + ".ini");
+         var copy_border = ini_read_string("BORDER", "TYPE", global.screen_border_id);
+         var copy_controls_list = [];
+         var shoulder_reassign = obj_gamecontroller.gamepad_shoulderlb_reassign;
+@@ -51,7 +51,7 @@
+         }
+         shoulder_reassign = ini_read_real("SHOULDERLB_REASSIGN", "SHOULDERLB_REASSIGN", obj_gamecontroller.gamepad_shoulderlb_reassign);
+         ossafe_ini_close_ch1();
+-        ossafe_ini_open_ch1("config_" + string(MENUCOORD[3]) + ".ini");
++        ossafe_ini_open_ch1("keyconfig_" + string(MENUCOORD[3]) + ".ini");
+         ini_write_string("BORDER", "TYPE", copy_border);
+         for (var i = 0; i < 10; i += 1)
+         {
+FILE combined/gml_Object_DEVICE_MENU_ch1_Step_0.gml M 6 6
+@@ -35,9 +35,9 @@
+                     scr_windowcaption_ch1(scr_84_get_lang_string_ch1("DEVICE_MENU_slash_Step_0_gml_35_0"));
+                     snd_free_all_ch1();
+                     obj_loadscreen_ch1.loaded = 1;
+-                    if (ossafe_file_exists_ch1("config_" + string(global.filechoice) + ".ini"))
+-                    {
+-                        ossafe_ini_open_ch1("config_" + string(global.filechoice) + ".ini");
++                    if (ossafe_file_exists_ch1("keyconfig_" + string(global.filechoice) + ".ini"))
++                    {
++                        ossafe_ini_open_ch1("keyconfig_" + string(global.filechoice) + ".ini");
+                         for (i = 0; i < 10; i += 1)
+                         {
+                             readval = ini_read_real("KEYBOARD_CONTROLS", string(i), -1);
+@@ -135,9 +135,9 @@
+                 ini_write_real("G" + string(MENUCOORD[5]), "Room", 0);
+                 ossafe_ini_close_ch1();
+                 ossafe_savedata_save_ch1();
+-                if (ossafe_file_exists_ch1("config_" + string(MENUCOORD[5]) + ".ini"))
+-                {
+-                    ossafe_file_delete_ch1("config_" + string(MENUCOORD[5]) + ".ini");
++                if (ossafe_file_exists_ch1("keyconfig_" + string(MENUCOORD[5]) + ".ini"))
++                {
++                    ossafe_file_delete_ch1("keyconfig_" + string(MENUCOORD[5]) + ".ini");
+                 }
+                 TEMPCOMMENT = scr_84_get_lang_string_ch1("DEVICE_MENU_slash_Step_0_gml_126_0");
+                 if (TYPE == 1)
+FILE combined/gml_Object_o_boxing_wireframe_Draw_0.gml M 11 11
+@@ -25,13 +25,13 @@
+ o_boxingcontroller_janky_y = o_boxingcontroller.y;
+ o_boxingcontroller_sprite_index = o_boxingcontroller.sprite_index;
+ o_boxingcontroller_image_index = o_boxingcontroller.image_index;
+-if (o_boxingcontroller.disable_queen_blocking == 0 && o_boxingqueen.health_count < (o_boxingqueen.health_count_max * 0.5) && o_boxingqueen_janky_sprite_index == 2128 && o_boxingqueen_janky_image_index < 2)
+-{
+-    o_boxingqueen_janky_sprite_index = 2143;
+-}
+-if (o_boxingcontroller.disable_queen_blocking == 0 && o_boxingqueen.health_count < (o_boxingqueen.health_count_max * 0.5) && o_boxingqueen_janky_sprite_index == 2129)
+-{
+-    o_boxingqueen_janky_sprite_index = 2143;
++if (o_boxingcontroller.disable_queen_blocking == 0 && o_boxingqueen.health_count < (o_boxingqueen.health_count_max * 0.5) && o_boxingqueen_janky_sprite_index == 2130 && o_boxingqueen_janky_image_index < 2)
++{
++    o_boxingqueen_janky_sprite_index = 2145;
++}
++if (o_boxingcontroller.disable_queen_blocking == 0 && o_boxingqueen.health_count < (o_boxingqueen.health_count_max * 0.5) && o_boxingqueen_janky_sprite_index == 2131)
++{
++    o_boxingqueen_janky_sprite_index = 2145;
+ }
+ if (pacifist_state <= 0 && introcon == 1)
+ {
+@@ -46,7 +46,7 @@
+     surface_set_target(surface);
+     if (hidebg == 0)
+     {
+-        draw_background(2205, 0, 0);
++        draw_background(2207, 0, 0);
+     }
+     if (hidebg == 1)
+     {
+@@ -55,11 +55,11 @@
+     }
+     if (o_boxingqueen.sprite_index == spr_bqueen_hurt_effect_wireframe)
+     {
+-        o_boxingqueen_janky_sprite_index = 2138;
++        o_boxingqueen_janky_sprite_index = 2140;
+     }
+     if (o_boxingqueen.sprite_index == spr_bqueen_headless_wireframe)
+     {
+-        o_boxingqueen_janky_sprite_index = 2144;
++        o_boxingqueen_janky_sprite_index = 2146;
+     }
+     if (!instance_exists(obj_vector_explosion_big))
+     {
+@@ -195,7 +195,7 @@
+             alarm[1] = 240;
+         }
+     }
+-    if ((o_boxingqueen_janky_sprite_index == 2143 && o_boxingcontroller.dead == 0 && o_boxingcontroller.arcade_times_blocked > 2) || (o_boxingqueen_janky_sprite_index == 2142 && o_boxingcontroller.dead == 0 && o_boxingcontroller.arcade_times_blocked > 2) || zx_timer > 0)
++    if ((o_boxingqueen_janky_sprite_index == 2145 && o_boxingcontroller.dead == 0 && o_boxingcontroller.arcade_times_blocked > 2) || (o_boxingqueen_janky_sprite_index == 2144 && o_boxingcontroller.dead == 0 && o_boxingcontroller.arcade_times_blocked > 2) || zx_timer > 0)
+     {
+         if (zx_state == 0)
+         {
+FILE combined/gml_Object_o_boxingcontroller_Collision_o_boxing_hitbox.gml M 5 1
+@@ -52,7 +52,11 @@
+         {
+             if (other.final_attack == 1)
+             {
+-                if (defend == 0)
++                if (global.hp[1] <= 10)
++                {
++                    global.hp[1] -= 10;
++                }
++                else if (defend == 0)
+                 {
+                     global.hp[1] -= floor(global.hp[1] / 2);
+                 }
+FILE combined/gml_Object_o_boxingcontroller_Other_13.gml M 9 0
+@@ -26,3 +26,12 @@
+         gigaqueentimer = 0;
+     }
+ }
++with (obj_gigaqueen_enemy)
++{
++    missleattack = 0;
++    breathattack = 0;
++}
++with (o_boxingqueen)
++{
++    finalbaseballused = 0;
++}
+FILE combined/gml_Object_o_boxingcontroller_Step_0.gml M 1 1
+@@ -265,7 +265,7 @@
+         }
+         if (didntdodgethisturn == 1)
+         {
+-            global.battlemsg[0] = stringsetloc("* (Dodge Queen's attacks with left, right, and down!)", "o_boxingcontroller_slash_Step_0_gml_178_0");
++            global.battlemsg[0] = stringsetsubloc("* (Dodge Queen's attacks with ~1, ~2, and ~3!)", scr_get_input_name(3), scr_get_input_name(1), scr_get_input_name(0), "o_boxingcontroller_slash_Step_0_gml_178_0");
+         }
+         if (recentphasetransition == 2)
+         {
+FILE combined/gml_Object_o_boxingqueen_KeyPress_79.gml M 2 0
+@@ -1,4 +1,6 @@
+ if (scr_debug())
+ {
+     health_count = 1;
++    o_boxing_wireframe.pacifist_timer = 2800;
++    times_hit_in_a_row = 2;
+ }
+FILE combined/gml_Object_o_boxingqueen_Step_0.gml M 1 1
+@@ -224,7 +224,7 @@
+             audio_stop_sound(snd_queen_laugh_0);
+         }
+     }
+-    if (times_hit_in_a_row > 1 && health_count > 0 && o_boxingcontroller.wireframe_boxing == 1)
++    if (times_hit_in_a_row > 1 && health_count > 0 && phase_transition < 1 && o_boxingcontroller.wireframe_boxing == 1)
+     {
+         invincible_l = 1;
+         invincible_r = 1;
+FILE combined/gml_Object_obj_balancepot_Step_2.gml M 1 0
+@@ -82,6 +82,7 @@
+         brokenpot.depth = 800000;
+         falling = 2;
+         timer = 0;
++        global.interact = 0;
+         if (global.flag[385] == 0)
+         {
+             global.flag[385] = 1;
+FILE combined/gml_Object_obj_boxing_loss_controller_Create_0.gml M 1 0
+@@ -1,5 +1,6 @@
+ f = 2;
+ state = 0;
+ timer = 0;
++con = 0;
+ image_alpha = 0;
+ depth = -100;
+FILE combined/gml_Object_obj_boxing_loss_controller_Draw_0.gml M 31 2
+@@ -10,12 +10,20 @@
+ {
+     if (image_alpha > 2.2)
+     {
+-        if (button1_p() || button2_p() || button3_p() || down_p() || right_p() || left_p())
++        if (button1_p() || button2_p() || button3_p())
+         {
+             state = 2;
+             instance_create(x, y, o_bq_whitefade);
+             o_bq_whitefade.depth = -150;
+         }
++        if (right_p())
++        {
++            con = 1;
++        }
++        if (left_p())
++        {
++            con = 0;
++        }
+     }
+     else
+     {
+@@ -25,7 +33,12 @@
+ if (state == 2)
+ {
+     image_alpha += 0.01;
+-    if (image_alpha > 2.6)
++    if (image_alpha > 2.6 && con == 1)
++    {
++        gameend = instance_create(0, 0, DEVICE_FAILURE);
++        gameend.EVENT = 8;
++    }
++    if (image_alpha > 2.6 && con == 0)
+     {
+         for (j = 0; j < 13; j += 1)
+         {
+@@ -189,3 +202,19 @@
+ }
+ draw_set_halign(fa_left);
+ draw_set_alpha(1);
++if (con == 0)
++{
++    draw_sprite_ext(spr_acrade_fightagain, 1, 190, 400, 1, 1, 0, c_white, image_alpha);
++}
++else
++{
++    draw_sprite_ext(spr_acrade_fightagain, 0, 190, 400, 1, 1, 0, c_white, image_alpha);
++}
++if (con == 1)
++{
++    draw_sprite_ext(scr_84_get_sprite("spr_acrade_retire"), 1, 370, 400, 1, 1, 0, c_white, image_alpha);
++}
++else
++{
++    draw_sprite_ext(scr_84_get_sprite("spr_acrade_retire"), 0, 370, 400, 1, 1, 0, c_white, image_alpha);
++}
+FILE combined/gml_Object_obj_ch2_city_berdly_Step_0.gml M 1 0
+@@ -533,6 +533,7 @@
+ }
+ if (con == 20)
+ {
++    global.spell[4][3] = 0;
+     con = 49;
+     alarm[0] = 30;
+     c_sel(no);
+FILE combined/gml_Object_obj_ch2_city_noelle_monologue_Step_0.gml M 8 1
+@@ -271,7 +271,14 @@
+     c_soundplay(snd_jump);
+     c_jump(6796, kr_actor.y - 20, 20, 10);
+     c_wait(15);
+-    c_walkdirect_wait(kr_actor.x + 50, kr_actor.y - 20, scr_directOverTime(kr_actor.x + 50, 6796, 4));
++    if (scr_directOverTime(kr_actor.x + 50, 6796, 4) <= 4)
++    {
++        c_walkdirect_wait(kr_actor.x + 50, kr_actor.y - 20, 4);
++    }
++    else
++    {
++        c_walkdirect_wait(kr_actor.x + 50, kr_actor.y - 20, scr_directOverTime(kr_actor.x + 50, 6796, 4));
++    }
+     c_wait(20);
+     c_sel(kr);
+     c_facing("r");
+FILE combined/gml_Object_obj_ch2_room_city_savepoint_Create_0.gml M 4 0
+@@ -1,4 +1,8 @@
+ con = -1;
++if (global.plot < 75)
++{
++    global.plot = 75;
++}
+ if (global.plot < 100)
+ {
+     capntalked = 0;
+FILE combined/gml_Object_obj_ch2_scene11a_Create_0.gml M 1 1
+@@ -12,7 +12,7 @@
+     total_width = sprite_get_width(sprite_index) * 16;
+     depth = 5000;
+ }
+-var tiled_wall_end = instance_create(590, 437, obj_cyber_wall_lights_right);
++var tiled_wall_end = instance_create(591, 437, obj_cyber_wall_lights_right);
+ with (tiled_wall_end)
+ {
+     depth = 4900;
+FILE combined/gml_Object_obj_ch2_scene11a_bg_Draw_0.gml M 0 2
+@@ -1,2 +0,0 @@
+-draw_set_color(#285545);
+-draw_rectangle(0, 464, 627, 480, false);
+FILE combined/gml_Object_obj_ch2_scene21_loop_Step_0.gml M 1 1
+@@ -663,7 +663,7 @@
+         c_sprite(spr_ralsei_hurt_overworld);
+         c_wait(10);
+         c_var_instance(id, "rouxls_power_up", 1);
+-        c_mus2("loopsfx", 130, 0);
++        c_mus2("loopsfx", 131, 0);
+         c_mus2("loopsfxvolume", 0, 0);
+         c_mus2("loopsfxvolume", 0.7, 30);
+         c_mus2("loopsfxpitch", 0, 0);
+FILE combined/gml_Object_obj_ch2_scene25_Create_0.gml M 5 0
+@@ -28,6 +28,11 @@
+ }
+ else
+ {
++    with (obj_mainchara)
++    {
++        x = 26;
++        y = 246;
++    }
+     if (global.tempflag[31] == 1)
+     {
+         shortened = 1;
+FILE combined/gml_Object_obj_ch2_scene26_Create_0.gml M 1 0
+@@ -5,6 +5,7 @@
+ skipbattle = 0;
+ drawx = 0;
+ extra_con = 0;
++noelle_depth = 0;
+ if (!snd_is_playing(global.currentsong[1]))
+ {
+     global.currentsong[0] = snd_init("wind_highplace.ogg");
+FILE combined/gml_Object_obj_ch2_scene26_Step_0.gml M 7 3
+@@ -320,8 +320,11 @@
+         c_sel(kr);
+         c_facing("l");
+         c_var_instance(id, "winelaser", 1);
+-        c_wait(6);
+         c_var_instance(queenwinehand, "image_index", 1);
++        c_wait(4);
++        c_sel(no);
++        c_depth(96849);
++        c_wait(4);
+         c_soundplay(snd_shadowpendant);
+         c_wait(15);
+         c_wait(3);
+@@ -336,7 +339,7 @@
+         c_facing("r");
+         c_sel(kr);
+         c_facing("r");
+-        c_wait(15);
++        c_wait(7);
+         c_sel(ra);
+         c_soundplay(snd_impact);
+         c_autowalk(0);
+@@ -357,7 +360,8 @@
+         c_sel(no);
+         c_shakeobj();
+         c_sprite(spr_noelle_kneel);
+-        c_wait(10);
++        c_wait(15);
++        c_depth(no_actor.depth + 100);
+         c_var_instance(queenwinehand, "image_index", 0);
+         c_wait(15);
+         c_var_lerp_instance(queenwinehand, "y", 149, queenwinehand.y, 15);
+FILE combined/gml_Object_obj_ch2_scene26_henshin_flash_Create_0.gml M 3 3
+@@ -7,9 +7,9 @@
+ beam_dir[2] = 220;
+ beam_dir[3] = 300;
+ beam_rot[0] = 1;
+-beam_rot[1] = 0.5;
+-beam_rot[2] = -1;
+-beam_rot[3] = -0.5;
++beam_rot[1] = 0.55;
++beam_rot[2] = -0.8;
++beam_rot[3] = -0.6;
+ beam_speed = 20;
+ beam_size = 0;
+ beam_timer = 0;
+FILE combined/gml_Object_obj_ch2_scene26_powers_combined_Create_0.gml M 1 0
+@@ -105,3 +105,4 @@
+ miniflash = 0;
+ f = 2;
+ big_square = -4;
++streak_timer = 0;
+FILE combined/gml_Object_obj_ch2_scene26_powers_combined_Draw_0.gml M 10 10
+@@ -52,49 +52,49 @@
+         thrash_con = 3;
+     }
+ }
+-if (con >= 5)
++if (con >= 5 || (con == 4 && shine_timer >= 40))
+ {
+     draw_set_color(c_white);
+     draw_rectangle(camerax(), cameray(), camerax() + 640, cameray() + 480, false);
+-    if (shine_timer == (4 / f))
++    if (streak_timer == (4 / f))
+     {
+         line = instance_create(camerax() + 20 + irandom(120), cameray() + 652 + irandom(32), obj_anime_bg_line);
+         line.image_blend = #8EAAEA;
+         line.depth = depth - 1;
+     }
+-    if (shine_timer == (24 / f))
++    if (streak_timer == (24 / f))
+     {
+         line = instance_create(camerax() + 20 + irandom(120), cameray() + 652 + irandom(32), obj_anime_bg_line);
+         line.image_blend = #8EAAEA;
+         line.depth = depth - 1;
+     }
+-    if (shine_timer == (44 / f))
++    if (streak_timer == (44 / f))
+     {
+         line = instance_create(camerax() + 20 + irandom(120), cameray() + 652 + irandom(32), obj_anime_bg_line);
+         line.image_blend = #8EAAEA;
+         line.depth = depth - 1;
+     }
+-    if (shine_timer == (14 / f))
++    if (streak_timer == (14 / f))
+     {
+         line = instance_create((camerax() + 620) - irandom(120), cameray() + 652 + irandom(32), obj_anime_bg_line);
+         line.image_blend = #8EAAEA;
+         line.depth = depth - 1;
+     }
+-    if (shine_timer == (34 / f))
++    if (streak_timer == (34 / f))
+     {
+         line = instance_create((camerax() + 620) - irandom(120), cameray() + 652 + irandom(32), obj_anime_bg_line);
+         line.image_blend = #8EAAEA;
+         line.depth = depth - 1;
+     }
+-    if (shine_timer == (44 / f))
++    if (streak_timer == (44 / f))
+     {
+         line = instance_create((camerax() + 620) - irandom(120), cameray() + 652 + irandom(32), obj_anime_bg_line);
+         line.image_blend = #8EAAEA;
+         line.depth = depth - 1;
+     }
+-    shine_timer++;
+-    if (shine_timer >= (50 / f))
++    streak_timer++;
++    if (streak_timer >= (50 / f))
+     {
+-        shine_timer = 0;
++        streak_timer = 0;
+     }
+ }
+FILE combined/gml_Object_obj_ch2_scene26_transformation_Create_0.gml M 1 1
+@@ -2,7 +2,6 @@
+ image_play = 0;
+ image_blend = c_black;
+ image_speed = 0;
+-image_alpha = -0.5;
+ timer = 0;
+ headsprite = spr_thrash_transform_head_c;
+ if (global.flag[220] == 1)
+@@ -18,3 +17,4 @@
+     headsprite = spr_thrash_transform_head_d;
+ }
+ frame_offset = 7;
++screen_fade = -0.5;
+FILE combined/gml_Object_obj_ch2_scene26_transformation_Draw_0.gml M 8 4
+@@ -1,8 +1,8 @@
+-if (image_alpha < 1)
++if (screen_fade < 1)
+ {
+-    image_alpha += 0.05;
++    screen_fade += 0.05;
+ }
+-if (image_alpha < 0)
++if (screen_fade < 0)
+ {
+     exit;
+ }
+@@ -20,8 +20,12 @@
+     }
+ }
+ draw_self();
+-if (image_alpha < 1)
++if (screen_fade < 1)
+ {
++    draw_set_color(c_white);
++    draw_set_alpha(1 - screen_fade);
++    draw_rectangle(camerax(), cameray(), camerax() + 640, cameray() + 480, false);
++    draw_set_alpha(1);
+     exit;
+ }
+ af = scr_afterimage();
+FILE combined/gml_Object_obj_ch2_scene26_wine_laser_Draw_0.gml M 22 7
+@@ -1,10 +1,10 @@
+ depth = 96850;
+ laserx = x + (27 * image_xscale);
+-lasery = y - (12 * image_yscale);
++lasery = y - (6 * image_yscale);
+ beam_power = 0;
+ if (timer < 0)
+ {
+-    timer++;
++    timer += 1.25;
+     if (timer < -10)
+     {
+         exit;
+@@ -18,8 +18,22 @@
+ }
+ if (trailstart > 0 && trailend < 640)
+ {
+-    draw_set_color(merge_color(#B5E61D, c_white, clamp(scr_remapvalue(35, 45, timer, 0, 1), 0, 1)));
+-    draw_rectangle(trailstart + camerax(), 310, trailend + camerax(), 314, false);
++    var _wine_color = merge_color(#B5E61D, c_white, clamp(scr_remapvalue(35, 45, timer, 0, 1), 0, 1));
++    draw_set_color(_wine_color);
++    if ((trailend + camerax()) < (noelle_x - 80))
++    {
++        draw_rectangle(trailend + camerax(), 310, min(noelle_x - 80, trailstart + camerax()), 314, false);
++    }
++    var _swerveleft = clamp((trailend + camerax()) - (noelle_x - 80), 0, 160);
++    var _swerveright = clamp((trailstart + camerax()) - (noelle_x - 80), 0, 160 - _swerveleft);
++    if (_swerveleft < 160 && _swerveright > 0)
++    {
++        draw_sprite_part_ext(spr_cutscene_26_laser_swerve, 0, _swerveleft, 0, _swerveright, 160, (noelle_x - 80) + _swerveleft, 272, 1, 1, _wine_color, 1);
++    }
++    if ((trailstart + camerax()) > (noelle_x + 80))
++    {
++        draw_rectangle(max(trailend + camerax(), noelle_x + 80), 310, trailstart + camerax(), 314, false);
++    }
+ }
+ if (timer >= 40)
+ {
+@@ -42,7 +56,7 @@
+     d.image_xscale = 2;
+     d.image_yscale = 2;
+     d.image_speed = 0.75;
+-    d.depth -= bombdepth;
++    d.depth -= bombdepth + 1;
+     with (d)
+     {
+         scr_depth();
+@@ -148,8 +162,9 @@
+     beam_power = 0;
+ }
+ gpu_set_blendmode(bm_subtract);
+-draw_rectangle(0, 315, 640, 480, false);
+-draw_circle(noelle_x - camerax(), 315, 40, 0);
++draw_rectangle(0, 315, noelle_x - camerax() - 80, 480, false);
++draw_rectangle(0, 345, 640, 480, false);
++draw_sprite(spr_cutscene_26_laser_swerve, 1, noelle_x - camerax(), 313);
+ gpu_set_blendmode(bm_normal);
+ surface_reset_target();
+ draw_surface(laser_surface, camerax(), cameray());
+FILE combined/gml_Object_obj_ch2_sceneex2a_Step_0.gml M 38 20
+@@ -2,7 +2,7 @@
+ {
+     con = 1;
+     global.interact = 1;
+-    global.facing = 3;
++    global.facing = 0;
+     sneo = scr_dark_marker(288, -170, spr_spamton_defeat_vines);
+     with (sneo)
+     {
+@@ -44,6 +44,13 @@
+     c_wait(45);
+     c_var_lerp_instance(sparkle, "image_alpha", 1, 0, 15);
+     c_wait(45);
++    scr_keyitemget(13);
++    c_soundplay(snd_item);
++    c_speaker("no_name");
++    c_msgsetloc(0, "* (You got ShadowCrystal.)/%", "obj_ch2_sceneex2a_slash_Step_0_gml_95_0");
++    c_talk_wait();
++    c_wait(5);
++    noroom = 0;
+     if (global.flag[571] == 1)
+     {
+         scr_weaponget(21);
+@@ -51,13 +58,10 @@
+         {
+             global.flag[468] = 1;
+         }
+-        else
+-        {
+-            c_soundplay(snd_item);
+-            c_speaker("no_name");
+-            c_msgsetloc(0, "* (You got PuppetScarf.)/%", "obj_ch2_sceneex2a_slash_Step_0_gml_88_0");
+-            c_talk_wait();
+-        }
++        c_soundplay(snd_item);
++        c_speaker("no_name");
++        c_msgsetloc(0, "* (You got PuppetScarf.)/%", "obj_ch2_sceneex2a_slash_Step_0_gml_88_0");
++        c_talk_wait();
+     }
+     else
+     {
+@@ -67,19 +71,33 @@
+         {
+             global.flag[468] = 1;
+         }
+-        else
+-        {
+-            c_soundplay(snd_item);
+-            c_speaker("no_name");
+-            c_msgsetloc(0, "* (You got Dealmaker.)/%", "obj_ch2_sceneex2a_slash_Step_0_gml_82_0");
+-            c_talk_wait();
+-        }
++        c_soundplay(snd_item);
++        c_speaker("no_name");
++        c_msgsetloc(0, "* (You got Dealmaker.)/%", "obj_ch2_sceneex2a_slash_Step_0_gml_82_0");
++        c_talk_wait();
+     }
+-    scr_keyitemget(13);
+-    c_soundplay(snd_item);
+-    c_speaker("no_name");
+-    c_msgsetloc(0, "* (You got ShadowCrystal.)/%", "obj_ch2_sceneex2a_slash_Step_0_gml_95_0");
+-    c_talk_wait();
++    if (noroom == 1)
++    {
++        c_wait(30);
++        c_speaker("no one");
++        c_msgsetloc(0, "* (... but your inventory was full.)/%", "obj_ch2_sceneex2a_slash_Step_0_gml_122_0");
++        c_talk_wait();
++        c_mus("free_all");
++        c_soundplay(snd_power);
++        c_var_lerp_instance(sparkle, "image_alpha", 0, 1, 5);
++        c_wait(30);
++        c_speaker("spamton");
++        c_msgsetloc(0, "* ... Kris...^1?&* Kris!^1?&* KRIS!?!?!?/", "obj_ch2_sceneex2a_slash_Step_0_gml_129_0");
++        c_msgnextloc("* YOU FILLED YOUR [Inventorium] WITH [Half-Pr1ce Sallamy] JUST TO KEEP ME OUT!?/", "obj_ch2_sceneex2a_slash_Step_0_gml_130_0");
++        c_msgnextloc("* WHAT^2!&* THE^2!&* [^4Fifty Percent Off]!?/", "obj_ch2_sceneex2a_slash_Step_0_gml_131_0");
++        c_msgnextloc("* YOU CAN CARRY LIKE 48 ITEMS!!!/", "obj_ch2_sceneex2a_slash_Step_0_gml_132_0");
++        c_msgnextloc("* [Why] DID YOU DO THIS!^1?&* WHY!^1? [Y]!^1? [Yellow]!^1? [Gamma]!?/", "obj_ch2_sceneex2a_slash_Step_0_gml_133_0");
++        c_msgnextloc("* NOT [Cool] KRIS^1!&* I'LL BE IN MY [Trailer]!/%", "obj_ch2_sceneex2a_slash_Step_0_gml_134_0");
++        c_talk_wait();
++        c_var_lerp_instance(sparkle, "x", 315, 700, 150);
++        c_soundplay(snd_slidewhistle);
++        c_wait(90);
++    }
+     c_mus2("volume", 0, 30);
+     c_wait(30);
+ }
+FILE combined/gml_Object_obj_controller_dw_mansion_b_west_2f_Step_0.gml M 1 0
+@@ -7,6 +7,7 @@
+     forcefield.canttalk = 1;
+     layer_set_visible("TILES_Edge_Hidden", 1);
+     con = 1;
++    scr_tempsave();
+ }
+ if (con == 1)
+ {
+FILE combined/gml_Object_obj_controller_dw_mansion_bridges_funny_Step_0.gml M 1 1
+@@ -134,7 +134,7 @@
+         timer = 0;
+         vaseCrackedCon++;
+     }
+-    if (instance_exists(obj_caterpillarchara) && enemySwatch.x <= (obj_caterpillarchara.x + obj_caterpillarchara.sprite_width + 8))
++    else if (instance_exists(obj_caterpillarchara) && enemySwatch.x <= (obj_caterpillarchara.x + obj_caterpillarchara.sprite_width + 8))
+     {
+         global.interact = 1;
+         enemySwatch.x = obj_caterpillarchara.x + obj_caterpillarchara.sprite_width + 8;
+FILE combined/gml_Object_obj_controller_dw_mansion_potBalance_Alarm_0.gml M 1 0
+@@ -27,6 +27,7 @@
+             eraser = 1;
+             noAlertSound = 1;
+             frozen = 0;
++            offscreen_frozen = 0;
+         }
+         instance_destroy();
+     }
+FILE combined/gml_Object_obj_controller_mansion_traffic_Step_0.gml M 6 3
+@@ -182,8 +182,11 @@
+         con++;
+     }
+ }
+-if (keyboard_check_pressed(vk_space))
++if (scr_debug())
+ {
+-    obj_mainchara.x = 1143;
+-    obj_mainchara.y = 360;
++    if (keyboard_check_pressed(vk_space))
++    {
++        obj_mainchara.x = 1143;
++        obj_mainchara.y = 360;
++    }
+ }
+FILE combined/gml_Object_obj_controller_mansion_traffic_old_Step_0.gml M 0 5
+@@ -123,8 +123,3 @@
+         instance_destroy();
+     }
+ }
+-if (keyboard_check_pressed(vk_space))
+-{
+-    obj_mainchara.x = 4244;
+-    obj_mainchara.y = 364;
+-}
+FILE combined/gml_Object_obj_credits_2_Step_0.gml M 0 10
+@@ -1,13 +1,3 @@
+-if (keyboard_check_pressed(ord("R")))
+-{
+-    snd_free_all();
+-    room_restart();
+-}
+-if (keyboard_check_pressed(ord("P")))
+-{
+-    snd_free_all();
+-    game_restart();
+-}
+ if (timer == 0)
+ {
+     snd_free_all();
+FILE combined/gml_Object_obj_darkcontroller_Step_0.gml M 2 2
+@@ -735,7 +735,7 @@
+                 selectnoise = 1;
+                 onebuffer = 2;
+                 twobuffer = 2;
+-                ossafe_ini_open("config_" + string(global.filechoice) + ".ini");
++                ossafe_ini_open("keyconfig_" + string(global.filechoice) + ".ini");
+                 for (var i = 0; i < 10; i += 1)
+                 {
+                     ini_write_real("KEYBOARD_CONTROLS", string(i), global.input_k[i]);
+@@ -797,7 +797,7 @@
+             {
+                 onebuffer = 2;
+                 twobuffer = 2;
+-                ossafe_ini_open("config_" + string(global.filechoice) + ".ini");
++                ossafe_ini_open("keyconfig_" + string(global.filechoice) + ".ini");
+                 ini_write_string("BORDER", "TYPE", global.screen_border_id);
+                 ossafe_ini_close();
+                 ossafe_savedata_save();
+FILE combined/gml_Object_obj_darkcontroller_ch1_Step_0.gml M 2 2
+@@ -727,7 +727,7 @@
+                 selectnoise = 1;
+                 onebuffer = 2;
+                 twobuffer = 2;
+-                ossafe_ini_open_ch1("config_" + string(global.filechoice) + ".ini");
++                ossafe_ini_open_ch1("keyconfig_" + string(global.filechoice) + ".ini");
+                 for (var i = 0; i < 10; i += 1)
+                 {
+                     ini_write_real("KEYBOARD_CONTROLS", string(i), global.input_k[i]);
+@@ -789,7 +789,7 @@
+             {
+                 onebuffer = 2;
+                 twobuffer = 2;
+-                ossafe_ini_open_ch1("config_" + string(global.filechoice) + ".ini");
++                ossafe_ini_open_ch1("keyconfig_" + string(global.filechoice) + ".ini");
+                 ini_write_string("BORDER", "TYPE", global.screen_border_id);
+                 ossafe_ini_close_ch1();
+                 ossafe_savedata_save_ch1();
+FILE combined/gml_Object_obj_doorW_Alarm_2.gml M 0 5
+@@ -312,11 +312,6 @@
+ }
+ if (room == room_dw_city_traffic_4)
+ {
+-    if (x > 3100 && y > 400)
+-    {
+-        global.entrance = 23;
+-        room_goto(room_dw_city_spamton_alley);
+-    }
+     if (x > 4500)
+     {
+         global.entrance = 24;
+FILE combined/gml_Object_obj_doorw_musfade_Alarm_2.gml M 5 0
+@@ -34,6 +34,11 @@
+         }
+     }
+ }
++if (room == room_dw_city_traffic_4)
++{
++    global.entrance = 23;
++    room_goto(room_dw_city_spamton_alley);
++}
+ if (room == room_dw_city_man)
+ {
+     global.entrance = 24;
+FILE combined/gml_Object_obj_example_cutscene_Step_0.gml M 1 1
+@@ -54,7 +54,7 @@
+     c_facing("r");
+     c_emote("!", 30, 0);
+     c_sel(kr);
+-    c_script_instance(id, snd_play_pitch, 25, 56, 0.5 + random(1.2));
++    c_script_instance(id, snd_play_pitch, 25, 57, 0.5 + random(1.2));
+     c_shakestep_x(15, -4, 15, 25, 5, 1);
+     c_wait(150);
+     c_script_instance_stop(id, snd_play_pitch);
+FILE combined/gml_Object_obj_fusionmenu_Step_0.gml M 1 1
+@@ -271,7 +271,7 @@
+         {
+             if (subtype == 1)
+             {
+-                scr_recruit_info_all("either");
++                scr_recruit_info_all("total");
+             }
+             if (subtype == 2)
+             {
+FILE combined/gml_Object_obj_hatguy_enemy_Step_0.gml M 1 1
+@@ -130,7 +130,7 @@
+                     obj_musicalbullet_controller.enemy_count += 1;
+                 }
+             }
+-            scr_turntimer(235);
++            scr_turntimer(185);
+             turns += 1;
+             global.typer = 6;
+             global.fc = 0;
+FILE combined/gml_Object_obj_heart_Create_0.gml M 1 0
+@@ -17,3 +17,4 @@
+ z_hold_f = 0;
+ chargeshot_delay = 0;
+ superchargetimer = 0;
++chargeshotcount = 0;
+FILE combined/gml_Object_obj_heart_Step_0.gml M 12 0
+@@ -274,6 +274,10 @@
+     if (z_hold >= 40)
+     {
+         image_index = 2;
++    }
++    if (z_charge < 15)
++    {
++        chargeshotcount = 0;
+     }
+     if (z_hold >= 40 && button1_r())
+     {
+@@ -290,6 +294,14 @@
+         z_hold = 0;
+         chargeshot_delay = 5;
+         image_index = 0;
++        chargeshotcount++;
++        if (chargeshotcount > 1)
++        {
++            with (obj_spamton_neo_enemy)
++            {
++                funnycheat += 1;
++            }
++        }
+         if (global.chapter == 2 && instance_exists(obj_spamton_neo_enemy))
+         {
+             obj_spamton_neo_enemy.bigshotused = 1;
+FILE combined/gml_Object_obj_kingcutscene_ch1_Step_0.gml M 12 12
+@@ -738,15 +738,15 @@
+         snd_play_ch1(snd_laz_c_ch1);
+         with (k)
+         {
+-            scr_anim_ch1(3813, 0.25);
+-        }
+-        with (s)
+-        {
+-            scr_anim_ch1(3839, 0.25);
+-        }
+-        with (r)
+-        {
+-            scr_anim_ch1(3854, 0.25);
++            scr_anim_ch1(3815, 0.25);
++        }
++        with (s)
++        {
++            scr_anim_ch1(3841, 0.25);
++        }
++        with (r)
++        {
++            scr_anim_ch1(3856, 0.25);
+         }
+         con = 61;
+         alarm[4] = 30;
+@@ -1030,7 +1030,7 @@
+         snd_play_ch1(snd_heavyswing_ch1);
+         with (king)
+         {
+-            scr_anim_ch1(4117, 0.1);
++            scr_anim_ch1(4119, 0.1);
+         }
+         con = 82;
+         alarm[4] = 50;
+@@ -1240,7 +1240,7 @@
+     {
+         with (r)
+         {
+-            scr_anim_ch1(3861, 0.25);
++            scr_anim_ch1(3863, 0.25);
+             x -= 10;
+             y -= 10;
+         }
+@@ -1437,7 +1437,7 @@
+         k.disto = disto;
+         with (k)
+         {
+-            scr_anim_ch1(3823, 0.5);
++            scr_anim_ch1(3825, 0.5);
+             move_towards_point(s.x + 60, s.y + 10, disto);
+         }
+         con = 137;
+FILE combined/gml_Object_obj_kk_enemy_Step_0.gml M 1 1
+@@ -138,7 +138,7 @@
+                     obj_musicalbullet_controller.enemy_count += 1;
+                 }
+             }
+-            scr_turntimer(235);
++            scr_turntimer(185);
+             turns += 1;
+             global.typer = 6;
+             global.fc = 0;
+FILE combined/gml_Object_obj_legend_neo_Draw_0.gml M 7 4
+@@ -1,7 +1,10 @@
+-if (keyboard_check_pressed(vk_backspace))
+-{
+-    snd_free_all();
+-    room_restart();
++if (scr_debug())
++{
++    if (keyboard_check_pressed(vk_backspace))
++    {
++        snd_free_all();
++        room_restart();
++    }
+ }
+ if (drawpic == 1)
+ {
+FILE combined/gml_Object_obj_mansion_keygen_lock_Other_10.gml M 1 1
+@@ -4,6 +4,7 @@
+     if (scr_keyitemcheck(12) == 0)
+     {
+         msgsetloc(0, "* It has a lock that seems impossible to open./%", "obj_mansion_keygen_lock_slash_Other_10_gml_5_0");
++        myinteract = 3;
+     }
+     if (scr_keyitemcheck(12) == 1)
+     {
+@@ -13,7 +14,6 @@
+         global.flag[309] = 4;
+         con = 1;
+     }
+-    myinteract = 3;
+     global.interact = 1;
+     mydialoguer = instance_create(0, 0, obj_dialoguer);
+ }
+FILE combined/gml_Object_obj_mansion_keygen_lock_Step_0.gml M 0 1
+@@ -1,6 +1,5 @@
+ if (con == 1 && !d_ex())
+ {
+-    global.interact = 1;
+     snd_play(snd_weirdeffect);
+     con++;
+ }
+FILE combined/gml_Object_obj_maus_enemy_Step_0.gml M 1 1
+@@ -431,7 +431,7 @@
+             }
+             if (global.char[2] == 3)
+             {
+-                if (global.actingtarget[2] == myself)
++                if (global.actingtarget[2] == myself && global.actingsingle[2] == 1)
+                 {
+                     scr_nextact();
+                 }
+FILE combined/gml_Object_obj_musical_battle_end_Draw_0.gml M 22 3
+@@ -7,6 +7,11 @@
+     song1 = snd_init("cyber_battle_end.ogg");
+     song2 = mus_play(song1);
+     marker[0] = scr_dark_marker(xx, yy - 200, spr_kris_dance);
++    if (global.hp[1] < 1)
++    {
++        marker[0].sprite_index = spr_kris_fallen_dark;
++        marker[0].y -= 2;
++    }
+     marker[1] = scr_dark_marker(xx, yy - 200, spr_susie_dance);
+     marker[2] = scr_dark_marker(xx, yy - 200, spr_ralsei_dance);
+     marker[3] = instance_create(xx, yy - 200, obj_sweet_npc);
+@@ -32,6 +37,10 @@
+     }
+     markeroffsetx[0] = 6;
+     markeroffsety[0] = 24;
++    if (global.hp[1] < 0)
++    {
++        markeroffsety[0] = 12;
++    }
+     markeroffsety[4] = -36;
+     markeroffsetx[4] = -40;
+     markeroffsetx[5] = -12;
+@@ -47,6 +56,10 @@
+     }
+     marker[con - 10].y = cy + markeroffsety[con - 10];
+     marker[con - 10].x = (cx - 140) + (sin(siner / 8) * 10) + markeroffsetx[con - 10];
++    if (global.hp[1] < 0 && con == 10)
++    {
++        marker[con - 10].x = (cx - 140) + 0 + markeroffsetx[con - 10];
++    }
+     marker[(con - 10) + 3].y = cy + markeroffsety[(con - 10) + 3];
+     marker[(con - 10) + 3].x = cx + 80 + (sin(siner / 8) * 10) + markeroffsetx[(con - 10) + 3];
+ }
+@@ -123,8 +136,11 @@
+ {
+     if (jumped[0] < 3)
+     {
+-        marker[0].sprite_index = spr_kris_pose;
+-        marker[0].y -= 18;
++        if (global.hp[1] > 0)
++        {
++            marker[0].sprite_index = spr_kris_pose;
++            marker[0].y -= 18;
++        }
+         marker[1].sprite_index = spr_susie_pose;
+         marker[2].sprite_index = spr_ralsei_pose;
+         for (i = 0; i < 20; i++)
+@@ -173,7 +189,10 @@
+     marker[3].musicalnotetimer = 0;
+     marker[4].musicalnotetimer = 0;
+     marker[5].musicalnotetimer = 0;
+-    marker[0].sprite_index = spr_kris_pose;
++    if (global.hp[1] > 0)
++    {
++        marker[0].sprite_index = spr_kris_pose;
++    }
+     marker[1].sprite_index = spr_susie_pose;
+     marker[2].sprite_index = spr_ralsei_pose;
+ }
+FILE combined/gml_Object_obj_npc_conbini_Step_0.gml M 2 2
+@@ -2,8 +2,9 @@
+ {
+     con = 0;
+ }
+-if (con == 0 && obj_mainchara.x > 140)
++if (con == 0 && obj_mainchara.x > 140 && global.interact == 0 && !d_ex())
+ {
++    global.interact = 1;
+     cutscene_master = scr_cutscene_make();
+     to = 0;
+     to_actor = instance_create(365, 250, obj_actor);
+@@ -20,7 +21,6 @@
+     sa_actor.auto_depth = 0;
+     sa_actor.depth = counter.depth + 10;
+     sans.visible = false;
+-    global.interact = 1;
+     con = 1;
+ }
+ if (con == 1)
+FILE combined/gml_Object_obj_npc_police_Create_0.gml M 6 1
+@@ -96,8 +96,13 @@
+     doorcollider = instance_create(223, 95, obj_solidblock);
+     doorcollider.image_xscale = 0.35;
+     doorcollider.image_yscale = 0.95;
+-    undynedesk = instance_create(128, 97, obj_npc_room);
++    undynedesk = instance_create(128, 97, obj_solidblock);
+     undynedesk.sprite_index = spr_lw_police_table_broken;
++    undynedesk.visible = true;
++    with (undynedesk)
++    {
++        scr_depth();
++    }
+     napstablook = instance_create(92, 84, obj_npc_napstablook_cop);
+     soundalarm = global.flag[317] == 2;
+     napstacon = (global.flag[317] == 2) ? 0 : -1;
+FILE combined/gml_Object_obj_npc_police_Step_0.gml M 1 1
+@@ -8,7 +8,7 @@
+         }
+         else
+         {
+-            bars.depth = (obj_mainchara.y > 60) ? 100000000 : 0;
++            bars.depth = (obj_mainchara.y > 60) ? 100000000 : 5000;
+         }
+     }
+     else
+FILE combined/gml_Object_obj_poppup_enemy_Create_0.gml M 1 0
+@@ -12,6 +12,7 @@
+ staticPoppup = 0;
+ animspeed = 0.16666666666666666;
+ clonedirection = 210;
++blockbuffer = 0;
+ for (var i = 0; i < 3; i++)
+ {
+     for (var j = 0; j < 6; j++)
+FILE combined/gml_Object_obj_poppup_enemy_Step_0.gml M 17 2
+@@ -1,3 +1,7 @@
++if (blockbuffer > 0)
++{
++    blockbuffer--;
++}
+ if (global.monster[myself] == 1)
+ {
+     if (scr_isphase("enemytalk") && talked == 0)
+@@ -335,6 +339,16 @@
+     {
+         with (obj_poppup_enemy)
+         {
++            for (var __i = 1; __i < 3; __i++)
++            {
++                if (global.actingtarget[__i] == myself && global.char[__i] > 0)
++                {
++                    global.acting[__i] = 0;
++                    global.actingsimul[__i] = 0;
++                    global.actingsingle[__i] = 0;
++                    global.faceaction[__i] = 0;
++                }
++            }
+             scr_mercyadd(myself, 100);
+             scr_spare(myself);
+         }
+@@ -376,8 +390,9 @@
+             popupscreated++;
+             poppupwait = 1;
+         }
+-        if (button3_p())
+-        {
++        if (button3_p() && blockbuffer == 0)
++        {
++            blockbuffer = 2;
+             if (blockTimer == 0)
+             {
+                 blockTimer = 1;
+FILE combined/gml_Object_obj_queen_enemy_Create_0.gml M 3 0
+@@ -78,3 +78,6 @@
+ wintimer = 0;
+ extracon = 0;
+ extratimer = 0;
++krismaxhp = global.maxhp[1];
++susiemaxhp = global.maxhp[2];
++ralseimaxhp = global.maxhp[3];
+FILE combined/gml_Object_obj_readable_room1_Other_10.gml M 1 1
+@@ -312,7 +312,7 @@
+         }
+         if (x >= 160 && x <= 190)
+         {
+-            if (global.plot == 210)
++            if (global.plot >= 210)
+             {
+                 scr_speaker("no_name");
+                 msgsetloc(0, "* (No need for it.)/%", "obj_readable_room1_slash_Other_10_gml_367_0");
+FILE combined/gml_Object_obj_rouxlsbattle_hey_Draw_0.gml M 0 4
+@@ -20,10 +20,6 @@
+         con = 0;
+     }
+ }
+-if (keyboard_check_pressed(ord("P")))
+-{
+-    audio_sound_set_track_position(global.batmusic[1], 57);
+-}
+ if (global.flag[54] == 0)
+ {
+     debug_message("battle ended");
+FILE combined/gml_Object_obj_saucer_Step_0.gml M 4 0
+@@ -1,4 +1,8 @@
+ scr_depth();
++if (i_ex(obj_dogtable_controlled))
++{
++    myinteract = 0;
++}
+ if (mode == 0 || mode == 3)
+ {
+     if (con == 0 && myinteract == 1)
+FILE combined/gml_Object_obj_savemenu_Create_0.gml M 21 24
+@@ -80,31 +80,28 @@
+ {
+     name = stringsetloc("Kris", "obj_savemenu_slash_Create_0_gml_75_0");
+ }
+-if (type == 1)
++name_current = global.truename;
++love_current = global.llv;
++room_current = scr_roomname(room);
++level_current = global.lv;
++time_current = global.time;
++for (var i = 0; i < 3; i++)
+ {
+-    name_current = global.truename;
+-    love_current = global.llv;
+-    room_current = scr_roomname(room);
+-    level_current = global.lv;
+-    time_current = global.time;
+-    for (var i = 0; i < 3; i++)
++    name_file[i] = "Kris";
++    level_file[i] = 1;
++    love_file[i] = 1;
++    time_file[i] = 0;
++    roome_file[i] = 0;
++    if (ossafe_file_exists("dr.ini"))
+     {
+-        name_file[i] = "Kris";
+-        level_file[i] = 1;
+-        love_file[i] = 1;
+-        time_file[i] = 0;
+-        roome_file[i] = 0;
+-        if (ossafe_file_exists("dr.ini"))
+-        {
+-            ini_ex_file[i] = 1;
+-            iniread_file[i] = ossafe_ini_open("dr.ini");
+-            name_file[i] = ini_read_string(scr_ini_chapter(global.chapter, i), "Name", "Kris");
+-            level_file[i] = ini_read_real(scr_ini_chapter(global.chapter, i), "Level", 0);
+-            love_file[i] = ini_read_real(scr_ini_chapter(global.chapter, i), "Love", 1);
+-            time_file[i] = ini_read_real(scr_ini_chapter(global.chapter, i), "Time", 0);
+-            roome_file[i] = ini_read_real(scr_ini_chapter(global.chapter, i), "Room", 0);
+-            ossafe_ini_close();
+-            ossafe_savedata_save();
+-        }
++        ini_ex_file[i] = 1;
++        iniread_file[i] = ossafe_ini_open("dr.ini");
++        name_file[i] = ini_read_string(scr_ini_chapter(global.chapter, i), "Name", "Kris");
++        level_file[i] = ini_read_real(scr_ini_chapter(global.chapter, i), "Level", 0);
++        love_file[i] = ini_read_real(scr_ini_chapter(global.chapter, i), "Love", 1);
++        time_file[i] = ini_read_real(scr_ini_chapter(global.chapter, i), "Time", 0);
++        roome_file[i] = ini_read_real(scr_ini_chapter(global.chapter, i), "Room", 0);
++        ossafe_ini_close();
++        ossafe_savedata_save();
+     }
+ }
+FILE combined/gml_Object_obj_savemenu_Draw_0.gml M 5 5
+@@ -314,11 +314,11 @@
+         draw_text(xx + 350, yy + 300 + 12 + 12, string_hash_to_newline(returntxt));
+         if (overcoord == 0)
+         {
+-            draw_sprite(heartsprite, 0, 142, 324 + (string_height(savetxt) / 4));
+-        }
+-        else
+-        {
+-            draw_sprite(heartsprite, 0, 322, 324 + (string_height(returntxt) / 4));
++            draw_sprite(heartsprite, 0, ((xx + 170) - 32) + 4, yy + 300 + 24 + (string_height(savetxt) / 4));
++        }
++        else
++        {
++            draw_sprite(heartsprite, 0, ((xx + 350) - 32) + 4, yy + 300 + 24 + (string_height(returntxt) / 4));
+         }
+         if (button1_p() && buffer < 0)
+         {
+FILE combined/gml_Object_obj_savemenu_Step_0.gml M 3 32
+@@ -41,38 +41,9 @@
+     {
+         if (button1_p())
+         {
+-            if (type == 0)
+-            {
+-                snd_play(snd_save);
+-                scr_save();
+-                saved = 1;
+-                xcoord = 2;
+-                buffer = 3;
+-                if (d == 2)
+-                {
+-                    name = global.truename;
+-                    love = global.llv;
+-                }
+-                scr_roomname(room);
+-                level = global.lv;
+-                time = global.time;
+-                minutes = floor(time / 1800);
+-                seconds = round(((time / 1800) - minutes) * 60);
+-                if (seconds == 60)
+-                {
+-                    seconds = 59;
+-                }
+-                if (seconds < 10)
+-                {
+-                    seconds = "0" + string(seconds);
+-                }
+-            }
+-            else
+-            {
+-                menuno = 1;
+-                buffer = 3;
+-                snd_play(snd_select);
+-            }
++            menuno = 1;
++            buffer = 3;
++            snd_play(snd_select);
+         }
+     }
+     if (button1_p() && xcoord == 1 && ycoord == 0 && buffer < 0)
+FILE combined/gml_Object_obj_shop_ch2_spamton_Draw_0.gml M 2 2
+@@ -947,7 +947,7 @@
+ }
+ if (down_p())
+ {
+-    if (menu != 11 && menu != 12 && menu != 13)
++    if (menu != 11 && menu != 12 && menu != 13 && greybg != 1)
+     {
+         menuc[menu] += 1;
+         if (menuc[menu] > menumax)
+@@ -958,7 +958,7 @@
+ }
+ if (up_p())
+ {
+-    if (menu != 11 && menu != 12 && menu != 13)
++    if (menu != 11 && menu != 12 && menu != 13 && greybg != 1)
+     {
+         menuc[menu] -= 1;
+         if (menuc[menu] < 0)
+FILE combined/gml_Object_obj_sneo_wireheart_Draw_0.gml M 1 1
+@@ -91,7 +91,7 @@
+         {
+             scr_script_delayed(scr_afterimage_cut, i * 2);
+             scr_script_delayed(snd_play, i * 2, snd_bomb);
+-            scr_script_delayed(snd_volume, i * 2, 141, 0.5, 0);
++            scr_script_delayed(snd_volume, i * 2, 142, 0.5, 0);
+             scr_doom(id, (i * 2) + 1);
+         }
+     }
+FILE combined/gml_Object_obj_sneo_wireheart_edit_Draw_0.gml M 1 1
+@@ -91,7 +91,7 @@
+         {
+             scr_script_delayed(scr_afterimage_cut, i * 2);
+             scr_script_delayed(snd_play, i * 2, snd_bomb);
+-            scr_script_delayed(snd_volume, i * 2, 141, 0.5, 0);
++            scr_script_delayed(snd_volume, i * 2, 142, 0.5, 0);
+             scr_doom(id, (i * 2) + 1);
+         }
+     }
+FILE combined/gml_Object_obj_sneo_wireheart_old_Draw_0.gml M 1 1
+@@ -91,7 +91,7 @@
+         {
+             scr_script_delayed(scr_afterimage_cut, i * 2);
+             scr_script_delayed(snd_play, i * 2, snd_bomb);
+-            scr_script_delayed(snd_volume, i * 2, 141, 0.5, 0);
++            scr_script_delayed(snd_volume, i * 2, 142, 0.5, 0);
+             scr_doom(id, (i * 2) + 1);
+         }
+     }
+FILE combined/gml_Object_obj_spamton_neo_enemy_Create_0.gml M 1 0
+@@ -78,6 +78,7 @@
+ lastwiretimer = 0;
+ headendcon = 0;
+ finalattackconversationcon = 0;
++funnycheat = 0;
+ laserflash = irandom(3);
+ talkmax = 90;
+ image_speed = 0.16666666666666666;
+FILE combined/gml_Object_obj_spamton_neo_enemy_Draw_0.gml M 110 22
+@@ -724,8 +724,16 @@
+                     wireheart.bossx = x + 10;
+                     wireheart.bossy = y + 80;
+                     wireheart.type = 0;
+-                    wireheart.target = obj_sneo_bulletcontroller.target;
+-                    wireheart.damage = obj_sneo_bulletcontroller.damage;
++                    wireheart.target = 3;
++                    if (scr_sideb_get_phase() > 2)
++                    {
++                        wireheart.target = obj_sneo_bulletcontroller.target;
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                    }
++                    else
++                    {
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                    }
+                 }
+                 else if (hearttype == 1)
+                 {
+@@ -734,22 +742,46 @@
+                     wireheart.bossx = x + 10;
+                     wireheart.bossy = y + 80;
+                     wireheart.type = 0;
+-                    wireheart.target = obj_sneo_bulletcontroller.target;
+-                    wireheart.damage = obj_sneo_bulletcontroller.damage;
++                    wireheart.target = 3;
++                    if (scr_sideb_get_phase() > 2)
++                    {
++                        wireheart.target = obj_sneo_bulletcontroller.target;
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                    }
++                    else
++                    {
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                    }
+                     wireheart = instance_create(x + 10, y + 80, obj_sneo_wireheart);
+                     wireheart.boss = id;
+                     wireheart.bossx = x + 10;
+                     wireheart.bossy = y + 80;
+                     wireheart.type = 1;
+-                    wireheart.target = obj_sneo_bulletcontroller.target;
+-                    wireheart.damage = obj_sneo_bulletcontroller.damage;
++                    wireheart.target = 3;
++                    if (scr_sideb_get_phase() > 2)
++                    {
++                        wireheart.target = obj_sneo_bulletcontroller.target;
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                    }
++                    else
++                    {
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                    }
+                     wireheart = instance_create(x + 10, y + 80, obj_sneo_wireheart);
+                     wireheart.boss = id;
+                     wireheart.bossx = x + 10;
+                     wireheart.bossy = y + 80;
+                     wireheart.type = 1;
+-                    wireheart.target = obj_sneo_bulletcontroller.target;
+-                    wireheart.damage = obj_sneo_bulletcontroller.damage;
++                    wireheart.target = 3;
++                    if (scr_sideb_get_phase() > 2)
++                    {
++                        wireheart.target = obj_sneo_bulletcontroller.target;
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                    }
++                    else
++                    {
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                    }
+                 }
+                 else if (hearttype == 2)
+                 {
+@@ -759,8 +791,16 @@
+                     wireheart.bossy = y + 80;
+                     wireheart.type = 0;
+                     wireheart.bighearttype = 1;
+-                    wireheart.target = obj_sneo_bulletcontroller.target;
+-                    wireheart.damage = obj_sneo_bulletcontroller.damage;
++                    wireheart.target = 3;
++                    if (scr_sideb_get_phase() > 2)
++                    {
++                        wireheart.target = obj_sneo_bulletcontroller.target;
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                    }
++                    else
++                    {
++                        wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                    }
+                 }
+                 else if (hearttype == 3)
+                 {
+@@ -771,8 +811,16 @@
+                         wireheart.bossx = x + 10;
+                         wireheart.bossy = y + 80;
+                         wireheart.type = 1;
+-                        wireheart.target = obj_sneo_bulletcontroller.target;
+-                        wireheart.damage = obj_sneo_bulletcontroller.damage;
++                        wireheart.target = 3;
++                        if (scr_sideb_get_phase() > 2)
++                        {
++                            wireheart.target = obj_sneo_bulletcontroller.target;
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                        }
++                        else
++                        {
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                        }
+                     }
+                     if (makehearttype == 0 || makehearttype == 3)
+                     {
+@@ -781,8 +829,16 @@
+                         wireheart.bossx = x + 10;
+                         wireheart.bossy = y + 80;
+                         wireheart.type = 3;
+-                        wireheart.target = obj_sneo_bulletcontroller.target;
+-                        wireheart.damage = obj_sneo_bulletcontroller.damage;
++                        wireheart.target = 3;
++                        if (scr_sideb_get_phase() > 2)
++                        {
++                            wireheart.target = obj_sneo_bulletcontroller.target;
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                        }
++                        else
++                        {
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                        }
+                         wireheart.altbiter = 3;
+                     }
+                     if (makehearttype == 0 || makehearttype == 4)
+@@ -792,8 +848,16 @@
+                         wireheart.bossx = x + 10;
+                         wireheart.bossy = y + 80;
+                         wireheart.type = 3;
+-                        wireheart.target = obj_sneo_bulletcontroller.target;
+-                        wireheart.damage = obj_sneo_bulletcontroller.damage;
++                        wireheart.target = 3;
++                        if (scr_sideb_get_phase() > 2)
++                        {
++                            wireheart.target = obj_sneo_bulletcontroller.target;
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                        }
++                        else
++                        {
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                        }
+                         wireheart.altbiter = 4;
+                     }
+                 }
+@@ -806,8 +870,16 @@
+                         wireheart.bossx = x + 10;
+                         wireheart.bossy = y + 80;
+                         wireheart.type = 1;
+-                        wireheart.target = obj_sneo_bulletcontroller.target;
+-                        wireheart.damage = obj_sneo_bulletcontroller.damage;
++                        wireheart.target = 3;
++                        if (scr_sideb_get_phase() > 2)
++                        {
++                            wireheart.target = obj_sneo_bulletcontroller.target;
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                        }
++                        else
++                        {
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                        }
+                     }
+                     if (makehearttype == 0 || makehearttype == 3)
+                     {
+@@ -816,8 +888,16 @@
+                         wireheart.bossx = x + 10;
+                         wireheart.bossy = y + 80;
+                         wireheart.type = 4;
+-                        wireheart.target = obj_sneo_bulletcontroller.target;
+-                        wireheart.damage = obj_sneo_bulletcontroller.damage;
++                        wireheart.target = 3;
++                        if (scr_sideb_get_phase() > 2)
++                        {
++                            wireheart.target = obj_sneo_bulletcontroller.target;
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                        }
++                        else
++                        {
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                        }
+                     }
+                     if (makehearttype == 0 || makehearttype == 4)
+                     {
+@@ -826,8 +906,16 @@
+                         wireheart.bossx = x + 10;
+                         wireheart.bossy = y + 80;
+                         wireheart.type = 4;
+-                        wireheart.target = obj_sneo_bulletcontroller.target;
+-                        wireheart.damage = obj_sneo_bulletcontroller.damage;
++                        wireheart.target = 3;
++                        if (scr_sideb_get_phase() > 2)
++                        {
++                            wireheart.target = obj_sneo_bulletcontroller.target;
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.8);
++                        }
++                        else
++                        {
++                            wireheart.damage = floor(global.monsterat[obj_spamton_neo_enemy.myself] * 5 * 0.6);
++                        }
+                     }
+                 }
+                 for (var _n = 0; _n < 6; _n++)
+FILE combined/gml_Object_obj_spamton_neo_enemy_Step_0.gml M 3 3
+@@ -1226,7 +1226,7 @@
+             snd_play(snd_damage);
+             dmgwriter = instance_create(x + 64, y + 62, obj_dmgwriter);
+             dmgwriter.damage = 684 + irandom(20);
+-            dmgwriter.type = 0;
++            dmgwriter.type = 6;
+             dmgwriter.depth = -999999;
+             alarm[4] = 3;
+         }
+@@ -1237,7 +1237,7 @@
+             snd_play(snd_damage);
+             dmgwriter = instance_create(x + 84, y + 90, obj_dmgwriter);
+             dmgwriter.damage = 684 + irandom(20);
+-            dmgwriter.type = 0;
++            dmgwriter.type = 6;
+             dmgwriter.depth = -999999;
+             alarm[4] = 3;
+         }
+@@ -1248,7 +1248,7 @@
+             snd_play(snd_damage);
+             dmgwriter = instance_create(x + 66, y + 119, obj_dmgwriter);
+             dmgwriter.damage = 684 + irandom(20);
+-            dmgwriter.type = 0;
++            dmgwriter.type = 6;
+             dmgwriter.depth = -999999;
+             alarm[4] = 1;
+         }
+FILE combined/gml_Object_obj_sweet_enemy_Step_0.gml M 1 1
+@@ -156,7 +156,7 @@
+                     obj_musicalbullet_controller.enemy_count += 1;
+                 }
+             }
+-            scr_turntimer(235);
++            scr_turntimer(185);
+             turns += 1;
+             global.typer = 6;
+             global.fc = 0;
+FILE combined/gml_Object_obj_tasquepainting_Step_1.gml M 0 4
+@@ -2,10 +2,6 @@
+ {
+     myinteract = 0;
+     global.interact = 0;
+-}
+-if (keyboard_check_pressed(vk_space))
+-{
+-    tasquespawn = 1;
+ }
+ if (extflag == 2 && tasquespawn == 1)
+ {
+FILE combined/gml_Object_obj_tower_o_mice_Step_0.gml M 1 1
+@@ -3,8 +3,8 @@
+     if (instance_exists(obj_noelle_scared))
+     {
+         x = (obj_noelle_scared.x + 23) - 5;
++        y = obj_noelle_scared.y + 80;
+     }
+-    y = obj_noelle_scared.y + 80;
+ }
+ if (con == 1)
+ {
+FILE combined/gml_Object_obj_treasure_room_Create_0.gml M 27 0
+@@ -103,6 +103,33 @@
+     itemtype = "armor";
+     itemflag = 141;
+ }
++if (room == room_dw_castle_west_cliff || room == room_dw_mansion_b_east_transformed)
++{
++    itemidchest = 21;
++    itemflag = 142;
++    var qualify = 0;
++    if (global.flag[468] > 0)
++    {
++        qualify = 1;
++    }
++    if (global.flag[142] == 1)
++    {
++        qualify = 0;
++    }
++    if (global.flag[571] == 1 || global.flag[468] == 2)
++    {
++        itemtype = "weapon";
++    }
++    else
++    {
++        itemtype = "armor";
++    }
++    if (qualify == 0)
++    {
++        instance_destroy();
++        visible = false;
++    }
++}
+ if (global.flag[itemflag] == 1)
+ {
+     image_index = 1;
+FILE combined/gml_Object_obj_vector_queen_face_Create_0.gml M 1 0
+@@ -1,3 +1,4 @@
+ state = 0;
+ image_xscale = 0.01;
+ image_yscale = 0.01;
++playsound = 0;
+FILE combined/gml_Object_obj_vector_queen_face_Step_0.gml M 6 1
+@@ -5,11 +5,16 @@
+     if (image_xscale >= 5)
+     {
+         state = 1;
+-        alarm[0] = 60;
++        alarm[0] = 52;
+     }
+ }
+ if (state == 1)
+ {
+     sprite_index = spr_bqueen_giant_head_laughing_wireframe;
+     image_speed = 0.5;
++    if (playsound == 0)
++    {
++        playsound = 1;
++        snd_play(snd_queen_laugh_0_bc);
++    }
+ }
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_10_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 2;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_11_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 0;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_12_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 1;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_13_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 2;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_14_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 0;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_15_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 1;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_16_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_17_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_18_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_19_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_1_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 2;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_20_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_21_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_22_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-specificTeacup = 102167;
++specificTeacup = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_23_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-specificTeacup = 102166;
++specificTeacup = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_2_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 0;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_3_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 1;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_4_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_5_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_6_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_12_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 2;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_13_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 0;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_14_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 1;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_15_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 2;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_16_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 0;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_17_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 1;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_18_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_19_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_1_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 2;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_20_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 102167;
++teacupTarget = 102168;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_21_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_22_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_23_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 102166;
++teacupTarget = 102167;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_24_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-specificTeacup = 102158;
++specificTeacup = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_2_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 0;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_3_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 1;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_4_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_5_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_battle_maze_2_old_6_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 102158;
++teacupTarget = 102159;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_10_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 1;
+-teacupTarget = 101788;
++teacupTarget = 101789;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_12_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 101788;
++teacupTarget = 101789;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_13_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 101788;
++teacupTarget = 101789;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_14_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 101788;
++teacupTarget = 101789;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_1_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 2;
+-teacupTarget = 101775;
++teacupTarget = 101776;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_2_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 0;
+-teacupTarget = 101775;
++teacupTarget = 101776;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_3_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 1;
+-teacupTarget = 101775;
++teacupTarget = 101776;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_4_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 101775;
++teacupTarget = 101776;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_5_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 101775;
++teacupTarget = 101776;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_6_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 101775;
++teacupTarget = 101776;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_8_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 2;
+-teacupTarget = 101788;
++teacupTarget = 101789;
+FILE combined/gml_RoomCC_room_dw_cyber_music_bullet_9_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 0;
+ partyMember = 0;
+-teacupTarget = 101788;
++teacupTarget = 101789;
+FILE combined/gml_RoomCC_room_dw_cyber_teacup_final_0_PreCreate.gml M 2 2
+@@ -1,6 +1,6 @@
+ uniqueRideExperience = 2;
+-endY = (102304).y;
+-jumpToRide = 102304;
++endY = (102305).y;
++jumpToRide = 102305;
+ camFollowAfter = 0;
+ uniqueBulletPattern = 2;
+ camTargetHeightNormal = 390;
+FILE combined/gml_RoomCC_room_dw_cyber_teacup_final_1_PreCreate.gml M 2 2
+@@ -1,6 +1,6 @@
+ uniqueRideExperience = 2;
+-endY = (102305).y;
+-jumpToRide = 102305;
++endY = (102306).y;
++jumpToRide = 102306;
+ riseSpeed = 5;
+ spinSpeed = 7;
+ uniqueBulletPattern = 3;
+FILE combined/gml_RoomCC_room_dw_cyber_teacup_final_2_PreCreate.gml M 2 2
+@@ -1,6 +1,6 @@
+ uniqueRideExperience = 2;
+-endY = (102306).y;
+-jumpToRide = 102306;
++endY = (102307).y;
++jumpToRide = 102307;
+ spinSpeed = 9;
+ riseSpeed = 7;
+ uniqueBulletPattern = 4;
+FILE combined/gml_RoomCC_room_dw_cyber_teacup_final_3_PreCreate.gml M 2 2
+@@ -1,6 +1,6 @@
+ uniqueRideExperience = 2;
+-endY = (102307).y;
+-jumpToRide = 102307;
++endY = (102308).y;
++jumpToRide = 102308;
+ riseSpeed = 14;
+ spinSpeed = 10;
+ uniqueBulletPattern = 5;
+FILE combined/gml_RoomCC_room_dw_cyber_teacup_final_4_PreCreate.gml M 2 2
+@@ -1,6 +1,6 @@
+ uniqueRideExperience = 2;
+-endY = (102308).y;
+-jumpToRide = 102308;
++endY = (102309).y;
++jumpToRide = 102309;
+ riseSpeed = 15;
+ spinSpeed = 10;
+ uniqueBulletPattern = 52;
+FILE combined/gml_RoomCC_room_dw_cyber_teacup_final_6_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 1;
+-teacupTarget = 102308;
++teacupTarget = 102309;
+FILE combined/gml_RoomCC_room_dw_cyber_teacup_final_7_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 0;
+-teacupTarget = 102308;
++teacupTarget = 102309;
+FILE combined/gml_RoomCC_room_dw_cyber_teacup_final_8_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ rideEnd = 1;
+ partyMember = 2;
+-teacupTarget = 102308;
++teacupTarget = 102309;
+FILE combined/gml_Object_o_boxinggraze_Draw_0.gml A 33 0
+var x_offset = -5;
+var y_offset = -5;
+if (i_ex(o_boxingcontroller))
+{
+    if (o_boxingcontroller.drawflip == 0)
+    {
+        if (o_boxingcontroller.sprite_index == spr_bhero)
+        {
+            if (o_boxingcontroller.image_index == 4)
+            {
+                x_offset = 22;
+                y_offset = -5;
+            }
+        }
+    }
+    else if (o_boxingcontroller.sprite_index == spr_bhero)
+    {
+        if (o_boxingcontroller.image_index == 4)
+        {
+            x_offset = -22;
+            y_offset = -5;
+        }
+    }
+    if (o_boxingcontroller.sprite_index == spr_bhero)
+    {
+        if (o_boxingcontroller.image_index == 6)
+        {
+            x_offset = -12;
+            y_offset = 2;
+        }
+    }
+}
+draw_sprite_ext(sprite_index, image_index, x + x_offset, y + y_offset, image_xscale, image_yscale, image_angle, image_blend, image_alpha);

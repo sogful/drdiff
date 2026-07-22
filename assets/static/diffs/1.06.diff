@@ -1,0 +1,667 @@
+FILE combined/gml_GlobalScript_scr_become_light.gml M 15 0
+@@ -10,6 +10,21 @@
+         {
+             scr_litemget(8);
+         }
++    }
++    else
++    {
++        scr_litemremove(8);
++    }
++    if (scr_keyitemcheck(13))
++    {
++        if (scr_litemcheck(11) == 0)
++        {
++            scr_litemget(11);
++        }
++    }
++    else
++    {
++        scr_litemremove(11);
+     }
+     global.lhp = ceil(global.hp[1] / global.maxhp[1]) * global.lmaxhp;
+     if (global.lhp < 1)
+FILE combined/gml_GlobalScript_scr_gameover.gml M 4 0
+@@ -12,6 +12,10 @@
+             global.hp[2] = global.maxhp[2];
+             global.hp[3] = global.maxhp[3];
+             scr_tempsave();
++        }
++        if (i_ex(obj_spamton_neo_enemy))
++        {
++            global.tempflag[37]++;
+         }
+     }
+     if (global.flag[35] == 0)
+FILE combined/gml_GlobalScript_scr_text.gml M 2 2
+@@ -3427,7 +3427,7 @@
+             global.choicemsg[3] = stringsetloc(" ", "scr_text_slash_scr_text_gml_3623_0");
+             scr_speaker("no_name");
+             msgsetloc(0, "\\M0* ..^1. hey!!/", "scr_text_slash_scr_text_gml_3625_0");
+-            var myname = (global.flag[259] == 1) ? stringsetloc("Hyper-Potato-Mouse!", "scr_text_slash_scr_text_gml_3626_0") : stringsetloc("Crisper!!", "scr_text_slash_scr_text_gml_3626_1");
++            var myname = (global.flag[259] == 2) ? stringsetloc("Hyper-Potato-Mouse!", "scr_text_slash_scr_text_gml_3626_0") : stringsetloc("Crisper!!", "scr_text_slash_scr_text_gml_3626_1");
+             msgnextsubloc("\\M1* ~1^1!/", myname, "scr_text_slash_scr_text_gml_3627_0");
+             msgnextloc("\\M2* I missed you^1, y'hear!? Hahaha!^1! Missed you all day!!/", "scr_text_slash_scr_text_gml_3628_0");
+             msgnextloc("\\M0* Didja miss..^1. me?/", "scr_text_slash_scr_text_gml_3629_0");
+@@ -3476,7 +3476,7 @@
+                 }
+                 msgnextsubloc("* ~1 is on the case!/", onionname, "scr_text_slash_scr_text_gml_3672_0");
+                 msgnextloc("\\M3* (That's my name^1, right?)/", "scr_text_slash_scr_text_gml_3673_0");
+-                var myname = (global.flag[259] == 1) ? stringsetloc("Mouse!!", "scr_text_slash_scr_text_gml_3674_0") : stringsetloc("Kiss!", "scr_text_slash_scr_text_gml_3674_1");
++                var myname = (global.flag[259] == 2) ? stringsetloc("Mouse!!", "scr_text_slash_scr_text_gml_3674_0") : stringsetloc("Kiss!", "scr_text_slash_scr_text_gml_3674_1");
+                 msgnextsubloc("\\M0* See you^1, ~1^1!/%", myname, "scr_text_slash_scr_text_gml_3675_0");
+             }
+             else
+FILE combined/gml_Object_DEVICE_MENU_Create_0.gml M 1 1
+@@ -113,7 +113,7 @@
+ THREAT = 0;
+ TEMPMESSAGE = " ";
+ MESSAGETIMER = 0;
+-version_text = "1.05";
++version_text = "1.06";
+ if (os_type == os_switch)
+ {
+     version_text = "1.03a";
+FILE combined/gml_Object_DEVICE_MENU_ch1_Create_0.gml M 1 1
+@@ -75,7 +75,7 @@
+ THREAT = 0;
+ TEMPMESSAGE = " ";
+ MESSAGETIMER = 0;
+-version_text = "1.05 ";
++version_text = "1.06 ";
+ if (os_type == os_switch)
+ {
+     version_text = "1.03a ";
+FILE combined/gml_Object_o_boxing_wireframe_Draw_0.gml M 1 1
+@@ -46,7 +46,7 @@
+     surface_set_target(surface);
+     if (hidebg == 0)
+     {
+-        draw_background(2207, 0, 0);
++        draw_background(2206, 0, 0);
+     }
+     if (hidebg == 1)
+     {
+FILE combined/gml_Object_obj_balancepot_Create_0.gml M 2 0
+@@ -3,3 +3,5 @@
+ balancespeed = 0;
+ inittimer = 0;
+ falling = -2;
++memfalling = -2;
++con = 0;
+FILE combined/gml_Object_obj_balancepot_Step_2.gml M 23 1
+@@ -1,3 +1,7 @@
++if (i_ex(obj_mainchara))
++{
++    depth = obj_mainchara.depth - 10;
++}
+ image_xscale = 2;
+ image_yscale = 2;
+ if (falling == -2)
+@@ -82,7 +86,10 @@
+         brokenpot.depth = 800000;
+         falling = 2;
+         timer = 0;
+-        global.interact = 0;
++        if (con == 0)
++        {
++            global.interact = 0;
++        }
+         if (global.flag[385] == 0)
+         {
+             global.flag[385] = 1;
+@@ -97,3 +104,18 @@
+     x = obj_mainchara.x + 20;
+     y = obj_mainchara.y + 10;
+ }
++if (falling == -99)
++{
++    if (!i_ex(obj_battleback))
++    {
++        falling = memfalling;
++    }
++}
++if (i_ex(obj_battleback))
++{
++    falling = -99;
++}
++else
++{
++    memfalling = falling;
++}
+FILE combined/gml_Object_obj_ch2_room_city_moss_Create_0.gml M 3 0
+@@ -7,3 +7,6 @@
+     scr_depth();
+ }
+ dumpster_con = (scr_sideb_get_phase() == 0 || !scr_havechar(4)) ? 0 : 10;
++play_song = 0;
++play_power = 0;
++play_stop = 0;
+FILE combined/gml_Object_obj_ch2_room_city_moss_Step_0.gml M 34 28
+@@ -1,18 +1,37 @@
+ if (con == 0 && !d_ex())
+ {
+-    con = 1;
++    con = 7;
+     alarm[0] = 30;
+-    scr_speaker("susie");
+-    msgsetloc(0, "\\E7* Heck yeah^1, I didn't know there was moss here!/", "obj_ch2_room_city_moss_slash_Step_0_gml_9_0");
+-    msgnextloc("\\EA* It's totally uneaten^1, too.../", "obj_ch2_room_city_moss_slash_Step_0_gml_10_0");
+-    msgnextloc("\\E1* ..^1. wait a sec./", "obj_ch2_room_city_moss_slash_Step_0_gml_11_0");
+-    msgnextloc("\\E0* ..^1. Kris.../%", "obj_ch2_room_city_moss_slash_Step_0_gml_12_0");
+-    d_make();
++    global.interact = 1;
++    cutscene_master = scr_cutscene_make();
++    scr_maincharacters_actors();
++    c_speaker("susie");
++    c_msgsetloc(0, "\\E7* Heck yeah^1, I didn't know there was moss here!/", "obj_ch2_room_city_moss_slash_Step_0_gml_9_0");
++    c_msgnextloc("\\EA* It's totally uneaten^1, too.../", "obj_ch2_room_city_moss_slash_Step_0_gml_10_0");
++    c_msgnextloc("\\E1* ..^1. wait a sec./", "obj_ch2_room_city_moss_slash_Step_0_gml_11_0");
++    c_msgnextloc("\\E0* ..^1. Kris.../%", "obj_ch2_room_city_moss_slash_Step_0_gml_12_0");
++    c_talk_wait();
++    c_var_instance(id, "play_song", 1);
++    c_speaker("susie");
++    c_msgsetloc(0, "\\EK* Were you..^1. saving this for me?/", "obj_ch2_room_city_moss_slash_Step_0_gml_28_0");
++    c_msgnextloc("\\EQ* ..^1. Heh./", "obj_ch2_room_city_moss_slash_Step_0_gml_29_0");
++    c_msgnextloc("\\E2* Guess even you've got your good moments.../%", "obj_ch2_room_city_moss_slash_Step_0_gml_30_0");
++    c_talk_wait();
++    c_var_instance(id, "play_power", 1);
++    c_speaker("no_name");
++    c_msgsetloc(0, "* (You ate the moss..^1. together.)/%", "obj_ch2_room_city_moss_slash_Step_0_gml_43_0");
++    c_talk_wait();
++    c_var_instance(id, "play_stop", 1);
++    c_speaker("ralsei");
++    c_msgsetloc(0, "\\EX* (..^1. uh?)/%", "obj_ch2_room_city_moss_slash_Step_0_gml_56_0");
++    c_talk_wait();
++    c_actortokris();
++    c_actortocaterpillar();
++    c_terminatekillactors();
+ }
+-if (con == 2 && !d_ex())
++if (play_song)
+ {
+-    con = 3;
+-    alarm[0] = 30;
++    play_song = 0;
+     snd_pause(global.currentsong[1]);
+     if (global.is_console)
+     {
+@@ -20,31 +39,18 @@
+     }
+     coolsong[0] = snd_init("noelle_school.ogg");
+     coolsong[1] = mus_loop(coolsong[0]);
+-    scr_speaker("susie");
+-    msgsetloc(0, "\\EK* Were you..^1. saving this for me?/", "obj_ch2_room_city_moss_slash_Step_0_gml_28_0");
+-    msgnextloc("\\EQ* ..^1. Heh./", "obj_ch2_room_city_moss_slash_Step_0_gml_29_0");
+-    msgnextloc("\\E2* Guess even you've got your good moments.../%", "obj_ch2_room_city_moss_slash_Step_0_gml_30_0");
+-    d_make();
+ }
+-if (con == 4 && !d_ex())
++if (play_power)
+ {
+-    con = 5;
+-    alarm[0] = 30;
++    play_power = 0;
+     snd_play(snd_power);
+-    scr_speaker("no_name");
+-    msgsetloc(0, "* (You ate the moss..^1. together.)/%", "obj_ch2_room_city_moss_slash_Step_0_gml_43_0");
+-    d_make();
+ }
+-if (con == 6 && !d_ex())
++if (play_stop)
+ {
+-    con = 7;
+-    alarm[0] = 30;
++    play_power = 0;
+     snd_free(coolsong[0]);
+-    scr_speaker("ralsei");
+-    msgsetloc(0, "\\EX* (..^1. uh?)/%", "obj_ch2_room_city_moss_slash_Step_0_gml_56_0");
+-    d_make();
+ }
+-if (con == 8 && !d_ex())
++if (con == 8 && !instance_exists(obj_cutscene_master))
+ {
+     con = 99;
+     if (global.is_console)
+FILE combined/gml_Object_obj_ch2_room_city_savepoint_Step_0.gml M 1 2
+@@ -3,6 +3,5 @@
+     con = 50;
+     kknpc.sprite_index = spr_npc_kk_music;
+     snd_free(global.currentsong[0]);
+-    global.currentsong[0] = snd_init("cybershop_christmas.ogg");
+-    global.currentsong[1] = mus_loop(global.currentsong[0]);
++    alarm[0] = 1;
+ }
+FILE combined/gml_Object_obj_ch2_scene13_Step_0.gml M 1 3
+@@ -606,9 +606,7 @@
+         visible = false;
+     }
+     snd_free_all();
+-    global.currentsong[0] = snd_init("cybercity.ogg");
+-    global.currentsong[1] = mus_loop_ext(global.currentsong[0], 0.8, 0.97);
+-    audio_sound_gain(global.currentsong[1], 1, 30);
++    alarm[1] = 1;
+ }
+ if (con == 55 && !noellelost && (obj_mainchara.x != 1100 || obj_mainchara.y != 233))
+ {
+FILE combined/gml_Object_obj_ch2_scene17b_Step_0.gml M 1 1
+@@ -156,7 +156,7 @@
+         c_speaker("susie");
+         c_msgsetloc(0, "\\E6* Hey^1, Kris..^1. do you hear something...?/", "obj_ch2_scene17b_slash_Step_0_gml_220_0");
+         c_msgnextloc("\\E1* Sounds like it's coming from your..^1. pocket?/", "obj_ch2_scene17b_slash_Step_0_gml_221_0");
+-        c_msgnextloc("\\E0* Your phone going off your something?/%", "obj_ch2_scene17b_slash_Step_0_gml_222_0");
++        c_msgnextloc("\\E0* Your phone going off or something?/%", "obj_ch2_scene17b_slash_Step_0_gml_222_0");
+         c_talk_wait();
+         c_var_instance(talktube, "image_index", 0);
+         c_var_instance(talktube, "image_speed", 0);
+FILE combined/gml_Object_obj_controller_dw_mansion_potBalance_Step_0.gml M 4 0
+@@ -92,6 +92,10 @@
+ }
+ if (con == 4)
+ {
++    if (i_ex(obj_balancepot))
++    {
++        obj_balancepot.con = 1;
++    }
+     con = 5;
+     alarm[1] = 30;
+     c_sel(su);
+FILE combined/gml_Object_obj_doorparent_Other_18.gml M 10 0
+@@ -1,3 +1,13 @@
++if (button3_h() && button2_h())
++{
++}
++else
++{
++    with (obj_mainchara)
++    {
++        roomenterfreezeend = 1;
++    }
++}
+ if (doorPreset > 0)
+ {
+     if (doorPreset == 1)
+FILE combined/gml_Object_obj_fusionmenu_Step_0.gml M 1 1
+@@ -391,7 +391,7 @@
+                 optionText[_n][j] = " ";
+                 if (global.is_console || obj_gamecontroller.gamepad_active)
+                 {
+-                    optionTopComment[_n][j] = stringsetloc("   Place       Return", "obj_fusionmenu_slash_Step_0_gml_462_0");
++                    optionTopComment[_n][j] = stringsetloc("      Place                 Return", "obj_fusionmenu_slash_Step_0_gml_462_0");
+                     display_buttons = 1;
+                 }
+                 else
+FILE combined/gml_Object_obj_hatguy_enemy_Step_0.gml M 2 2
+@@ -55,7 +55,7 @@
+         scr_blconskip(15);
+         if (scr_isphase("bullets"))
+         {
+-            if ((instance_exists(obj_sweet_enemy) && global.monsterhp[obj_sweet_enemy.myself] <= 2) || (instance_exists(obj_kk_enemy) && global.monsterhp[obj_kk_enemy.myself] <= 2) || (instance_exists(obj_hatguy_enemy) && global.monsterhp[obj_hatguy_enemy.myself] <= 2))
++            if ((instance_exists(obj_sweet_enemy) && global.monsterhp[obj_sweet_enemy.myself] < 2) || (instance_exists(obj_kk_enemy) && global.monsterhp[obj_kk_enemy.myself] < 2) || (instance_exists(obj_hatguy_enemy) && global.monsterhp[obj_hatguy_enemy.myself] < 2))
+             {
+                 if (obj_musical_controller.scon == 0)
+                 {
+@@ -130,7 +130,7 @@
+                     obj_musicalbullet_controller.enemy_count += 1;
+                 }
+             }
+-            scr_turntimer(185);
++            global.turntimer = 235;
+             turns += 1;
+             global.typer = 6;
+             global.fc = 0;
+FILE combined/gml_Object_obj_heart_Step_0.gml M 1 1
+@@ -299,7 +299,7 @@
+         {
+             with (obj_spamton_neo_enemy)
+             {
+-                funnycheat += 1;
++                event_user(4);
+             }
+         }
+         if (global.chapter == 2 && instance_exists(obj_spamton_neo_enemy))
+FILE combined/gml_Object_obj_kingcutscene_ch1_Step_0.gml M 12 12
+@@ -738,15 +738,15 @@
+         snd_play_ch1(snd_laz_c_ch1);
+         with (k)
+         {
+-            scr_anim_ch1(3815, 0.25);
+-        }
+-        with (s)
+-        {
+-            scr_anim_ch1(3841, 0.25);
+-        }
+-        with (r)
+-        {
+-            scr_anim_ch1(3856, 0.25);
++            scr_anim_ch1(3814, 0.25);
++        }
++        with (s)
++        {
++            scr_anim_ch1(3840, 0.25);
++        }
++        with (r)
++        {
++            scr_anim_ch1(3855, 0.25);
+         }
+         con = 61;
+         alarm[4] = 30;
+@@ -1030,7 +1030,7 @@
+         snd_play_ch1(snd_heavyswing_ch1);
+         with (king)
+         {
+-            scr_anim_ch1(4119, 0.1);
++            scr_anim_ch1(4118, 0.1);
+         }
+         con = 82;
+         alarm[4] = 50;
+@@ -1240,7 +1240,7 @@
+     {
+         with (r)
+         {
+-            scr_anim_ch1(3863, 0.25);
++            scr_anim_ch1(3862, 0.25);
+             x -= 10;
+             y -= 10;
+         }
+@@ -1437,7 +1437,7 @@
+         k.disto = disto;
+         with (k)
+         {
+-            scr_anim_ch1(3825, 0.5);
++            scr_anim_ch1(3824, 0.5);
+             move_towards_point(s.x + 60, s.y + 10, disto);
+         }
+         con = 137;
+FILE combined/gml_Object_obj_kk_enemy_Step_0.gml M 2 2
+@@ -63,7 +63,7 @@
+         scr_blconskip(15);
+         if (scr_isphase("bullets"))
+         {
+-            if ((instance_exists(obj_sweet_enemy) && global.monsterhp[obj_sweet_enemy.myself] <= 2) || (instance_exists(obj_kk_enemy) && global.monsterhp[obj_kk_enemy.myself] <= 2) || (instance_exists(obj_hatguy_enemy) && global.monsterhp[obj_hatguy_enemy.myself] <= 2))
++            if ((instance_exists(obj_sweet_enemy) && global.monsterhp[obj_sweet_enemy.myself] < 2) || (instance_exists(obj_kk_enemy) && global.monsterhp[obj_kk_enemy.myself] < 2) || (instance_exists(obj_hatguy_enemy) && global.monsterhp[obj_hatguy_enemy.myself] < 2))
+             {
+                 if (obj_musical_controller.scon == 0)
+                 {
+@@ -138,7 +138,7 @@
+                     obj_musicalbullet_controller.enemy_count += 1;
+                 }
+             }
+-            scr_turntimer(185);
++            global.turntimer = 235;
+             turns += 1;
+             global.typer = 6;
+             global.fc = 0;
+FILE combined/gml_Object_obj_npc_police_Create_0.gml M 1 2
+@@ -113,8 +113,7 @@
+             doorFadeMusic = 1;
+         }
+         snd_free_all();
+-        global.currentsong[0] = snd_init("napsta_alarm.ogg");
+-        global.currentsong[1] = mus_loop_ext(global.currentsong[0], 1, 1);
++        alarm[1] = 1;
+     }
+     undyne_slam = 0;
+     undyne_slam_timer = 0;
+FILE combined/gml_Object_obj_npc_police_Step_0.gml M 1 0
+@@ -526,6 +526,7 @@
+     c_wait(15);
+     c_wait(5);
+     c_mus("free_all");
++    c_wait(5);
+     c_mus2("initloop", "napsta_alarm.ogg", 0);
+     c_wait(5);
+     c_var_lerp("y", 64, 84, 15);
+FILE combined/gml_Object_obj_savepoint_Other_10.gml M 14 3
+@@ -47,9 +47,20 @@
+     else
+     {
+         nodialogue = 0;
+-        scr_speaker("no_name");
+-        msgsetloc(0, "* After a long day^1, the town has grown once again./", "obj_savepoint_slash_Other_10_gml_50_0");
+-        msgnextloc("* You are filled with a certain power.../%", "obj_savepoint_slash_Other_10_gml_51_0");
++        if (global.flag[469] == 0)
++        {
++            global.flag[469] = 1;
++            scr_speaker("no_name");
++            msgsetloc(0, "* (You touched the light...)/", "obj_savepoint_slash_Other_10_gml_59_0");
++            msgnextloc("* (You thought about how you \\cRcan't go back to the Cyber World\\cW anymore.)/", "obj_savepoint_slash_Other_10_gml_60_0_b");
++            msgnextloc("* (You considered this carefully!)/%", "obj_savepoint_slash_Other_10_gml_61_0_b");
++        }
++        else
++        {
++            scr_speaker("no_name");
++            msgsetloc(0, "* After a long day^1, the town has grown once again./", "obj_savepoint_slash_Other_10_gml_50_0");
++            msgnextloc("* You are filled with a certain power.../%", "obj_savepoint_slash_Other_10_gml_51_0");
++        }
+     }
+ }
+ if (room == room_dw_cyber_savepoint)
+FILE combined/gml_Object_obj_shop_ch2_music_Create_0.gml M 1 0
+@@ -134,3 +134,4 @@
+ }
+ previous_song = "cyber_shop.ogg";
+ is_playing = 1;
++audio_timer = 0;
+FILE combined/gml_Object_obj_shop_ch2_music_Draw_0.gml M 6 1
+@@ -831,14 +831,19 @@
+             previous_song = string(obj_fusionmenu.songPlaying);
+         }
+     }
+-    else
++    else if (audio_timer == 1)
+     {
+         if (!is_playing)
+         {
+             global.currentsong[0] = snd_init(previous_song);
+             global.currentsong[1] = mus_loop_ext(global.currentsong[0], 1, 1);
+         }
++        audio_timer = 0;
+         menu = 0;
++    }
++    else
++    {
++        audio_timer++;
+     }
+ }
+ onebuffer -= 1;
+FILE combined/gml_Object_obj_spamton_neo_enemy_Create_0.gml M 4 0
+@@ -79,6 +79,10 @@
+ headendcon = 0;
+ finalattackconversationcon = 0;
+ funnycheat = 0;
++funnycheattimer = 0;
++funnycheattimer2 = 0;
++funnycheattimer3 = 0;
++headexpand = 0;
+ laserflash = irandom(3);
+ talkmax = 90;
+ image_speed = 0.16666666666666666;
+FILE combined/gml_Object_obj_spamton_neo_enemy_Draw_0.gml M 61 1
+@@ -1511,7 +1511,67 @@
+     {
+         partframe[5] = headforceframe;
+     }
+-    draw_monster_body_part_ext(partsprite[i], partframe[i], x + (partx[i] * facing) + (partxoff[i] * facing) + lastxoff + shakevar, (y + party[i] + partyoff[i]) - shakevar, (2 + scalebonus) * facing, 2 + scalebonus, partrot[i] * facing, partblend[i], image_alpha);
++    if (funnycheat > 5)
++    {
++        if (funnycheattimer < 28)
++        {
++            funnycheattimer += 0.125;
++        }
++        partblend[5] = merge_color(c_white, c_red, funnycheattimer / 30);
++        if (funnycheattimer == 24)
++        {
++            snd_play(snd_carhonk);
++            funnycheattimer3++;
++        }
++        if (funnycheattimer3 > 0 && funnycheattimer3 < 33 && i == 5)
++        {
++            funnycheattimer3++;
++            if (funnycheattimer3 > 0 && funnycheattimer3 < 6)
++            {
++                headexpand = lerp(headexpand, 2, funnycheattimer3 / 6);
++            }
++            if (funnycheattimer3 >= 8 && funnycheattimer3 < 16)
++            {
++                headexpand = lerp(headexpand, 0, (funnycheattimer3 - 8) / 8);
++            }
++            if (funnycheattimer3 >= 16 && funnycheattimer3 < 22)
++            {
++                headexpand = lerp(headexpand, 2, (funnycheattimer3 - 16) / 6);
++            }
++            if (funnycheattimer3 >= 24 && funnycheattimer3 < 32)
++            {
++                headexpand = lerp(headexpand, 0, (funnycheattimer3 - 24) / 8);
++            }
++            if ((funnycheattimer3 >= 4 && funnycheattimer3 <= 10) || (funnycheattimer3 >= 20 && funnycheattimer3 <= 26))
++            {
++                shakevar = -12 + random(24);
++            }
++        }
++        funnycheattimer2++;
++        if (funnycheattimer2 >= 10 && image_alpha > 0.6)
++        {
++            var smokey = instance_create(x + 50, y + 80, obj_afterimage_grow);
++            smokey.visible = false;
++            with (smokey)
++            {
++                scr_script_delayed(scr_var, 1, "visible", 1);
++            }
++            smokey.depth = depth + 10;
++            smokey.image_alpha = 2.5;
++            smokey.sprite_index = spr_cakesmoke;
++            smokey.hspeed = random_range(2, 8);
++            smokey.gravity = -0.5;
++            smokey.friction = 0.2;
++            smokey.vspeed = random_range(-1, -2);
++            funnycheattimer2 = 0;
++        }
++    }
++    var expand = 0;
++    if (i == 5)
++    {
++        expand = headexpand;
++    }
++    draw_monster_body_part_ext(partsprite[i], partframe[i], x + (partx[i] * facing) + (partxoff[i] * facing) + lastxoff + shakevar, (y + party[i] + partyoff[i]) - shakevar, ((2 + scalebonus) * facing) + expand, 2 + scalebonus + expand, partrot[i] * facing, partblend[i], image_alpha);
+     if (violentendflash > 0)
+     {
+         d3d_set_fog(true, c_white, 0, 1);
+FILE combined/gml_Object_obj_sweet_enemy_Draw_0.gml M 1 0
+@@ -1,3 +1,4 @@
++draw_text(80, 10, global.turntimer);
+ if (hurtstate2 == 1)
+ {
+     draw_sprite_ext(spr_sweet_hurt, 0, x, y, 2, 2, 0, c_white, 1);
+FILE combined/gml_Object_obj_sweet_enemy_Step_0.gml M 2 2
+@@ -56,7 +56,7 @@
+         scr_blconskip(15);
+         if (scr_isphase("bullets"))
+         {
+-            if ((instance_exists(obj_sweet_enemy) && global.monsterhp[obj_sweet_enemy.myself] <= 2) || (instance_exists(obj_kk_enemy) && global.monsterhp[obj_kk_enemy.myself] <= 2) || (instance_exists(obj_hatguy_enemy) && global.monsterhp[obj_hatguy_enemy.myself] <= 2))
++            if ((instance_exists(obj_sweet_enemy) && global.monsterhp[obj_sweet_enemy.myself] < 2) || (instance_exists(obj_kk_enemy) && global.monsterhp[obj_kk_enemy.myself] < 2) || (instance_exists(obj_hatguy_enemy) && global.monsterhp[obj_hatguy_enemy.myself] < 2))
+             {
+                 if (obj_musical_controller.scon == 0)
+                 {
+@@ -156,7 +156,7 @@
+                     obj_musicalbullet_controller.enemy_count += 1;
+                 }
+             }
+-            scr_turntimer(185);
++            global.turntimer = 235;
+             turns += 1;
+             global.typer = 6;
+             global.fc = 0;
+FILE combined/gml_Object_obj_testoverworldenemy_Other_10.gml M 11 0
+@@ -7,6 +7,17 @@
+         global.flag[9] = 1;
+         if (global.chapter == 2)
+         {
++            if (room == room_dw_mansion_potBalance)
++            {
++                with (obj_chaseenemy)
++                {
++                    encountered = 1;
++                }
++                with (obj_testoverworldenemy)
++                {
++                    encountered = 1;
++                }
++            }
+             var roomrange = 0;
+             if ((room >= room_dw_mansion_krisroom && room < room_dw_mansion_b_entrance) || (room >= room_dw_mansion_east_2f_a && room < room_dw_mansion_acid_tunnel) || room == room_dw_mansion_dininghall || room == room_dw_mansion_east_2f_c || room == room_dw_mansion_dining3)
+             {
+FILE combined/gml_Object_obj_weirdroute_manipulator_Create_0.gml M 4 0
+@@ -516,6 +516,10 @@
+         {
+             instance_destroy();
+         }
++        with (obj_readable_room1)
++        {
++            instance_destroy();
++        }
+         instance_create(255, 287, obj_chaseenemy);
+     }
+     if (room == room_dw_mansion_east_4f_b)
+FILE combined/gml_Object_obj_ch2_room_city_savepoint_Alarm_0.gml A 2 0
+global.currentsong[0] = snd_init("cybershop_christmas.ogg");
+global.currentsong[1] = mus_loop(global.currentsong[0]);
+FILE combined/gml_Object_obj_ch2_scene13_Alarm_1.gml A 3 0
+global.currentsong[0] = snd_init("cybercity.ogg");
+global.currentsong[1] = mus_loop_ext(global.currentsong[0], 0.8, 0.97);
+audio_sound_gain(global.currentsong[1], 1, 30);
+FILE combined/gml_Object_obj_npc_police_Alarm_1.gml A 2 0
+global.currentsong[0] = snd_init("napsta_alarm.ogg");
+global.currentsong[1] = mus_loop_ext(global.currentsong[0], 1, 1);
+FILE combined/gml_Object_obj_spamton_neo_enemy_Other_14.gml A 51 0
+funnycheat += 1;
+if (funnycheat > 5)
+{
+    if (global.tempflag[37] < 2)
+    {
+        if (global.monsterat[myself] < 26)
+        {
+            global.monsterat[myself] += 0.5;
+        }
+        else
+        {
+            global.monsterat[myself] = 26;
+        }
+    }
+    else if (global.tempflag[37] < 4)
+    {
+        if (global.monsterat[myself] < 22)
+        {
+            global.monsterat[myself] += 0.25;
+        }
+        else
+        {
+            global.monsterat[myself] = 22;
+        }
+    }
+    else if (global.tempflag[37] < 6)
+    {
+        if (global.monsterat[myself] < 18)
+        {
+            global.monsterat[myself] += 0.1;
+        }
+        else
+        {
+            global.monsterat[myself] = 18;
+        }
+    }
+    else if (global.tempflag[37] < 10)
+    {
+        if (global.monsterat[myself] < 15)
+        {
+            global.monsterat[myself] += 0.04;
+        }
+        else
+        {
+            global.monsterat[myself] = 15;
+        }
+    }
+    else if (global.tempflag[37] >= 10)
+    {
+    }
+}

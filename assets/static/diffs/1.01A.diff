@@ -1,0 +1,1947 @@
+FILE ch3/gml_Object_obj_b2_bino_v2_Create_0.gml M 1 0
+@@ -5,6 +5,7 @@
+ myhealth = 3;
+ hitbuff = 0;
+ active = 0;
++wondertalkfailsafe = 0;
+ mysolid = instance_create(x, y, obj_board_boatsolid);
+ mysolid.sprite_index = sprite_index;
+ myinteract = 0;
+FILE ch3/gml_Object_obj_b2_bino_v2_Step_0.gml M 11 2
+@@ -65,9 +65,18 @@
+     if (con == 2.1)
+     {
+         wondertalk = 1;
+-        if (i_ex(obj_writer))
++        if (instance_exists(obj_writer))
+         {
+             if (scr_msgno_end(0))
++            {
++                con = 2.2;
++                timer = 0;
++            }
++        }
++        else
++        {
++            wondertalkfailsafe++;
++            if (wondertalkfailsafe >= 15)
+             {
+                 con = 2.2;
+                 timer = 0;
+@@ -114,7 +123,7 @@
+                 scr_couchtalk(tetalk, "tenna", 2, 80);
+             }
+             var endcon = 0;
+-            if (timer > 5 && (button3_h() || button1_p()))
++            if (timer > 5 && (button3_h() || button1_p() || !instance_exists(obj_couchwriter)))
+             {
+                 endcon = 1;
+             }
+FILE ch3/gml_Object_obj_b2pippinsisland_Create_0.gml M 1 0
+@@ -19,3 +19,4 @@
+ read = 0;
+ boated = false;
+ boattalk = 0;
++failsafe = 0;
+FILE ch3/gml_Object_obj_b2pippinsisland_Step_0.gml M 29 16
+@@ -67,22 +67,35 @@
+     }
+     if (con == 2)
+     {
+-        if (i_ex(b))
+-        {
+-            if (i_ex(b.writer))
+-            {
+-                if (b.writer.reachedend == true)
+-                {
+-                    with (obj_actor_tenna)
+-                    {
+-                        bounce = 1;
+-                    }
+-                    var tetalk = stringsetloc("What the ---", "obj_b2pippinsisland_slash_Step_0_gml_56_0");
+-                    scr_couchtalk(tetalk, "tenna", 2, 9999);
+-                    con = 3;
+-                    buff = 3;
+-                }
+-            }
++        var _trig = 0;
++        with (obj_board_writer)
++        {
++            with (writer)
++            {
++                if (reachedend)
++                {
++                    _trig = 1;
++                }
++            }
++        }
++        if (!instance_exists(obj_writer))
++        {
++            failsafe++;
++            if (failsafe >= 15)
++            {
++                _trig = 1;
++            }
++        }
++        if (_trig)
++        {
++            with (obj_actor_tenna)
++            {
++                bounce = 1;
++            }
++            var tetalk = stringsetloc("What the ---", "obj_b2pippinsisland_slash_Step_0_gml_56_0");
++            scr_couchtalk(tetalk, "tenna", 2, 9999);
++            con = 3;
++            buff = 3;
+         }
+     }
+     if (con == 3)
+FILE ch3/gml_Object_obj_board_grabbablegrass_Step_0.gml M 12 2
+@@ -79,7 +79,10 @@
+     if (con == 2)
+     {
+         con = -1;
+-        grabdaddy.image_index = 1;
++        with (grabdaddy)
++        {
++            image_index = 1;
++        }
+         if (!infinite)
+         {
+             image_alpha = 0;
+@@ -88,7 +91,14 @@
+         {
+             var movetime = 4;
+             var waittime = 6;
+-            coin = instance_create(grabdaddy.x, grabdaddy.y, obj_board_marker);
++            var targx = x;
++            var targy = y;
++            with (grabdaddy)
++            {
++                targx = x;
++                targy = y;
++            }
++            coin = instance_create(targx, targy, obj_board_marker);
+             with (coin)
+             {
+                 scr_darksize();
+FILE ch3/gml_Object_obj_dw_b3bs_extrapuzzle_Create_0.gml M 1 1
+@@ -8,7 +8,7 @@
+ block = 0;
+ bxoff = -128;
+ byoff = 32;
+-if (global.flag[1111] > 0)
++if (global.flag[1111] > 0 && global.flag[1055] < 6)
+ {
+     block = instance_create(round((global.flag[1109] + bxoff) / 32) * 32, round((global.flag[1110] + byoff) / 32) * 32, obj_pushableblock_board);
+     if (global.flag[1109] < 352)
+FILE ch3/gml_Object_obj_dw_b3bs_mysterypuzzle_Create_0.gml M 22 11
+@@ -24,7 +24,7 @@
+ resettile = false;
+ resetcon = 0;
+ resettime = 0;
+-block = 0;
++block = -4;
+ noreset = false;
+ global.flag[1018] = 1;
+ global.flag[1020] = 1;
+@@ -53,27 +53,38 @@
+     spike[i].depth = 1000000;
+     spike[i].image_blend = merge_color(c_white, #371E0F, 0.5);
+ }
++floorblock = -4;
+ floorblock = instance_create(120, 320, obj_solidblocksized);
+ scr_darksize(floorblock);
+ switchtile1 = instance_create(224, 96, obj_board_blocktrig);
+ switchtile2 = instance_create(320, 96, obj_board_blocktrig);
+ yend = -1;
++if (global.flag[1111] == 2)
++{
++    con = 3;
++    safe_delete(floorblock);
++    with (switchtile1)
++    {
++        used = true;
++    }
++    with (switchtile2)
++    {
++        used = true;
++    }
++    for (var i = 0; i < 4; i++)
++    {
++        spike[i].image_index = 1;
++    }
++}
+ endcon = 0;
+ if (global.flag[1055] >= 6)
+ {
+     scr_marker_ext(128, 64, spr_pxwhite, 352, 224, undefined, undefined, c_black, 99801);
+     endcon = 1;
++    con = 999;
+     global.flag[1111] = 2;
+-}
+-if (global.flag[1111] == 2)
+-{
+-    con = 3;
+-    safe_delete(floorblock);
+-    switchtile1.used = true;
+-    switchtile2.used = true;
+-    for (var i = 0; i < 4; i++)
++    with (obj_pushableblock_board)
+     {
+-        spike[i].image_index = 1;
++        visible = false;
+     }
+ }
+-debug_message(room_get_name(room) + "start: block x/y=" + string(global.flag[1109]) + "|" + string(global.flag[1110]));
+FILE ch3/gml_Object_obj_dw_b3bs_mysterypuzzle_Step_0.gml M 91 59
+@@ -111,25 +111,31 @@
+         yend = yloc;
+         block = instance_create(xloc, 32, obj_pushableblock_board);
+         snd_play(snd_fall);
+-        block.gravity = 0.5;
++        with (block)
++        {
++            gravity = 0.5;
++        }
+         timer = 0;
+         con++;
+     }
+ }
+ if (con == 2)
+ {
+-    if (block.y >= (yend - 8))
+-    {
+-        block.y = yend;
+-        global.flag[1111] = 1;
+-        global.flag[1109] = block.x;
+-        global.flag[1110] = block.y;
+-        snd_play_x(snd_noise, 0.5, 0.8);
+-        block.vspeed = 0;
+-        block.gravity = 0;
+-        global.interact = 0;
+-        con = 3;
+-        update = false;
++    if (instance_exists(block))
++    {
++        if (block.y >= (yend - 8))
++        {
++            block.y = yend;
++            global.flag[1111] = 1;
++            global.flag[1109] = block.x;
++            global.flag[1110] = block.y;
++            snd_play_x(snd_noise, 0.5, 0.8);
++            block.vspeed = 0;
++            block.gravity = 0;
++            global.interact = 0;
++            con = 3;
++            update = false;
++        }
+     }
+ }
+ if (con == 3.2)
+@@ -184,75 +190,84 @@
+         {
+             sucleanup = true;
+         }
+-        if ((block.x != 256 || block.y != 192) && block.x != 999999)
+-        {
+-            if (sucleanup)
+-            {
+-                with (obj_board_grabobject)
++        if (instance_exists(block))
++        {
++            if ((block.x != 256 || block.y != 192) && block.x != 999999)
++            {
++                if (sucleanup)
+                 {
+-                    if (i_ex(marker))
++                    with (obj_board_grabobject)
+                     {
+-                        var markx = marker.x;
+-                        var marky = marker.y;
+-                        with (grabbedid)
++                        if (i_ex(marker))
+                         {
+-                            setxy(markx, marky);
++                            var markx = marker.x;
++                            var marky = marker.y;
++                            with (grabbedid)
++                            {
++                                setxy(markx, marky);
++                            }
+                         }
+-                    }
+-                    else
+-                    {
+-                        with (grabbedid)
++                        else
+                         {
+-                            setxy(other.x, other.y);
++                            with (grabbedid)
++                            {
++                                setxy(other.x, other.y);
++                            }
+                         }
+-                    }
+-                    grabbedid.visible = true;
+-                    with (marker)
+-                    {
++                        grabbedid.visible = true;
++                        with (marker)
++                        {
++                            instance_destroy();
++                        }
++                        if (i_ex(grabdaddy))
++                        {
++                            grabdaddy.grabbed = 0;
++                            grabdaddy.grab = 0;
++                            grabdaddy.canfreemove = 1;
++                        }
+                         instance_destroy();
+                     }
+-                    if (i_ex(grabdaddy))
+-                    {
+-                        grabdaddy.grabbed = 0;
+-                        grabdaddy.grab = 0;
+-                        grabdaddy.canfreemove = 1;
+-                    }
+-                    instance_destroy();
+                 }
+-            }
+-            var delaytime = round(point_distance(256, 192, block.x, block.y) / 8) + 1;
+-            debug_print("delaytime=" + string(delaytime));
+-            con = 3.1;
+-            scr_delay_var("con", 3.2, delaytime);
+-            global.interact = 1;
+-            with (block)
+-            {
+-                scr_lerpvar("x", x, 256, delaytime, -1, "out");
+-                scr_lerpvar("y", y, 192, delaytime, -1, "out");
+-                con = 999;
+-                scr_delay_var("con", 0, delaytime + 1);
++                var delaytime = round(point_distance(256, 192, block.x, block.y) / 8) + 1;
++                debug_print("delaytime=" + string(delaytime));
++                con = 3.1;
++                scr_delay_var("con", 3.2, delaytime);
++                global.interact = 1;
++                with (block)
++                {
++                    scr_lerpvar("x", x, 256, delaytime, -1, "out");
++                    scr_lerpvar("y", y, 192, delaytime, -1, "out");
++                    con = 999;
++                    scr_delay_var("con", 0, delaytime + 1);
++                }
+             }
+         }
+     }
+     if (update == false)
+     {
+-        if (i_ex(obj_board_grabobject))
++        if (instance_exists(obj_board_grabobject))
+         {
+             update = true;
+         }
+     }
+     var doupdate = true;
+-    if (obj_pushableblock_board.con != 0)
+-    {
+-        doupdate = false;
++    with (obj_pushableblock_board)
++    {
++        if (con != 0)
++        {
++            doupdate = false;
++        }
+     }
+     if (update == true && global.interact == 0 && doupdate == true)
+     {
+-        if (!i_ex(obj_board_grabobject))
++        if (!instance_exists(obj_board_grabobject))
+         {
+             update = false;
+-            global.flag[1109] = block.x;
+-            global.flag[1110] = block.y;
++            if (instance_exists(block))
++            {
++                global.flag[1109] = block.x;
++                global.flag[1110] = block.y;
++            }
+             debug_message("block x/y=" + string(global.flag[1109]) + "|" + string(global.flag[1110]));
+         }
+     }
+@@ -271,7 +286,10 @@
+ if (endcon == 2 && !d_ex())
+ {
+     endcon = 1;
+-    obj_b3bs_console.swordinteract = 0;
++    with (obj_b3bs_console)
++    {
++        swordinteract = 0;
++    }
+     global.interact = 0;
+ }
+ if (global.flag[1111] == 2)
+@@ -281,3 +299,17 @@
+         spike[i].image_index = 1;
+     }
+ }
++if (global.flag[1055] >= 6)
++{
++    with (obj_pushableblock_board)
++    {
++        visible = false;
++    }
++    with (obj_solidblocksized)
++    {
++        if (x == 120 && y == 320)
++        {
++            x = room_width * 40;
++        }
++    }
++}
+FILE ch3/gml_Object_obj_dw_ch3_teevie_quiz_screen_Draw_0.gml M 11 10
+@@ -332,15 +332,16 @@
+             }
+         }
+     }
+-    for (var i = 0; i < width; i++)
+-    {
+-        for (var j = 0; j < height; j++)
+-        {
+-            draw_sprite_ext(tvbasesprite, 4, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, c_white, 0.65);
+-            draw_sprite_ext(tvbasesprite, 1, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, screencolor[i][j], 0.6 + (sin((timer / 4) + i + j) * 0.1)), image_alpha);
+-            draw_sprite_ext(tvbasesprite, 2, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, c_black, 0.5), image_alpha);
+-            draw_sprite_ext(tvbasesprite, 3, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, tvbasecolor, image_alpha);
+-            draw_sprite_ext(tvbasesprite, 5, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
+-        }
++    for (var i = 0; i < array_length(_screen_list); i++)
++    {
++        var screen = _screen_list[i];
++        var screen_tile_pos = screen.get_tile_pos();
++        var screen_tile_x = screen_tile_pos.x;
++        var screen_tile_y = screen_tile_pos.y;
++        draw_sprite_ext(tvbasesprite, 4, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, c_white, 0.65);
++        draw_sprite_ext(tvbasesprite, 1, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, screen.get_screen_color(), 0.6 + (sin((timer / 4) + screen_tile_x + screen_tile_y) * 0.1)), image_alpha);
++        draw_sprite_ext(tvbasesprite, 2, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, c_black, 0.5), image_alpha);
++        draw_sprite_ext(tvbasesprite, 3, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, tvbasecolor, image_alpha);
++        draw_sprite_ext(tvbasesprite, 5, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
+     }
+ }
+FILE ch3/gml_Object_obj_dw_ch3_teevie_quiz_screen_Step_0.gml M 1 0
+@@ -1,3 +1,4 @@
++event_inherited();
+ if (shoot_sequence)
+ {
+     shoot_sequence_timer++;
+FILE ch3/gml_Object_obj_dw_teevie_tv_screens_Create_0.gml M 1 61
+@@ -25,64 +25,4 @@
+ tvbasecolor = #5B2745;
+ tvbasesprite = spr_dw_teevie_tv_base_thin;
+ mode = 0;
+-
+-set_screen = function(arg0, arg1)
+-{
+-    var myimage = choose(0, 2, 4, 8, 19, 23, 31, 35, 37, 39);
+-    screenimage[arg0][arg1] = myimage;
+-    screenimageoffset[arg0][arg1] = 0;
+-    switch (myimage)
+-    {
+-        case 0:
+-            screencolor[arg0][arg1] = c_aqua;
+-            break;
+-        case 2:
+-            screencolor[arg0][arg1] = c_yellow;
+-            break;
+-        case 4:
+-            screencolor[arg0][arg1] = #FFD4B3;
+-            screencon[arg0][arg1] = 2;
+-            break;
+-        case 8:
+-            screencolor[arg0][arg1] = c_aqua;
+-            screencon[arg0][arg1] = 3;
+-            break;
+-        case 19:
+-            screencolor[arg0][arg1] = #FFD4B3;
+-            screencon[arg0][arg1] = 4;
+-            break;
+-        case 23:
+-            screencolor[arg0][arg1] = #AFC170;
+-            screencon[arg0][arg1] = 5;
+-            break;
+-        case 31:
+-            screencolor[arg0][arg1] = #FF8A2D;
+-            screencon[arg0][arg1] = 6;
+-            break;
+-        case 35:
+-            screencolor[arg0][arg1] = #777A34;
+-            screencon[arg0][arg1] = 7;
+-            break;
+-        case 37:
+-            screencolor[arg0][arg1] = c_black;
+-            screencon[arg0][arg1] = 8;
+-            break;
+-        case 39:
+-            screencolor[arg0][arg1] = #6F95B7;
+-            screencon[arg0][arg1] = 9;
+-            break;
+-        default:
+-            screencolor[arg0][arg1] = c_aqua;
+-            break;
+-    }
+-};
+-
+-set_static = function(arg0, arg1)
+-{
+-    screentimer[arg0][arg1] = 0;
+-    screencon[arg0][arg1] = 1;
+-    screensprite[arg0][arg1] = 3996;
+-    screenimage[arg0][arg1] = 0;
+-    screencolor[arg0][arg1] = c_white;
+-    screenimageoffset[arg0][arg1] = 0;
+-};
++_screen_list = [];
+FILE ch3/gml_Object_obj_dw_teevie_tv_screens_Draw_0.gml M 22 202
+@@ -1,17 +1,6 @@
+ if (init == 0)
+ {
+-    for (var i = 0; i < width; i++)
+-    {
+-        for (var j = 0; j < height; j++)
+-        {
+-            screensprite[i][j] = 4931;
+-            screencon[i][j] = 0;
+-            screentimer[i][j] = floor(random(100) - 100);
+-            screencolor[i][j] = c_white;
+-            set_screen(i, j);
+-        }
+-    }
+-    init = 1;
++    exit;
+ }
+ timer++;
+ image_xscale = 2;
+@@ -24,200 +13,31 @@
+ ossafe_fill_rectangle(x, y, (x + (width * tvwidth)) - 1, (y + (height * tvheight)) - 1, false);
+ draw_set_color(c_white);
+ draw_set_blend_mode(bm_add);
+-for (var i = 0; i < width; i++)
++for (var i = 0; i < array_length(_screen_list); i++)
+ {
+-    for (var j = 0; j < height; j++)
+-    {
+-        if (mode == 0)
+-        {
+-            if (screencon[i][j] == 0)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 8) == 0)
+-                {
+-                    if (screenimageoffset[i][j] == 0)
+-                    {
+-                        screenimageoffset[i][j] = 1;
+-                    }
+-                    else
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 1)
+-            {
+-                screentimer[i][j]++;
+-                if ((screentimer[i][j] % 2) == 0)
+-                {
+-                    if (screenimageoffset[i][j] == 0)
+-                    {
+-                        screenimageoffset[i][j] = 1;
+-                    }
+-                    else
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 15)
+-                {
+-                    screentimer[i][j] = -100 + floor(random(100));
+-                    screencon[i][j] = 0;
+-                    screensprite[i][j] = 4931;
+-                    set_screen(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 2)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 4)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 3)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 11)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 4)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 4)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 5)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    if (screenimageoffset[i][j] < 7)
+-                    {
+-                        screenimageoffset[i][j]++;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 20)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 6)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 4)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 7)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 6) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 2)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 8)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 6) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 2)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 9)
+-            {
+-                screentimer[i][j]++;
+-                if ((abs(screentimer[i][j]) % 6) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 2)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-        }
+-        draw_sprite_ext(screensprite[i][j], screenimage[i][j] + screenimageoffset[i][j], x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+-    }
++    var screen = _screen_list[i];
++    var screen_tile_pos = screen.get_tile_pos();
++    var screen_tile_x = screen_tile_pos.x;
++    var screen_tile_y = screen_tile_pos.y;
++    var screen_sprite = screen.get_screen_sprite();
++    var screen_image_index = screen.get_screen_image_index();
++    var screen_offset = screen.get_screen_offset();
++    draw_sprite_ext(screen_sprite, screen_image_index + screen_offset, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+ }
+ draw_set_blend_mode(bm_normal);
+-for (var i = 0; i < width; i++)
++for (var i = 0; i < array_length(_screen_list); i++)
+ {
+-    for (var j = 0; j < height; j++)
++    var screen = _screen_list[i];
++    var screen_tile_pos = screen.get_tile_pos();
++    var screen_tile_x = screen_tile_pos.x;
++    var screen_tile_y = screen_tile_pos.y;
++    if (drawborders)
+     {
+-        if (drawborders)
+-        {
+-            tvbasesprite = spr_dw_teevie_tv_base;
+-        }
+-        draw_sprite_ext(tvbasesprite, 4, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
+-        draw_sprite_ext(tvbasesprite, 1, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, screencolor[i][j], 0.6 + (sin((timer / 4) + i + j) * 0.1)), image_alpha);
+-        draw_sprite_ext(tvbasesprite, 2, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, c_black, 0.5), image_alpha);
+-        draw_sprite_ext(tvbasesprite, 3, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, tvbasecolor, image_alpha);
+-        draw_sprite_ext(tvbasesprite, 5, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
+-        if (drawborders)
+-        {
+-        }
++        tvbasesprite = spr_dw_teevie_tv_base;
+     }
++    draw_sprite_ext(tvbasesprite, 4, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
++    draw_sprite_ext(tvbasesprite, 1, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, screen.get_screen_color(), 0.6 + (sin((timer / 4) + screen_tile_x + screen_tile_y) * 0.1)), image_alpha);
++    draw_sprite_ext(tvbasesprite, 2, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, c_black, 0.5), image_alpha);
++    draw_sprite_ext(tvbasesprite, 3, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, tvbasecolor, image_alpha);
++    draw_sprite_ext(tvbasesprite, 5, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
+ }
+FILE ch3/gml_Object_obj_dw_teevie_tv_screens_treasure_Create_0.gml M 1 61
+@@ -19,6 +19,7 @@
+ treasure_flag = -1;
+ treasure_sequence = false;
+ treasure_timer = 0;
++_screen_list = [];
+ 
+ set_secret = function(arg0, arg1)
+ {
+@@ -46,67 +47,6 @@
+     }
+ };
+ 
+-set_screen = function(arg0, arg1)
+-{
+-    var myimage = choose(0, 2, 4, 8, 19, 23, 31, 35, 37, 39);
+-    screenimage[arg0][arg1] = myimage;
+-    screenimageoffset[arg0][arg1] = 0;
+-    switch (myimage)
+-    {
+-        case 0:
+-            screencolor[arg0][arg1] = c_aqua;
+-            break;
+-        case 2:
+-            screencolor[arg0][arg1] = c_yellow;
+-            break;
+-        case 4:
+-            screencolor[arg0][arg1] = #FFD4B3;
+-            screencon[arg0][arg1] = 2;
+-            break;
+-        case 8:
+-            screencolor[arg0][arg1] = c_aqua;
+-            screencon[arg0][arg1] = 3;
+-            break;
+-        case 19:
+-            screencolor[arg0][arg1] = #FFD4B3;
+-            screencon[arg0][arg1] = 4;
+-            break;
+-        case 23:
+-            screencolor[arg0][arg1] = #AFC170;
+-            screencon[arg0][arg1] = 5;
+-            break;
+-        case 31:
+-            screencolor[arg0][arg1] = #FF8A2D;
+-            screencon[arg0][arg1] = 6;
+-            break;
+-        case 35:
+-            screencolor[arg0][arg1] = #777A34;
+-            screencon[arg0][arg1] = 7;
+-            break;
+-        case 37:
+-            screencolor[arg0][arg1] = c_black;
+-            screencon[arg0][arg1] = 8;
+-            break;
+-        case 39:
+-            screencolor[arg0][arg1] = #6F95B7;
+-            screencon[arg0][arg1] = 9;
+-            break;
+-        default:
+-            screencolor[arg0][arg1] = c_aqua;
+-            break;
+-    }
+-};
+-
+-set_static = function(arg0, arg1)
+-{
+-    screentimer[arg0][arg1] = 0;
+-    screencon[arg0][arg1] = 1;
+-    screensprite[arg0][arg1] = 3996;
+-    screenimage[arg0][arg1] = 0;
+-    screencolor[arg0][arg1] = c_white;
+-    screenimageoffset[arg0][arg1] = 0;
+-};
+-
+ show_treasure = function()
+ {
+     door_active = true;
+FILE ch3/gml_Object_obj_dw_teevie_tv_screens_treasure_Draw_0.gml M 26 234
+@@ -1,18 +1,6 @@
+ if (init == 0)
+ {
+-    for (var i = 0; i < width; i++)
+-    {
+-        for (var j = 0; j < height; j++)
+-        {
+-            screensprite[i][j] = 4931;
+-            screencon[i][j] = 0;
+-            screentimer[i][j] = floor(random(100) - 100);
+-            screencolor[i][j] = c_white;
+-            screenanimate[i][j] = !(i == 3 && j == 2);
+-            set_screen(i, j);
+-        }
+-    }
+-    init = 1;
++    exit;
+ }
+ timer++;
+ var xx = x;
+@@ -21,233 +9,37 @@
+ ossafe_fill_rectangle(x, y, x + (width * tvwidth), y + (height * tvheight), false);
+ draw_set_color(c_white);
+ draw_set_blend_mode(bm_add);
+-for (var i = 0; i < width; i++)
++for (var i = 0; i < array_length(_screen_list); i++)
+ {
+-    for (var j = 0; j < height; j++)
++    var screen = _screen_list[i];
++    var screen_tile_pos = screen.get_tile_pos();
++    var screen_tile_x = screen_tile_pos.x;
++    var screen_tile_y = screen_tile_pos.y;
++    if (screen.is_animated())
+     {
+-        if (mode == 0)
+-        {
+-            if (screencon[i][j] == 0)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 8) == 0)
+-                {
+-                    if (screenimageoffset[i][j] == 0)
+-                    {
+-                        screenimageoffset[i][j] = 1;
+-                    }
+-                    else
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 1)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((screentimer[i][j] % 2) == 0)
+-                {
+-                    if (screenimageoffset[i][j] == 0)
+-                    {
+-                        screenimageoffset[i][j] = 1;
+-                    }
+-                    else
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 15)
+-                {
+-                    screentimer[i][j] = -100 + floor(random(100));
+-                    screencon[i][j] = 0;
+-                    screensprite[i][j] = 4931;
+-                    set_screen(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 2)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 4)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 3)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 11)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 4)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 4)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 5)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    if (screenimageoffset[i][j] < 7)
+-                    {
+-                        screenimageoffset[i][j]++;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 20)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 6)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 4) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 4)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 7)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 6) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 2)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 8)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 6) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 2)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-            if (screencon[i][j] == 9)
+-            {
+-                if (screenanimate[i][j])
+-                {
+-                    screentimer[i][j]++;
+-                }
+-                if ((abs(screentimer[i][j]) % 6) == 0)
+-                {
+-                    screenimageoffset[i][j]++;
+-                    if (screenimageoffset[i][j] == 2)
+-                    {
+-                        screenimageoffset[i][j] = 0;
+-                    }
+-                }
+-                if (screentimer[i][j] >= 120)
+-                {
+-                    set_static(i, j);
+-                }
+-            }
+-        }
+-        if (screenanimate[i][j])
+-        {
+-            draw_sprite_ext(screensprite[i][j], screenimage[i][j] + screenimageoffset[i][j], x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+-        }
+-        else
+-        {
+-            var _index = (frozen_mode == 1) ? 0 : 1;
+-            draw_sprite_ext(spr_dw_teevie_tv_shows_frozen, _index, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+-        }
++        var screen_sprite = screen.get_screen_sprite();
++        var screen_image_index = screen.get_screen_image_index();
++        var screen_offset = screen.get_screen_offset();
++        draw_sprite_ext(screen_sprite, screen_image_index + screen_offset, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, image_blend, image_alpha);
++    }
++    else
++    {
++        var _index = (frozen_mode == 1) ? 0 : 1;
++        draw_sprite_ext(spr_dw_teevie_tv_shows_frozen, _index, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, image_blend, image_alpha);
+     }
+ }
+ draw_set_blend_mode(bm_normal);
+-for (var i = 0; i < width; i++)
++for (var i = 0; i < array_length(_screen_list); i++)
+ {
+-    for (var j = 0; j < height; j++)
+-    {
+-        draw_sprite_ext(tvbasesprite, 4, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
+-        draw_sprite_ext(tvbasesprite, 1, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, screencolor[i][j], 0.6 + (sin((timer / 4) + i + j) * 0.1)), image_alpha);
+-        draw_sprite_ext(tvbasesprite, 2, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, c_black, 0.5), image_alpha);
+-        draw_sprite_ext(tvbasesprite, 3, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, tvbasecolor, image_alpha);
+-        draw_sprite_ext(tvbasesprite, 5, x + (i * tvwidth), y + (j * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
+-    }
++    var screen = _screen_list[i];
++    var screen_tile_pos = screen.get_tile_pos();
++    var screen_tile_x = screen_tile_pos.x;
++    var screen_tile_y = screen_tile_pos.y;
++    draw_sprite_ext(tvbasesprite, 4, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
++    draw_sprite_ext(tvbasesprite, 1, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, screen.get_screen_color(), 0.6 + (sin((timer / 4) + screen_tile_x + screen_tile_y) * 0.1)), image_alpha);
++    draw_sprite_ext(tvbasesprite, 2, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, merge_color(tvbasecolor, c_black, 0.5), image_alpha);
++    draw_sprite_ext(tvbasesprite, 3, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, tvbasecolor, image_alpha);
++    draw_sprite_ext(tvbasesprite, 5, x + (screen_tile_x * tvwidth), y + (screen_tile_y * tvheight), image_xscale, image_yscale, image_angle, c_white, image_alpha);
+ }
+ if (door_active)
+ {
+FILE ch3/gml_Object_obj_dw_teevie_tv_screens_treasure_Step_0.gml M 235 0
+@@ -1,3 +1,238 @@
++if (init == 0)
++{
++    for (var i = 0; i < width; i++)
++    {
++        var tile_x = i;
++        for (var j = 0; j < height; j++)
++        {
++            var tile_y = j;
++            var is_animated = !(tile_x == 3 && tile_y == 2);
++            var new_screen = new scr_teevie_screen(new Vector2(tile_x, tile_y));
++            new_screen.init();
++            if (!is_animated)
++            {
++                new_screen.disable_animation();
++            }
++            _screen_list[array_length(_screen_list)] = new_screen;
++        }
++    }
++    init = 1;
++}
++for (var i = 0; i < array_length(_screen_list); i++)
++{
++    var screen = _screen_list[i];
++    var screencon = screen.get_screen_con();
++    if (mode == 0)
++    {
++        if (screencon == 0)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 8) == 0)
++            {
++                if (screen.get_screen_offset() == 0)
++                {
++                    screen.set_screen_offset(1);
++                }
++                else
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 120)
++            {
++                screen.set_static();
++            }
++        }
++        else if (screencon == 1)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 2) == 0)
++            {
++                if (screen.get_screen_offset() == 0)
++                {
++                    screen.set_screen_offset(1);
++                }
++                else
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 15)
++            {
++                var random_timer = -100 + floor(random(100));
++                screen.set_screen_timer(random_timer);
++                screen.set_screen_con(0);
++                screen.set_screen_sprite(spr_dw_teevie_tv_shows);
++                screen.set_screen();
++            }
++        }
++        else if (screencon == 2)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 4) == 0)
++            {
++                var offset = screen.get_screen_offset();
++                screen.set_screen_offset(offset + 1);
++                if (screen.get_screen_offset() == 4)
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 120)
++            {
++                screen.set_static();
++            }
++        }
++        else if (screencon == 3)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 4) == 0)
++            {
++                var offset = screen.get_screen_offset();
++                screen.set_screen_offset(offset + 1);
++                if (screen.get_screen_offset() == 11)
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 120)
++            {
++                screen.set_static();
++            }
++        }
++        else if (screencon == 4)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 4) == 0)
++            {
++                var offset = screen.get_screen_offset();
++                screen.set_screen_offset(offset + 1);
++                if (screen.get_screen_offset() == 4)
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 120)
++            {
++                screen.set_static();
++            }
++        }
++        else if (screencon == 5)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 4) == 0)
++            {
++                var offset = screen.get_screen_offset();
++                if (offset < 7)
++                {
++                    screen.set_screen_offset(offset + 1);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 20)
++            {
++                screen.set_static();
++            }
++        }
++        else if (screencon == 6)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 4) == 0)
++            {
++                var offset = screen.get_screen_offset();
++                screen.set_screen_offset(offset + 1);
++                if (screen.get_screen_offset() == 4)
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 120)
++            {
++                screen.set_static();
++            }
++        }
++        else if (screencon == 7)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 6) == 0)
++            {
++                var offset = screen.get_screen_offset();
++                screen.set_screen_offset(offset + 1);
++                if (screen.get_screen_offset() == 2)
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 120)
++            {
++                screen.set_static();
++            }
++        }
++        else if (screencon == 8)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 6) == 0)
++            {
++                var offset = screen.get_screen_offset();
++                screen.set_screen_offset(offset + 1);
++                if (screen.get_screen_offset() == 2)
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 120)
++            {
++                screen.set_static();
++            }
++        }
++        else if (screencon == 9)
++        {
++            if (screen.is_animated())
++            {
++                screen.increment_screen_timer();
++            }
++            if ((abs(screen.get_screen_timer()) % 6) == 0)
++            {
++                var offset = screen.get_screen_offset();
++                screen.set_screen_offset(offset + 1);
++                if (screen.get_screen_offset() == 2)
++                {
++                    screen.set_screen_offset(0);
++                }
++            }
++            if (abs(screen.get_screen_timer()) >= 120)
++            {
++                screen.set_static();
++            }
++        }
++    }
++}
+ if (treasure_sequence)
+ {
+     treasure_timer++;
+FILE ch3/gml_Object_obj_initializer2_Create_0.gml M 1 1
+@@ -65,7 +65,7 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.086";
++global.versionno = "v0.0.087";
+ if (scr_is_switch_os())
+ {
+ }
+FILE ch3/gml_Object_obj_rhythmgame_Create_0.gml M 6 0
+@@ -47,6 +47,8 @@
+ hurt_counter = 0;
+ safety_timer = 0;
+ safety_mode = false;
++muted = false;
++muted_time = 0;
+ averagetimeunit = 0;
+ safety_pos = 0;
+ smooth_timer = 0;
+@@ -310,6 +312,10 @@
+ {
+     if (!i_ex(track1))
+     {
++        if (trackpos <= 0)
++        {
++            trackpos = 0.1;
++        }
+         debug_print("Emergency reload called. Resuming from " + string(trackpos));
+         remtrackpos[0] = trackpos;
+         track1 = snd_init(track1_id);
+FILE ch3/gml_Object_obj_rhythmgame_Step_0.gml M 10 3
+@@ -461,6 +461,11 @@
+             exit;
+         }
+         _truetrackpos = audio_sound_get_track_position(track1_main);
++        if (muted && muted_time != _truetrackpos)
++        {
++            muted = false;
++            debug_print("huh???");
++        }
+         var _posdiff = _truetrackpos - trackpos;
+         if (lose_con == 0 && !paused && _posdiff == 0 && trackpos < (track_length - 0.5))
+         {
+@@ -470,11 +475,13 @@
+                 if (!safety_mode)
+                 {
+                     safety_mode = 1;
++                    muted = true;
++                    muted_time = _truetrackpos;
+                     debug_print("safety mode engaged");
+                 }
+             }
+         }
+-        else if (!paused && abs(_posdiff) > 0.05 && abs(_posdiff) < 0.5 && lose_con == 0 && song_id != 4)
++        else if (!paused && abs(_posdiff) > 0.05 && abs(_posdiff) < 0.5 && lose_con == 0 && song_id != 4 && !muted)
+         {
+             if (smooth_timer == 0)
+             {
+@@ -507,14 +514,14 @@
+         }
+         if (safety_mode && lose_con == 0)
+         {
+-            if (smooth_timer > 0)
++            if (smooth_timer > 0 && !muted)
+             {
+                 safety_pos += (delta_time / 1000000);
+                 trackpos = remap(6, 0, safety_pos, _truetrackpos, smooth_timer);
+             }
+             else
+             {
+-                trackpos += (delta_time / 1000000);
++                trackpos += ((delta_time / 1000000) * pitch);
+             }
+             if (loop && trackpos >= track_length)
+             {
+FILE ch3/gml_Object_obj_room_interstitial_Step_0.gml M 6 2
+@@ -2,11 +2,15 @@
+ {
+     exit;
+ }
+-if (con == 1 && obj_mainchara.x < 16)
++if (con == 1 && obj_mainchara.x < 18)
+ {
+     con = 2;
+     global.interact = 1;
+-    obj_mainchara.x += 8;
++    obj_mainchara.x = 18;
++    with (obj_caterpillarchara)
++    {
++        scr_caterpillar_interpolate();
++    }
+     scr_speaker("susie");
+     msgsetloc(0, "\\E0* (Tenna looks busy...)/%", "obj_room_interstitial_slash_Step_0_gml_15_0");
+     var d = d_make();
+FILE ch3/gml_Object_obj_shadow_mantle_enemy_spawn_Create_0.gml M 4 0
+@@ -1,3 +1,7 @@
++if (!i_ex(obj_shadow_mantle_enemy))
++{
++    exit;
++}
+ timer = 0;
+ con = 0;
+ move_type = 0;
+FILE ch3/gml_Object_obj_shadow_mantle_enemy_spawn_Step_0.gml M 4 0
+@@ -1,3 +1,7 @@
++if (!i_ex(obj_shadow_mantle_enemy))
++{
++    exit;
++}
+ if (global.shadow_mantle_losses == 0 && obj_shadow_mantle_enemy.speedrun >= 0 && obj_shadow_mantle_enemy.speedrun < 5)
+ {
+     if (obj_shadow_mantle_enemy.speedrun == 0)
+FILE ch3/gml_GlobalScript_scr_teevie_screen.gml A 156 0
+function scr_teevie_screen(arg0) constructor
+{
+    static init = function()
+    {
+        set_screen();
+    };
+    
+    static get_tile_pos = function()
+    {
+        return _tile_pos;
+    };
+    
+    static set_screen_sprite = function(arg0)
+    {
+        _screensprite = arg0;
+    };
+    
+    static get_screen_sprite = function()
+    {
+        return _screensprite;
+    };
+    
+    static set_screen_image_index = function(arg0)
+    {
+        _screenimage = arg0;
+    };
+    
+    static get_screen_image_index = function()
+    {
+        return _screenimage;
+    };
+    
+    static is_animated = function()
+    {
+        return _screenanimate;
+    };
+    
+    static disable_animation = function()
+    {
+        _screenanimate = false;
+    };
+    
+    static set_screen_con = function(arg0)
+    {
+        _screencon = arg0;
+    };
+    
+    static get_screen_con = function()
+    {
+        return _screencon;
+    };
+    
+    static set_screen_color = function(arg0)
+    {
+        _screencolor = arg0;
+    };
+    
+    static get_screen_color = function()
+    {
+        return _screencolor;
+    };
+    
+    static increment_screen_timer = function()
+    {
+        _screentimer += 1;
+    };
+    
+    static set_screen_timer = function(arg0)
+    {
+        _screentimer = arg0;
+    };
+    
+    static get_screen_timer = function()
+    {
+        return _screentimer;
+    };
+    
+    static set_screen_offset = function(arg0)
+    {
+        _screenimageoffset = arg0;
+    };
+    
+    static get_screen_offset = function()
+    {
+        return _screenimageoffset;
+    };
+    
+    static set_screen = function()
+    {
+        var random_image_index = choose(0, 2, 4, 8, 19, 23, 31, 35, 37, 39);
+        set_screen_image_index(random_image_index);
+        switch (random_image_index)
+        {
+            case 0:
+                set_screen_color(c_aqua);
+                break;
+            case 2:
+                set_screen_color(c_yellow);
+                break;
+            case 4:
+                set_screen_color(#FFD4B3);
+                set_screen_con(2);
+                break;
+            case 8:
+                set_screen_color(c_aqua);
+                set_screen_con(3);
+                break;
+            case 19:
+                set_screen_color(#FFD4B3);
+                set_screen_con(4);
+                break;
+            case 23:
+                set_screen_color(#AFC170);
+                set_screen_con(5);
+                break;
+            case 31:
+                set_screen_color(#FF8A2D);
+                set_screen_con(6);
+                break;
+            case 35:
+                set_screen_color(#777A34);
+                set_screen_con(7);
+                break;
+            case 37:
+                set_screen_color(c_black);
+                set_screen_con(8);
+                break;
+            case 39:
+                set_screen_color(#6F95B7);
+                set_screen_con(9);
+                break;
+            default:
+                set_screen_color(c_aqua);
+                break;
+        }
+    };
+    
+    static set_static = function()
+    {
+        set_screen_timer(0);
+        set_screen_con(1);
+        set_screen_sprite(spr_dw_teevie_tv_static);
+        set_screen_image_index(0);
+        set_screen_color(c_white);
+        set_screen_offset(0);
+    };
+    
+    _tile_pos = arg0;
+    _screensprite = spr_dw_teevie_tv_shows;
+    _screencon = 0;
+    _screentimer = floor(random(100) - 100);
+    _screencolor = c_white;
+    _screenanimate = true;
+    _screenimageoffset = 0;
+    _screenimage = 0;
+}
+FILE ch3/gml_Object_obj_dw_teevie_tv_screens_Step_0.gml A 230 0
+if (init == 0)
+{
+    for (var i = 0; i < width; i++)
+    {
+        var tile_x = i;
+        for (var j = 0; j < height; j++)
+        {
+            var tile_y = j;
+            var new_screen = new scr_teevie_screen(new Vector2(tile_x, tile_y));
+            new_screen.init();
+            _screen_list[array_length(_screen_list)] = new_screen;
+        }
+    }
+    init = 1;
+}
+for (var i = 0; i < array_length(_screen_list); i++)
+{
+    var screen = _screen_list[i];
+    var screencon = screen.get_screen_con();
+    if (mode == 0)
+    {
+        if (screencon == 0)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 8) == 0)
+            {
+                if (screen.get_screen_offset() == 0)
+                {
+                    screen.set_screen_offset(1);
+                }
+                else
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 120)
+            {
+                screen.set_static();
+            }
+        }
+        else if (screencon == 1)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 2) == 0)
+            {
+                if (screen.get_screen_offset() == 0)
+                {
+                    screen.set_screen_offset(1);
+                }
+                else
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 15)
+            {
+                var random_timer = -100 + floor(random(100));
+                screen.set_screen_timer(random_timer);
+                screen.set_screen_con(0);
+                screen.set_screen_sprite(spr_dw_teevie_tv_shows);
+                screen.set_screen();
+            }
+        }
+        else if (screencon == 2)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 4) == 0)
+            {
+                var offset = screen.get_screen_offset();
+                screen.set_screen_offset(offset + 1);
+                if (screen.get_screen_offset() == 4)
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 120)
+            {
+                screen.set_static();
+            }
+        }
+        else if (screencon == 3)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 4) == 0)
+            {
+                var offset = screen.get_screen_offset();
+                screen.set_screen_offset(offset + 1);
+                if (screen.get_screen_offset() == 11)
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 120)
+            {
+                screen.set_static();
+            }
+        }
+        else if (screencon == 4)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 4) == 0)
+            {
+                var offset = screen.get_screen_offset();
+                screen.set_screen_offset(offset + 1);
+                if (screen.get_screen_offset() == 4)
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 120)
+            {
+                screen.set_static();
+            }
+        }
+        else if (screencon == 5)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 4) == 0)
+            {
+                var offset = screen.get_screen_offset();
+                if (offset < 7)
+                {
+                    screen.set_screen_offset(offset + 1);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 20)
+            {
+                screen.set_static();
+            }
+        }
+        else if (screencon == 6)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 4) == 0)
+            {
+                var offset = screen.get_screen_offset();
+                screen.set_screen_offset(offset + 1);
+                if (screen.get_screen_offset() == 4)
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 120)
+            {
+                screen.set_static();
+            }
+        }
+        else if (screencon == 7)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 6) == 0)
+            {
+                var offset = screen.get_screen_offset();
+                screen.set_screen_offset(offset + 1);
+                if (screen.get_screen_offset() == 2)
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 120)
+            {
+                screen.set_static();
+            }
+        }
+        else if (screencon == 8)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 6) == 0)
+            {
+                var offset = screen.get_screen_offset();
+                screen.set_screen_offset(offset + 1);
+                if (screen.get_screen_offset() == 2)
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 120)
+            {
+                screen.set_static();
+            }
+        }
+        else if (screencon == 9)
+        {
+            if (screen.is_animated())
+            {
+                screen.increment_screen_timer();
+            }
+            if ((abs(screen.get_screen_timer()) % 6) == 0)
+            {
+                var offset = screen.get_screen_offset();
+                screen.set_screen_offset(offset + 1);
+                if (screen.get_screen_offset() == 2)
+                {
+                    screen.set_screen_offset(0);
+                }
+            }
+            if (abs(screen.get_screen_timer()) >= 120)
+            {
+                screen.set_static();
+            }
+        }
+    }
+}
+FILE ch4/gml_Object_obj_battlecontroller_Step_0.gml M 0 3
+@@ -421,9 +421,6 @@
+         {
+             if (global.spellcost[thischar][global.bmenucoord[2][global.charturn]] <= global.tension)
+             {
+-                show_message("here 1");
+-                show_message(floor(floor((global.spellcost[thischar][global.bmenucoord[2][global.charturn]] / global.maxtension) * 100) * 2.5));
+-                show_message(floor(floor((global.tension / global.maxtension) * 100) * 2.5));
+                 onebuffer = 2;
+                 global.bmenuno = 0;
+                 selnoise = 1;
+FILE ch4/gml_Object_obj_ch4_PDC10C_Step_0.gml M 1 1
+@@ -159,7 +159,7 @@
+ {
+     if (show_heart)
+     {
+-        var pressed_up = sunkus_kb_check_pressed(vk_up) || (i_ex(obj_gamecontroller) && (gamepad_button_check_released(obj_gamecontroller.gamepad_id, gp_padu) || scr_gamepad_axis_check(obj_gamecontroller.gamepad_id, 2)));
++        var pressed_up = up_p();
+         if (!pressed_up)
+         {
+             heart_timer++;
+FILE ch4/gml_Object_obj_ch4_PDC14A_noelle_Step_0.gml M 1 1
+@@ -1357,7 +1357,7 @@
+     {
+         with (drip_marker)
+         {
+-            setxy(camerax() + 201, cameray() + 113);
++            setxy(camerax() + 201 + 4, (cameray() + 113) - 10);
+         }
+         drip_marker.visible = 1;
+     }
+FILE ch4/gml_Object_obj_initializer2_Create_0.gml M 2 2
+@@ -66,14 +66,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.085";
++global.versionno = "v0.0.086";
+ if (scr_is_switch_os())
+ {
+     global.versionno = "v0.0.086";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.085";
++    global.versionno = "v0.0.086";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch4/gml_Object_obj_rhythmgame_Create_0.gml M 2 0
+@@ -52,6 +52,8 @@
+ rewind_start = 0;
+ safety_timer = 0;
+ safety_mode = false;
++muted = false;
++muted_time = 0;
+ averagetimeunit = 0;
+ safety_pos = 0;
+ smooth_timer = 0;
+FILE ch4/gml_Object_obj_rhythmgame_Step_0.gml M 10 3
+@@ -499,6 +499,11 @@
+             exit;
+         }
+         _truetrackpos = audio_sound_get_track_position(track1_main);
++        if (muted && muted_time != _truetrackpos)
++        {
++            muted = false;
++            debug_print("huh???");
++        }
+         var _posdiff = _truetrackpos - trackpos;
+         if (lose_con == 0 && !paused && _posdiff == 0 && trackpos < (track_length - 0.5))
+         {
+@@ -508,11 +513,13 @@
+                 if (!safety_mode)
+                 {
+                     safety_mode = 1;
++                    muted = true;
++                    muted_time = _truetrackpos;
+                     debug_print("safety mode engaged");
+                 }
+             }
+         }
+-        else if (!paused && abs(_posdiff) > 0.05 && abs(_posdiff) < 0.5 && lose_con == 0 && song_id != 4)
++        else if (!paused && abs(_posdiff) > 0.05 && abs(_posdiff) < 0.5 && lose_con == 0 && song_id != 4 && !muted)
+         {
+             if (smooth_timer == 0)
+             {
+@@ -545,14 +552,14 @@
+         }
+         if (safety_mode && lose_con == 0)
+         {
+-            if (smooth_timer > 0)
++            if (smooth_timer > 0 && !muted)
+             {
+                 safety_pos += (delta_time / 1000000);
+                 trackpos = remap(6, 0, safety_pos, _truetrackpos, smooth_timer);
+             }
+             else
+             {
+-                trackpos += (delta_time / 1000000);
++                trackpos += ((delta_time / 1000000) * pitch);
+             }
+             if (loop && trackpos >= track_length)
+             {

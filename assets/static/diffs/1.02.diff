@@ -1,0 +1,2976 @@
+FILE root/gml_GlobalScript_scr_init.gml M 1 1
+@@ -54,7 +54,7 @@
+ 
+ function get_version()
+ {
+-    var version = "v14";
++    var version = "v15";
+     return version;
+ }
+ 
+FILE root/gml_GlobalScript_scr_ossafe_init.gml M 56 1
+@@ -7,7 +7,7 @@
+     var titles = [];
+     if (scr_is_switch_os())
+     {
+-        titles = [new scr_switch_title("n/a", new scr_save_data_file("DELTARUNESaveData", "deltarune_ch1.sav")), new scr_switch_title("n/a", new scr_save_data_file("DELTARUNE", "deltarune_ch1.sav")), new scr_switch_title("n/a", new scr_save_data_file("DELTARUNESaveData", "deltarune_ch1.sav")), new scr_switch_title("n/a", new scr_save_data_file("DELTARUNE", "deltarune_ch1.sav"))];
++        titles = [new scr_switch_title("n/a", new scr_save_data_file("DELTARUNESaveData", "deltarune_ch1.sav")), new scr_switch_title("n/a", new scr_save_data_file("DELTARUNESaveData", "deltarune_ch1.sav"))];
+     }
+     else if (os_type == os_ps4 || os_type == os_ps5)
+     {
+@@ -133,3 +133,58 @@
+     }
+     return product_title;
+ }
++
++function scr_get_app_title_choice_text(arg0)
++{
++    var product_title = "N/A";
++    if (scr_is_demo_title(arg0))
++    {
++        if (scr_is_switch_os())
++        {
++            if (arg0.app_id == "n/a")
++            {
++                product_title = "DELTARUNE Chapter 1&2 [2021 demo]";
++                if (global.lang == "ja")
++                {
++                    product_title = "『DELTARUNE Chapter 1&2』（2021年）";
++                }
++            }
++            else if (arg0.app_id == "n/a")
++            {
++                product_title = "DELTARUNE Chapter 1&2 Demo [2025 demo]";
++                if (global.lang == "ja")
++                {
++                    product_title = "『DELTARUNE Chapter 1&2 体験版』（2025年）";
++                }
++            }
++        }
++        else
++        {
++            product_title = "DELTARUNE Chapter 1&2 [Demo]";
++            if (global.lang == "ja")
++            {
++                product_title = "体験版『DELTARUNE Chapter 1&2』";
++            }
++        }
++    }
++    else if (scr_is_full_title(arg0))
++    {
++        if (scr_is_switch_os())
++        {
++            product_title = "DELTARUNE [Nintendo Switch]";
++            if (global.lang == "ja")
++            {
++                product_title = "『DELTARUNE』（Nintendo Switch版）";
++            }
++        }
++        else
++        {
++            product_title = "DELTARUNE [PlayStation~4]";
++            if (global.lang == "ja")
++            {
++                product_title = "PlayStation~4版『DELTARUNE』";
++            }
++        }
++    }
++    return product_title;
++}
+FILE root/gml_Object_obj_CHAPTER_SELECT_Create_0.gml M 77 20
+@@ -13,6 +13,7 @@
+ _launch_data = scr_init_launch_parameters();
+ _pending_titles = [];
+ _pending_title = -4;
++_load_type = UnknownEnum.Value_0;
+ 
+ init = function()
+ {
+@@ -85,18 +86,32 @@
+                 clean_up();
+             }
+             _pending_titles = arg1;
+-            _pending_title = _pending_titles[0];
+-            var adjusted_list = [];
+-            for (var i = 0; i < array_length(_pending_titles); i++)
+-            {
+-                if (_pending_titles[i] == _pending_title)
+-                {
+-                    continue;
+-                }
+-                adjusted_list[array_length(adjusted_list)] = _pending_titles[i];
+-            }
+-            _pending_titles = adjusted_list;
+-            create_load_prompt_screen(_pending_title.title);
++            if (scr_is_switch_os())
++            {
++                if (array_length(_pending_titles) > 1)
++                {
++                    _load_type = UnknownEnum.Value_1;
++                }
++            }
++            if (_load_type == UnknownEnum.Value_0)
++            {
++                _pending_title = _pending_titles[0];
++                var adjusted_list = [];
++                for (var i = 0; i < array_length(_pending_titles); i++)
++                {
++                    if (_pending_titles[i] == _pending_title)
++                    {
++                        continue;
++                    }
++                    adjusted_list[array_length(adjusted_list)] = _pending_titles[i];
++                }
++                _pending_titles = adjusted_list;
++                create_load_prompt_screen(_pending_title.title);
++            }
++            else
++            {
++                create_load_prompt_multiple_screen(_pending_titles);
++            }
+             break;
+         case UnknownEnum.Value_6:
+             with (obj_screen_start)
+@@ -185,6 +200,28 @@
+     start_screen.fade_in();
+ };
+ 
++create_load_prompt_multiple_screen = function(arg0)
++{
++    var load_text = "Multiple DELTARUNE Save Files found.\nWould you like to import one of these?\n(This will only be asked once.)\n \n ";
++    if (global.lang == "ja")
++    {
++        load_text = "複数の『DELTARUNE』セーブデータが存在します。\nどれか1つを取り込みますか？\n（この確認は一度しか行いません）\n \n ";
++    }
++    var choices = [];
++    for (var i = 0; i < array_length(arg0); i++)
++    {
++        var prev_title = arg0[i];
++        var title_choice = scr_get_app_title_choice_text(prev_title.title);
++        var new_choice = new create_choice(title_choice, prev_title);
++        choices[array_length(choices)] = new_choice;
++    }
++    var do_not_text = (global.lang == "en") ? "Do Not Import" : "取り込まない";
++    choices[array_length(choices)] = new create_choice(do_not_text, UnknownEnum.Value_1);
++    var start_screen = instance_create(0, 0, obj_screen_start);
++    start_screen.init(id, load_text, choices, 0, -32);
++    start_screen.fade_in();
++};
++
+ create_load_deny_confirm_screen = function()
+ {
+     var deny_text = (global.lang == "en") ? "Proceed without importing?" : "取り込まずに進めますか？";
+@@ -224,14 +261,35 @@
+                     convert_loaded_file();
+                 }
+             }
+-            else if (array_length(_pending_titles) > 0)
+-            {
++            else if (event_value == UnknownEnum.Value_1)
++            {
++                if (_load_type == UnknownEnum.Value_0)
++                {
++                    if (array_length(_pending_titles) > 0)
++                    {
++                        change_state(UnknownEnum.Value_0);
++                        trigger_event("load_prompt", _pending_titles);
++                    }
++                    else
++                    {
++                        change_state(UnknownEnum.Value_6);
++                    }
++                }
++                else
++                {
++                    change_state(UnknownEnum.Value_6);
++                }
++            }
++            else
++            {
++                _pending_title = event_value;
++                global.savedata = _pending_title.save_data;
++                _restart_room = true;
+                 change_state(UnknownEnum.Value_0);
+-                trigger_event("load_prompt", _pending_titles);
+-            }
+-            else
+-            {
+-                change_state(UnknownEnum.Value_6);
++                with (obj_init_console)
++                {
++                    convert_loaded_file();
++                }
+             }
+             break;
+         case UnknownEnum.Value_6:
+@@ -327,7 +385,6 @@
+ {
+     audio_stop_all();
+     var chapstring = string(_target_chapter);
+-    show_debug_message("Attempting to launch Chapter " + string(arg0));
+     var parameters = get_chapter_switch_parameters();
+     if (scr_is_switch_os())
+     {
+FILE root/gml_Object_obj_init_console_Other_72.gml M 26 5
+@@ -190,10 +190,32 @@
+         {
+             if (scr_is_switch_os())
+             {
+-                _pending_titles[array_length(_pending_titles)] = new scr_pending_save_data(_pending_title, global.savedata);
+-                load_default_settings();
+-                audio_group_load(0);
+-                _parent.trigger_event("load_prompt", _pending_titles);
++                if (ossafe_file_exists("dr.ini"))
++                {
++                    array_insert(_pending_titles, 0, new scr_pending_save_data(_pending_title, global.savedata));
++                }
++                var adjusted_list = [];
++                for (var i = 0; i < array_length(_demo_titles); i++)
++                {
++                    if (_demo_titles[i] == _pending_title)
++                    {
++                        continue;
++                    }
++                    adjusted_list[array_length(adjusted_list)] = _demo_titles[i];
++                }
++                _demo_titles = adjusted_list;
++                var prev_title = ossafe_savedata_title_exists(_demo_titles);
++                if (prev_title != "n/a")
++                {
++                    _load_state = UnknownEnum.Value_2;
++                    _pending_title = prev_title;
++                }
++                else
++                {
++                    load_default_settings();
++                    audio_group_load(0);
++                    _parent.trigger_event("load_prompt", _pending_titles);
++                }
+             }
+             if (os_type == os_ps4 || os_type == os_ps5)
+             {
+@@ -250,7 +272,6 @@
+             {
+                 switch_save_data_commit();
+             }
+-            show_debug_message("-- ASYNC SAVE EVENT: " + string(global.savedata_debuginfo));
+         }
+         buffer_delete(global.savedata_buffer);
+         global.savedata_buffer = undefined;
+FILE root/gml_Object_obj_screen_start_Create_0.gml M 3 2
+@@ -18,7 +18,7 @@
+ _register_text = [];
+ _prompt_text = [];
+ 
+-init = function(arg0, arg1, arg2 = [], arg3 = 0)
++init = function(arg0, arg1, arg2 = [], arg3 = 0, arg4 = 0)
+ {
+     _parent = arg0;
+     _text = arg1;
+@@ -32,9 +32,10 @@
+     for (var i = 0; i < array_length(arg2); i++)
+     {
+         var choice_data = arg2[i];
+-        var choice = instance_create(280 + arg3, 260 + (i * 40), obj_ui_choice);
++        var choice = instance_create(280 + arg3, 260 + (i * 40) + arg4, obj_ui_choice);
+         choice.init(id, choice_data.choice_text, choice_data.choice_value);
+         choice.set_alpha(0);
++        choice.align_center();
+         choice.y -= 40;
+         _choices[array_length(_choices)] = choice;
+     }
+FILE root/gml_Object_obj_ui_choice_Create_0.gml M 6 0
+@@ -13,6 +13,7 @@
+ _scale = 2;
+ _color = 16777215;
+ _font = (global.lang == "en") ? 2 : 1;
++_centered = false;
+ 
+ init = function(arg0, arg1, arg2)
+ {
+@@ -20,6 +21,11 @@
+     _text = arg1;
+     _value = arg2;
+     _init = true;
++};
++
++align_center = function()
++{
++    _centered = true;
+ };
+ 
+ set_font = function(arg0)
+FILE root/gml_Object_obj_ui_choice_Draw_0.gml M 31 5
+@@ -2,17 +2,43 @@
+ {
+     exit;
+ }
+-if (_heart_enabled)
+-{
+-    draw_sprite_ext(spr_heart, 0, x, y + 8, _scale, _scale, 0, c_white, _alpha);
+-}
+ draw_set_color(_color);
+ draw_set_alpha(_alpha);
+ draw_set_font(_font);
++if (_heart_enabled)
++{
++    if (_centered)
++    {
++        var heart_offset = 0;
++        if (_font == 1)
++        {
++            heart_offset = 6;
++        }
++        draw_sprite_ext(spr_heart, 0, (320 - string_width(_text) - 30) + heart_offset, y + 8, _scale, _scale, 0, c_white, _alpha);
++    }
++    else
++    {
++        draw_sprite_ext(spr_heart, 0, x, y + 8, _scale, _scale, 0, c_white, _alpha);
++    }
++}
+ if (_font == 1)
+ {
+     _text_offset = -4;
+ }
+-draw_text_transformed(x + 30 + _text_offset, y, _text, _scale, _scale, 0);
++if (_centered)
++{
++    if (_font == 1)
++    {
++        _text_offset = 0;
++    }
++    draw_set_halign(fa_center);
++    draw_text_transformed(320 + _text_offset, y, _text, _scale, _scale, 0);
++}
++else
++{
++    draw_set_halign(fa_left);
++    draw_text_transformed(x + 30 + _text_offset, y, _text, _scale, _scale, 0);
++}
++draw_set_halign(fa_left);
+ draw_set_color(c_white);
+ draw_set_alpha(1);
+FILE ch1/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -61,14 +61,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.36";
++global.version = "1.37";
+ if (scr_is_switch_os())
+ {
+-    global.version = "1.24";
++    global.version = "1.25";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.version = "1.24";
++    global.version = "1.25";
+ }
+ old_savedata_check = false;
+ if (global.is_console)
+FILE ch1/gml_Object_obj_legend_Create_0.gml M 1 0
+@@ -28,3 +28,4 @@
+ skiptimer = 0;
+ draw_screen = true;
+ skip_buffer = 10;
++subsubcon = 0;
+FILE ch1/gml_Object_obj_legend_Draw_0.gml M 27 7
+@@ -60,15 +60,35 @@
+         if (yoff <= -260)
+         {
+             contimer += 1;
+-            if (contimer >= 40)
+-            {
+-                with (obj_switchAsyncHelper)
++            if (subsubcon == 0)
++            {
++                var dopause = false;
++                if (os_type == os_ps4 || os_type == os_ps5)
+                 {
+-                    docheck = false;
++                    var trackpos = audio_sound_get_track_position(global.currentsong[1]);
++                    var beginSil = 17.934;
++                    var endSil = 19.612;
++                    if (trackpos >= beginSil && trackpos <= endSil)
++                    {
++                        scr_debug_print(string("trackpos=" + string(trackpos)));
++                        dopause = true;
++                    }
+                 }
+-                audio_pause_sound(global.currentsong[1]);
+-            }
+-            if (contimer == 100)
++                else if (contimer >= 40)
++                {
++                    dopause = true;
++                }
++                if (dopause)
++                {
++                    subsubcon = 1;
++                    with (obj_switchAsyncHelper)
++                    {
++                        docheck = false;
++                    }
++                    audio_pause_sound(global.currentsong[1]);
++                }
++            }
++            if (contimer >= 100)
+             {
+                 con = 2;
+                 contimer = 0;
+FILE ch1/gml_Object_obj_gamecontroller_Step_1.gml A 66 0
+if (os_type == os_windows || os_type == os_linux || os_type == os_macosx)
+{
+    var controllerUpdate = -1;
+    for (var i = 0; i < gamepad_get_device_count(); i++)
+    {
+        if (i != gamepad_id)
+        {
+            if (gamepad_button_check(i, gp_face1) || gamepad_button_check(i, gp_face2) || gamepad_button_check(i, gp_face3) || gamepad_button_check(i, gp_face4) || gamepad_button_check(i, gp_padd) || gamepad_button_check(i, gp_padr) || gamepad_button_check(i, gp_padu) || gamepad_button_check(i, gp_padl) || abs(gamepad_axis_value(i, gp_axislh)) > 0.8 || abs(gamepad_axis_value(i, gp_axislv)) > 0.8)
+            {
+                controllerUpdate = i;
+                break;
+            }
+        }
+    }
+    if (controllerUpdate != -1)
+    {
+        gamepad_id = controllerUpdate;
+        gamepad_active = 1;
+        var gamepad_description = gamepad_get_description(gamepad_id);
+        if (gamepad_get_guid(gamepad_id) == "4c05e60c000000000000504944564944")
+        {
+            show_debug_message("***** Remap controller: " + gamepad_description + " to " + "DualSense Wireless Controller");
+            var mapping = "a:b1,b:b2,x:b0,y:b3,back:b8,start:b9,leftstick:b10,rightstick:b11,leftshoulder:b4,rightshoulder:b5,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a2,righty:a5,lefttrigger:a3,righttrigger:a4,";
+            gamepad_test_mapping(gamepad_id, "4c05e60c000000000000504944564944," + gamepad_description + "," + mapping);
+            gamepad_description = "DualSense Wireless Controller";
+        }
+        gamepad_type = gamepad_description;
+        if (gamepad_type != global.gamepad_type)
+        {
+            global.gamepad_type = gamepad_type;
+            scr_controls_default();
+            if (_load_enabled)
+            {
+                if (ossafe_file_exists("config_" + string(global.filechoice) + ".ini"))
+                {
+                    ossafe_ini_open("config_" + string(global.filechoice) + ".ini");
+                    for (var i = 0; i < 10; i++)
+                    {
+                        readval = ini_read_real("KEYBOARD_CONTROLS", string(i), -1);
+                        if (readval != -1)
+                        {
+                            global.input_k[i] = readval;
+                        }
+                    }
+                    for (var i = 0; i < 10; i++)
+                    {
+                        readval = ini_read_real("GAMEPAD_CONTROLS", string(i), -1);
+                        if (readval != -1)
+                        {
+                            global.input_g[i] = readval;
+                        }
+                    }
+                    var readval = ini_read_real("SHOULDERLB_REASSIGN", "SHOULDERLB_REASSIGN", gamepad_shoulderlb_reassign);
+                    if (readval != -1)
+                    {
+                        gamepad_shoulderlb_reassign = readval;
+                    }
+                    global.button0 = global.input_g[4];
+                    global.button1 = global.input_g[5];
+                    global.button2 = global.input_g[6];
+                    ossafe_ini_close();
+                }
+            }
+        }
+    }
+}
+FILE ch2/gml_GlobalScript_camerax.gml M 1 1
+@@ -1,4 +1,4 @@
+ function camerax()
+ {
+-    return __view_get(e__VW.XView, 0);
++    return camera_get_view_x(view_camera[0]);
+ }
+FILE ch2/gml_GlobalScript_cameray.gml M 1 1
+@@ -1,4 +1,4 @@
+ function cameray()
+ {
+-    return __view_get(e__VW.YView, 0);
++    return camera_get_view_y(view_camera[0]);
+ }
+FILE ch2/gml_GlobalScript_scr_cutscene_master_commands_initialize.gml M 1 1
+@@ -1,6 +1,6 @@
+ function scr_cutscene_master_commands_initialize()
+ {
+-    for (i = 0; i < 800; i++)
++    for (var i = 0; i < 800; i++)
+     {
+         command[i] = "terminate";
+         command_actor[i] = 99999999;
+FILE ch2/gml_GlobalScript_scr_gamestart_chapter_override.gml M 0 1
+@@ -38,7 +38,6 @@
+         global.flag[9] = 1;
+         global.flag[10] = 1;
+         global.flag[16] = 0.85;
+-        global.flag[17] = 0.6;
+         global.flag[20] = 0;
+         global.flag[21] = 0;
+         global.flag[31] = 1;
+FILE ch2/gml_Object_obj_controller_dininghall_Create_0.gml M 7 0
+@@ -1,3 +1,10 @@
++if (scr_debug())
++{
++    if (keyboard_check(ord("P")) || gamepad_button_check(0, gp_face4) || gamepad_button_check(1, gp_face4))
++    {
++        global.flag[382] = 0;
++    }
++}
+ if (scr_sideb_get_phase() == 3)
+ {
+     instance_destroy();
+FILE ch2/gml_Object_obj_controller_dininghall_Step_0.gml M 32 31
+@@ -13,12 +13,9 @@
+     }
+     with (obj_saucer)
+     {
+-        if (i_ex(collider))
++        with (collider)
+         {
+-            with (collider)
+-            {
+-                instance_destroy();
+-            }
++            instance_destroy();
+         }
+     }
+     with (obj_caterpillarchara)
+@@ -42,6 +39,8 @@
+ }
+ if (con == 2)
+ {
++    scr_debug_print("Con 2");
++    global.interact = 1;
+     for (var i = 0; i < 3; i++)
+     {
+         shade = instance_create(166 + (i * 104), 364, obj_marker);
+@@ -51,33 +50,25 @@
+         shade.image_yscale = 2;
+         shade.depth = 890000;
+     }
+-    with (obj_caterpillarchara)
+-    {
+-        visible = false;
+-    }
+-    with (obj_mainchara)
+-    {
+-        visible = false;
+-    }
+-    global.interact = 1;
+-    cutscene_master = scr_cutscene_make();
+-    scr_maincharacters_actors();
+-    with (obj_dogtable_controlled)
+-    {
+-        drawtype = 1;
+-    }
+-    dog = remdog;
+-    memx = dog.x;
+-    memy = dog.y;
+-    cutscene_master.save_object[0] = dog;
+     con++;
+ }
+ if (con == 3)
+ {
+-    con = -999;
+-    c_soundplay(snd_impact);
+-    c_var_instance(dog, "x", memx);
+-    c_var_instance(dog, "y", memy);
++    show_debug_message_concat("before cutscene make");
++    with (obj_camera_advanced)
++    {
++        instance_destroy();
++    }
++    scr_cutscene_make();
++    show_debug_message_concat("after cutscene make");
++    scr_maincharacters_actors();
++    show_debug_message_concat("after actors make");
++    snd_play(snd_impact);
++    dogtable.drawtype = 1;
++    dog = dogtable;
++    memx = dog.x;
++    memy = dog.y;
++    con = 4;
+     c_shake();
+     c_var_instance(dog, "depth", 890000);
+     c_sel(kr);
+@@ -121,12 +112,15 @@
+     c_wait(6);
+     c_sel(ra);
+     c_facing("r");
++    c_addxy(4, -6);
+     c_autowalk(1);
+     c_sel(kr);
+     c_facing("u");
++    c_addxy(10, 4);
+     c_autowalk(1);
+     c_sel(su);
+     c_facing("d");
++    c_addxy(8, 0);
+     c_autowalk(1);
+     c_wait(15);
+     c_sel(su);
+@@ -154,10 +148,9 @@
+     c_facing("d");
+     c_actortokris();
+     c_actortocaterpillar();
+-    c_var_instance(id, "con", 4);
+     c_terminatekillactors();
+ }
+-if (con == 4)
++if (con == 4 && !instance_exists(obj_cutscene_master))
+ {
+     with (obj_dogtable_controlled)
+     {
+@@ -174,6 +167,14 @@
+     global.flag[7] = 0;
+     global.interact = 0;
+     global.flag[382] = 1;
+-    alarm[0] = 1;
+     con++;
+ }
++if (scr_debug())
++{
++    if (gamepad_button_check(0, gp_stickl) || gamepad_button_check(1, gp_stickl) || gamepad_button_check(2, gp_stickl))
++    {
++        global.interact = 0;
++        global.flag[382] = 0;
++        room_restart();
++    }
++}
+FILE ch2/gml_Object_obj_cutscene_master_Create_0.gml M 42 6
+@@ -16,16 +16,52 @@
+ zurasu = 0;
+ mysound = -1;
+ initialized = 0;
++var inittype = 0;
++with (obj_controller_dininghall)
++{
++    inittype = 1;
++}
++with (obj_ch2_scene19a)
++{
++    inittype = 1;
++}
++with (obj_ch2_scene19b)
++{
++    inittype = 1;
++}
++with (obj_ch2_scene19c)
++{
++    inittype = 1;
++}
+ actor_selected = "noone";
+ actor_selected_id = 99999999;
+-for (i = 0; i < 20; i++)
++if (inittype == 0)
+ {
+-    actor_id[i] = 99999999;
+-    actor_name[i] = "noone";
++    for (i = 0; i < 20; i++)
++    {
++        actor_id[i] = 99999999;
++        actor_name[i] = "noone";
++    }
++    for (i = 0; i < 10; i++)
++    {
++        save_object[i] = 99999999;
++    }
++    scr_cutscene_master_commands_initialize();
+ }
+-for (i = 0; i < 10; i++)
++if (inittype == 1)
+ {
+-    save_object[i] = 99999999;
++    actor_id = array_create(20, 99999999);
++    actor_name = array_create(20, "noone");
++    save_object = array_create(10, 99999999);
++    command = array_create(800, "terminate");
++    command_actor = array_create(800, 99999999);
++    command_arg1 = array_create(800);
++    command_arg2 = array_create(800);
++    command_arg3 = array_create(800);
++    command_arg4 = array_create(800);
++    command_arg5 = array_create(800);
++    command_arg6 = array_create(800);
++    current_command = 0;
++    maximum_command = 1;
+ }
+-scr_cutscene_master_commands_initialize();
+ terminate_this_frame = 0;
+FILE ch2/gml_Object_obj_cybercity_balloon_Create_0.gml M 1 0
+@@ -9,6 +9,7 @@
+ attached = 0;
+ attachedobj = obj_city_cyberballoon_mouse;
+ balloonid = -1;
++mylerpfall = -4;
+ if (room == room_dw_city_postbaseball_3)
+ {
+     sprite_index = spr_bg_city_balloon_carrier;
+FILE ch2/gml_Object_obj_cybercity_balloon_Step_0.gml M 5 1
+@@ -55,7 +55,7 @@
+             paused = 0;
+         }
+         sprite_index = spr_bg_city_balloon_carrier;
+-        if (speed == 0)
++        if (!instance_exists(mylerpfall))
+         {
+             y += (sin(siner / 16) * 0.5);
+         }
+@@ -77,6 +77,10 @@
+     if (place_meeting(x, y, obj_forcefield))
+     {
+         broken = 1;
++    }
++    if (x == 626 && siner < 10)
++    {
++        broken = 0;
+     }
+     if (broken)
+     {
+FILE ch2/gml_Object_obj_dogtable_controlled_Collision_obj_saucer.gml M 1 1
+@@ -22,7 +22,7 @@
+ {
+     vspeed *= 0.75;
+ }
+-if (instance_number(obj_saucer) == (targ - 1) && i_ex(obj_controller_dining3))
++if (instance_number(obj_saucer) == (targ - 1) && instance_exists(obj_controller_dining3))
+ {
+     vertState = 1;
+     global.interact = 1;
+FILE ch2/gml_Object_obj_dogtable_controlled_Create_0.gml M 1 0
+@@ -24,3 +24,4 @@
+ raspr = spr_ralsei_walk_down;
+ drawtype = 0;
+ drawcustom = 0;
++collided = 0;
+FILE ch2/gml_Object_obj_dogtable_controlled_Step_1.gml M 17 0
+@@ -125,3 +125,20 @@
+ {
+     vertState = 0;
+ }
++if (!collided && room == room_dw_mansion_dininghall)
++{
++    if (y <= 194)
++    {
++        y = 194;
++        collided = true;
++        vertState = 1;
++        global.interact = 1;
++        scr_debug_print("collision happened");
++        with (obj_controller_dininghall)
++        {
++            con = 2;
++        }
++        hsp = 0;
++        vspeed = 0;
++    }
++}
+FILE ch2/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -65,14 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.42";
++global.version = "1.43";
+ if (scr_is_switch_os())
+ {
+-    global.version = "1.30";
++    global.version = "1.31";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.version = "1.30";
++    global.version = "1.31";
+ }
+ global.game_won = false;
+ global.chapter = 2;
+FILE ch2/gml_Object_obj_legend_Create_0.gml M 1 0
+@@ -28,3 +28,4 @@
+ skiptimer = 0;
+ draw_screen = true;
+ skip_buffer = 10;
++subsubcon = 0;
+FILE ch2/gml_Object_obj_legend_Draw_0.gml M 25 5
+@@ -60,13 +60,33 @@
+         if (yoff <= -260)
+         {
+             contimer += 1;
+-            if (contimer >= 40)
+-            {
+-                with (obj_switchAsyncHelper)
++            if (subsubcon == 0)
++            {
++                var dopause = false;
++                if (os_type == os_ps4 || os_type == os_ps5)
+                 {
+-                    docheck = false;
++                    var trackpos = audio_sound_get_track_position(global.currentsong[1]);
++                    var beginSil = 17.934;
++                    var endSil = 19.612;
++                    if (trackpos >= beginSil && trackpos <= endSil)
++                    {
++                        scr_debug_print(string("trackpos=" + string(trackpos)));
++                        dopause = true;
++                    }
+                 }
+-                audio_pause_sound(global.currentsong[1]);
++                else if (contimer >= 40)
++                {
++                    dopause = true;
++                }
++                if (dopause)
++                {
++                    subsubcon = 1;
++                    with (obj_switchAsyncHelper)
++                    {
++                        docheck = false;
++                    }
++                    audio_pause_sound(global.currentsong[1]);
++                }
+             }
+             if (contimer == 100)
+             {
+FILE ch2/gml_Object_obj_pushtile_room_Step_0.gml M 21 2
+@@ -1,11 +1,30 @@
++var checktype = 0;
++if (room == room_dw_city_postbaseball_2)
++{
++    checktype = 1;
++}
+ if (pushedoverride < 0)
+ {
+     pushed = 0;
+     for (var i = 0; i < 3; i++)
+     {
+-        if (place_meeting(x, y, pushChar[i]))
++        if (checktype == 0)
+         {
+-            pushed = 1;
++            if (place_meeting(x, y, pushChar[i]))
++            {
++                pushed = 1;
++            }
++        }
++        if (checktype == 1)
++        {
++            var col = instance_place(x, y, pushChar[i]);
++            if (instance_exists(col))
++            {
++                if (col.visible && col.image_alpha > 0)
++                {
++                    pushed = 1;
++                }
++            }
+         }
+     }
+ }
+FILE ch2/gml_Object_obj_room_dw_city_postbaseball_Step_0.gml M 1 1
+@@ -608,7 +608,7 @@
+             with (balloon[0])
+             {
+                 event_user(0);
+-                scr_lerpvar("y", y, other.ballremy[0], 15, 2, "out");
++                mylerpfall = scr_lerpvar("y", y, 60, 15, 2, "out");
+             }
+             balloondestroyed[0] = 0;
+         }
+FILE ch2/gml_Object_obj_gamecontroller_Step_1.gml A 66 0
+if (os_type == os_windows || os_type == os_linux || os_type == os_macosx)
+{
+    var controllerUpdate = -1;
+    for (var i = 0; i < gamepad_get_device_count(); i++)
+    {
+        if (i != gamepad_id)
+        {
+            if (gamepad_button_check(i, gp_face1) || gamepad_button_check(i, gp_face2) || gamepad_button_check(i, gp_face3) || gamepad_button_check(i, gp_face4) || gamepad_button_check(i, gp_padd) || gamepad_button_check(i, gp_padr) || gamepad_button_check(i, gp_padu) || gamepad_button_check(i, gp_padl) || abs(gamepad_axis_value(i, gp_axislh)) > 0.8 || abs(gamepad_axis_value(i, gp_axislv)) > 0.8)
+            {
+                controllerUpdate = i;
+                break;
+            }
+        }
+    }
+    if (controllerUpdate != -1)
+    {
+        gamepad_id = controllerUpdate;
+        gamepad_active = 1;
+        var gamepad_description = gamepad_get_description(gamepad_id);
+        if (gamepad_get_guid(gamepad_id) == "4c05e60c000000000000504944564944")
+        {
+            show_debug_message("***** Remap controller: " + gamepad_description + " to " + "DualSense Wireless Controller");
+            var mapping = "a:b1,b:b2,x:b0,y:b3,back:b8,start:b9,leftstick:b10,rightstick:b11,leftshoulder:b4,rightshoulder:b5,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a2,righty:a5,lefttrigger:a3,righttrigger:a4,";
+            gamepad_test_mapping(gamepad_id, "4c05e60c000000000000504944564944," + gamepad_description + "," + mapping);
+            gamepad_description = "DualSense Wireless Controller";
+        }
+        gamepad_type = gamepad_description;
+        if (gamepad_type != global.gamepad_type)
+        {
+            global.gamepad_type = gamepad_type;
+            scr_controls_default();
+            if (_load_enabled)
+            {
+                if (ossafe_file_exists("config_" + string(global.filechoice) + ".ini"))
+                {
+                    ossafe_ini_open("config_" + string(global.filechoice) + ".ini");
+                    for (var i = 0; i < 10; i++)
+                    {
+                        readval = ini_read_real("KEYBOARD_CONTROLS", string(i), -1);
+                        if (readval != -1)
+                        {
+                            global.input_k[i] = readval;
+                        }
+                    }
+                    for (var i = 0; i < 10; i++)
+                    {
+                        readval = ini_read_real("GAMEPAD_CONTROLS", string(i), -1);
+                        if (readval != -1)
+                        {
+                            global.input_g[i] = readval;
+                        }
+                    }
+                    var readval = ini_read_real("SHOULDERLB_REASSIGN", "SHOULDERLB_REASSIGN", gamepad_shoulderlb_reassign);
+                    if (readval != -1)
+                    {
+                        gamepad_shoulderlb_reassign = readval;
+                    }
+                    global.button0 = global.input_g[4];
+                    global.button1 = global.input_g[5];
+                    global.button2 = global.input_g[6];
+                    ossafe_ini_close();
+                }
+            }
+        }
+    }
+}
+FILE ch2/gml_Object_obj_mazecheese_Step_2.gml A 7 0
+if (room == room_dw_city_postbaseball_2)
+{
+    if (y > 312)
+    {
+        y = 312;
+    }
+}
+FILE ch2/gml_Object_obj_controller_dininghall_Draw_64.gml D 0 1
+exit;
+FILE ch2/gml_Object_obj_cutscene_master_Draw_64.gml D 0 3
+if (global.debug == true)
+{
+}
+FILE ch2/gml_Object_obj_dogtable_controlled_Collision_obj_solidenemy.gml D 0 9
+if (vertState == 0)
+{
+    vertState = 1;
+    global.interact = 1;
+    obj_controller_dininghall.con = 2;
+    obj_controller_dininghall.remdog = id;
+    hsp = 0;
+    vspeed = 0;
+}
+FILE ch3/gml_GlobalScript_scr_complete_save_file.gml M 2 1
+@@ -263,4 +263,5 @@
+     var iniwrite = ossafe_ini_open("dr.ini");
+     ini_write_real("VHS", "watched", arg0);
+     ossafe_ini_close();
+-}
++    ossafe_savedata_save();
++}
+FILE ch3/gml_GlobalScript_scr_gamestart_chapter_override.gml M 0 1
+@@ -60,7 +60,6 @@
+         global.flag[9] = 1;
+         global.flag[10] = 1;
+         global.flag[16] = 0.85;
+-        global.flag[17] = 0.6;
+         global.flag[20] = 0;
+         global.flag[21] = 0;
+         global.flag[31] = 1;
+FILE ch3/gml_GlobalScript_scr_get_border.gml M 5 2
+@@ -17,7 +17,10 @@
+         }
+         if (global.plot >= 122)
+         {
+-            _border_image = border_dw_tv_black;
++            if (arg0 == room_ch3_gameshowroom)
++            {
++                _border_image = border_dw_tv_black;
++            }
+         }
+         if (global.plot >= 160)
+         {
+@@ -68,7 +71,7 @@
+         {
+             _border_image = border_dw_tv_black;
+         }
+-        if (arg0 == room_dw_tv_curtain || arg0 == room_dw_chef || arg0 == room_dw_rhythm || arg0 == room_dw_ranking_a)
++        if (arg0 == room_dw_tv_curtain || arg0 == room_dw_chef || arg0 == room_dw_rhythm || arg0 == room_dw_ranking_a || arg0 == room_dw_rhythm_countdown || arg0 == room_dw_susiezilla)
+         {
+             _border_image = border_dw_blue_stars;
+         }
+FILE ch3/gml_Object_obj_actor_tenna_Draw_0.gml M 1 1
+@@ -869,7 +869,7 @@
+     {
+         d3d_set_fog(true, c_black, 0, 1);
+         draw_sprite_pos(sprite_index, image_index, x1 + dropdist, y1 + dropdist, x2 + dropdist, y2 + dropdist, x3 + dropdist, y3 + dropdist, x4 + dropdist, y4 + dropdist, 1);
+-        d3d_set_fog(false, c_white, 0, 0);
++        d3d_set_fog(false, c_black, 0, 0);
+     }
+     if (i_ex(obj_shadowman_sharpshoot_target) && threepartmode == true && !i_ex(obj_tenna_enemy))
+     {
+FILE ch3/gml_Object_obj_b1lancer_Step_0.gml M 64 47
+@@ -240,7 +240,7 @@
+     {
+         susiewalkcon = 1;
+     }
+-    if (con == 0 && obj_board_camera.con == 0)
++    if (con == 0 && obj_board_camera.con == 0 && obj_board_camera.shift == "none")
+     {
+         var triggered = 0;
+         var mytrigger = "lancercactus";
+@@ -355,7 +355,7 @@
+     if (con == 20.1)
+     {
+         pctime++;
+-        if (pctime == 10)
++        if (pctime >= 10)
+         {
+             con = 21;
+         }
+@@ -374,54 +374,71 @@
+             con = 0;
+         }
+     }
+-    if (con == 30 && scr_board_checklocation("susie", 256, 224, 2) && button.pressed)
+-    {
+-        pot1 = instance_create_board(11, 3, obj_board_grabbleObject);
+-        pot2 = instance_create_board(11, 4, obj_board_grabbleObject);
+-        pot3 = instance_create_board(5, 7, obj_board_grabbleObject);
+-        pot4 = instance_create_board(6, 7, obj_board_grabbleObject);
+-        instance_create_board(11, 3, obj_board_smokepuff);
+-        instance_create_board(11, 4, obj_board_smokepuff);
+-        instance_create_board(5, 7, obj_board_smokepuff);
+-        instance_create_board(6, 7, obj_board_smokepuff);
+-        solvetimer = 0;
+-        con = 30.1;
++    if (con == 30 && obj_board_lancerswitch.pressed)
++    {
++        var __proceed = true;
++        with (obj_board_trigger)
++        {
++            if (extflag == "potspawnchecker")
++            {
++                if (place_meeting(x, y, obj_mainchara_board))
++                {
++                    __proceed = false;
++                }
++            }
++        }
++        if (__proceed)
++        {
++            pot1 = instance_create_board(11, 3, obj_board_grabbleObject);
++            pot2 = instance_create_board(11, 4, obj_board_grabbleObject);
++            pot3 = instance_create_board(5, 7, obj_board_grabbleObject);
++            pot4 = instance_create_board(6, 7, obj_board_grabbleObject);
++            instance_create_board(11, 3, obj_board_smokepuff);
++            instance_create_board(11, 4, obj_board_smokepuff);
++            instance_create_board(5, 7, obj_board_smokepuff);
++            instance_create_board(6, 7, obj_board_smokepuff);
++            solvetimer = 0;
++            con = 30.1;
++        }
+     }
+     if (con == 30.1)
+     {
+-        solvetimer++;
+-        if (solvetimer == 1)
+-        {
+-            susie.facing = 3;
+-        }
+-        if (solvetimer == 30)
+-        {
+-            help = false;
+-            solved = 1;
+-            var susiesolvestring = stringsetloc("Hm...", "obj_b1lancer_slash_Step_0_gml_358_0");
+-            scr_couchtalk(susiesolvestring, "susie", 2, 60);
+-        }
+-        var a = 30;
+-        var b = 90;
+-        if (between(solvetimer, a + 5, b))
+-        {
+-            if (button3_h())
+-            {
+-                solvetimer = b - 1;
+-            }
+-        }
+-        if (between(solvetimer, a, b))
+-        {
+-            if (button1_p())
+-            {
+-                solvetimer = b - 1;
+-            }
+-        }
+-        if (solvetimer == 90)
+-        {
+-            timer = 0;
+-            con = 31;
+-            solvetimer = 0;
++        if (scr_board_checklocation("susie", 256, 224, 6))
++        {
++            solvetimer++;
++            if (solvetimer == 1)
++            {
++                susie.facing = 3;
++            }
++            if (solvetimer == 30)
++            {
++                help = false;
++                solved = 1;
++                var susiesolvestring = stringsetloc("Hm...", "obj_b1lancer_slash_Step_0_gml_358_0");
++                scr_couchtalk(susiesolvestring, "susie", 2, 60);
++            }
++            var a = 30;
++            var b = 90;
++            if (between(solvetimer, a + 5, b))
++            {
++                if (button3_h())
++                {
++                    solvetimer = b - 1;
++                }
++            }
++            if (between(solvetimer, a, b))
++            {
++                if (button1_p())
++                {
++                    solvetimer = b - 1;
++                }
++            }
++            if (solvetimer == 90)
++            {
++                timer = 0;
++                con = 31;
++                solvetimer = 0;
++            }
+         }
+     }
+     if (con == 31)
+FILE ch3/gml_Object_obj_b1rocks1_Create_0.gml M 2 0
+@@ -34,3 +34,5 @@
+ splatside = 0;
+ sulazy = 0;
+ ralseihitwhine = 0;
++splatmarker = -4;
++ralseiwashit = -1;
+FILE ch3/gml_Object_obj_b1rocks1_Step_0.gml M 15 0
+@@ -528,3 +528,18 @@
+     safe_delete(grabmarker);
+     grabmarker = 0;
+ }
++if (!active && ralseiwashit == 1)
++{
++    if (!instance_exists(obj_board_splattered_ralsei))
++    {
++        ralseiwashit = 2;
++        with (obj_mainchara_board)
++        {
++            if (name == "ralsei")
++            {
++                visible = true;
++                iframes = 0;
++            }
++        }
++    }
++}
+FILE ch3/gml_Object_obj_b1rocks1_Step_1.gml M 1 0
+@@ -17,6 +17,7 @@
+         ralsei.visible = false;
+         splatmarker = instance_create(round(ralsei.x / 2) * 2, round(ralsei.y / 2) * 2, obj_board_splattered_ralsei);
+         splatmarker.splatside = splatside;
++        ralseiwashit = 1;
+         var ratalk = stringsetloc("Oops.", "obj_b1rocks1_slash_Step_1_gml_19_0");
+         scr_couchtalk(ratalk, "ralsei", 2, 60);
+         npcwalk = 3;
+FILE ch3/gml_Object_obj_board_grabbablegrass_Create_0.gml M 8 1
+@@ -4,8 +4,15 @@
+ siner = 0;
+ con = 0;
+ init = 0;
+-grabdaddy = 0;
++grabdaddy = -4;
+ grabcount = 0;
+ bomb = 0;
+ active = true;
+ coin = 0;
++cameraend = 0;
++trig = -1;
++trigtime = 0;
++resetcon = 0;
++dofun = -1;
++dograb = -1;
++docanfreemove = -1;
+FILE ch3/gml_Object_obj_board_grabbablegrass_Step_0.gml M 50 15
+@@ -76,7 +76,7 @@
+             scr_delay_var("con", 10, movetime + waittime);
+         }
+     }
+-    if (con == 2)
++    if (con == 2 && obj_board_camera.con == 0 && obj_board_camera.shift == "none")
+     {
+         con = -1;
+         with (grabdaddy)
+@@ -105,12 +105,12 @@
+                 sprite_index = spr_board_pointsGet;
+                 scr_lerpvar("y", y, (y - 32) + 4, movetime, 2, "out");
+             }
+-            with (grabdaddy)
+-            {
+-                scr_var_delay("fun", 0, movetime + waittime + 4);
+-                scr_var_delay("grab", 0, movetime + waittime + 4);
+-                scr_var_delay("canfreemove", 1, movetime + waittime + 4);
+-            }
++            trig = movetime + waittime + 4;
++            trigtime = 0;
++            dofun = 0;
++            dograb = 0;
++            docanfreemove = 1;
++            resetcon = 1;
+             scr_delay_var("con", 10, movetime + waittime);
+             scr_doom(coin, movetime + waittime + 5);
+         }
+@@ -124,12 +124,12 @@
+                 image_blend = #FFECBD;
+             }
+             dirt = scr_board_marker(x, y, spr_board_holemarker, 0, 999999, 2);
+-            with (grabdaddy)
+-            {
+-                scr_var_delay("fun", 0, movetime + waittime + 4);
+-                scr_var_delay("grab", 0, movetime + waittime + 4);
+-                scr_var_delay("canfreemove", 1, movetime + waittime + 4);
+-            }
++            trig = movetime + waittime + 4;
++            trigtime = 0;
++            dofun = 0;
++            dograb = 0;
++            docanfreemove = 1;
++            resetcon = 1;
+             scr_delay_var("con", 10, movetime + waittime);
+         }
+         if (type == "pot")
+@@ -215,7 +215,7 @@
+         }
+         else
+         {
+-            instance_destroy();
++            destroy = true;
+         }
+     }
+     if (con == 20 && !i_ex(obj_board_grabobject))
+@@ -246,10 +246,45 @@
+             newGrass.puzzleid = puzzleid;
+             newGrass.infinite = infinite;
+         }
+-        instance_destroy();
++        else
++        {
++            x = room_width * 2;
++            con = 31;
++        }
+     }
+ }
+ else if (room != room_dw_puzzlecloset_1)
+ {
+     instance_destroy();
+ }
++if (resetcon == 1)
++{
++    if (obj_board_camera.con != 0 || obj_board_camera.shift != "none" || !instance_exists(grabdaddy))
++    {
++        resetcon = -1;
++        exit;
++    }
++    if (global.interact == 0 && !d_ex() && !bw_ex())
++    {
++        trigtime++;
++    }
++    if (trigtime >= trig)
++    {
++        if (dofun != -1)
++        {
++            grabdaddy.fun = dofun;
++        }
++        if (dograb != -1)
++        {
++            grabdaddy.grab = dograb;
++        }
++        if (docanfreemove != -1)
++        {
++            grabdaddy.canfreemove = docanfreemove;
++        }
++        dofun = -1;
++        dograb = -1;
++        docanfreemove = -1;
++        resetcon = 0;
++    }
++}
+FILE ch3/gml_Object_obj_board_splattered_ralsei_Step_0.gml M 22 3
+@@ -16,6 +16,19 @@
+ }
+ if (stuck == false)
+ {
++    var kris = -4;
++    var susie = -4;
++    with (obj_mainchara_board)
++    {
++        if (name == "kris")
++        {
++            kris = id;
++        }
++        if (name == "susie")
++        {
++            susie = id;
++        }
++    }
+     if (place_meeting(x, y, kris) || place_meeting(x, y, susie))
+     {
+         if (splatside == 1)
+@@ -31,8 +44,14 @@
+ if (obj_board_camera.con != 0 || instance_exists(obj_gameover_minigame))
+ {
+     scr_play_recording("ralsei", "0W");
+-    ralsei.x = x;
+-    ralsei.y = y;
+-    ralsei.visible = true;
++    with (obj_mainchara_board)
++    {
++        if (name == "ralsei")
++        {
++            x = other.x;
++            y = other.y;
++            visible = true;
++        }
++    }
+     instance_destroy();
+ }
+FILE ch3/gml_Object_obj_ch3_GSB02_Create_0.gml M 4 0
+@@ -52,6 +52,10 @@
+         visible = 0;
+     }
+     var retry_screen = instance_create(0, 0, obj_gameover_retry);
++    if (os_type == os_ps4 || os_type == os_ps5)
++    {
++        retry_screen.split_screen_timer = -3;
++    }
+ }
+ cheerloop = 0;
+ cheercon = -1;
+FILE ch3/gml_Object_obj_ch3_couch_video_Create_0.gml M 6 0
+@@ -20,3 +20,9 @@
+ {
+     videochromasampler = shader_get_sampler_index(shd_video_yuv, "v_chroma");
+ }
++target_duration = 0;
++if (scr_is_switch_os())
++{
++    target_duration = 1224;
++}
++video_position = 0;
+FILE ch3/gml_Object_obj_ch3_couch_video_Draw_0.gml M 10 1
+@@ -45,7 +45,16 @@
+             }
+         }
+     }
+-    if (video_get_position() >= (video_get_duration() - 150))
++    if (scr_is_switch_os())
++    {
++        video_position += 1;
++    }
++    else
++    {
++        target_duration = video_get_duration() - 150;
++        video_position = video_get_position();
++    }
++    if (video_position >= target_duration)
+     {
+         if (!i_ex(obj_ch3_couch_video_screenshot))
+         {
+FILE ch3/gml_Object_obj_cutscene_master_Create_0.gml M 38 6
+@@ -24,14 +24,46 @@
+ initialized = 0;
+ actor_selected = "noone";
+ actor_selected_id = 99999999;
+-for (i = 0; i < 20; i++)
++var inittype = 0;
++with (obj_ch3_GSA04)
+ {
+-    actor_id[i] = 99999999;
+-    actor_name[i] = "noone";
++    inittype = 1;
+ }
+-for (i = 0; i < 10; i++)
++with (obj_ch3_GSB02)
+ {
+-    save_object[i] = 99999999;
++    inittype = 1;
+ }
+-scr_cutscene_master_commands_initialize();
++with (obj_rhythmgame)
++{
++    inittype = 1;
++}
++if (inittype == 0)
++{
++    for (i = 0; i < 20; i++)
++    {
++        actor_id[i] = 99999999;
++        actor_name[i] = "noone";
++    }
++    for (i = 0; i < 10; i++)
++    {
++        save_object[i] = 99999999;
++    }
++    scr_cutscene_master_commands_initialize();
++}
++if (inittype == 1)
++{
++    actor_id = array_create(20, 99999999);
++    actor_name = array_create(20, "noone");
++    save_object = array_create(10, 99999999);
++    command = array_create(800, "terminate");
++    command_actor = array_create(800, 99999999);
++    command_arg1 = array_create(800);
++    command_arg2 = array_create(800);
++    command_arg3 = array_create(800);
++    command_arg4 = array_create(800);
++    command_arg5 = array_create(800);
++    command_arg6 = array_create(800);
++    current_command = 0;
++    maximum_command = 1;
++}
+ terminate_this_frame = 0;
+FILE ch3/gml_Object_obj_dw_teevie_susiezilla_Create_0.gml M 18 1
+@@ -6,7 +6,7 @@
+ timer = 0;
+ sukcon = 0;
+ suktimer = 0;
+-susie = 0;
++susie = -4;
+ sureal = 0;
+ targ = 0;
+ killmove = 0;
+@@ -18,3 +18,20 @@
+ signx = camerax() + 320;
+ signy = -400;
+ vis = true;
++fightcon = 0;
++timer2 = 0;
++suwalktarg = 
++{
++    x: 0,
++    y: 0
++};
++sustart = 
++{
++    x: 0,
++    y: 0
++};
++
++scr_returnwait = function(arg0, arg1, arg2, arg3, arg4)
++{
++    return max(1, round(point_distance(arg0, arg1, arg2, arg3) / arg4));
++};
+FILE ch3/gml_Object_obj_dw_teevie_susiezilla_Draw_0.gml M 4 3
+@@ -1,7 +1,8 @@
+-var count = 0;
++var cx = camerax();
++var cy = cameray();
+ if (nohouses == 1)
+ {
+-    signx = lerp(signx, camerax() + 320, 0.16666666666666666);
++    signx = lerp(signx, cx + 320, 0.16666666666666666);
+     timer++;
+     if (timer == 15 || timer == 30 || timer == 37)
+     {
+@@ -12,7 +13,7 @@
+         scr_lerpvar("signy", signy, -120, 30, 3, "in");
+         if (!i_ex(obj_dw_points_get_display))
+         {
+-            with (instance_create(camerax() + 320, signy + 140, obj_dw_points_get_display))
++            with (instance_create(cx + 320, signy + 140, obj_dw_points_get_display))
+             {
+                 depth = other.depth - 1;
+                 if (global.interact == 0)
+FILE ch3/gml_Object_obj_dw_teevie_susiezilla_Step_0.gml M 158 132
+@@ -1,4 +1,6 @@
+ depth = 5000;
++var cx = camerax();
++var cy = cameray();
+ if (init == 0)
+ {
+     with (obj_caterpillarchara)
+@@ -10,25 +12,33 @@
+         }
+     }
+ }
+-if (sukcon == 0 && !killmove)
+-{
+-    with (obj_mainchara)
+-    {
+-        var xloc = x + 18;
+-        var yloc = y + 60;
+-        var radius = 120;
+-        if (i_ex(collision_rectangle(xloc - radius, yloc - (radius / 2), xloc + radius, yloc + (radius / 2), obj_susiezilla_house_single, 0, 0)))
+-        {
+-            other.sukcon = 1;
++if (sukcon == 0)
++{
++    if (global.interact == 0)
++    {
++        var _target = -4;
++        with (obj_mainchara)
++        {
++            var xloc = x + 18;
++            var yloc = y + 60;
++            var radius = 120;
++            _target = collision_rectangle(xloc - radius, yloc - (radius / 2), xloc + radius, yloc + (radius / 2), obj_susiezilla_house_single, 0, 0);
++        }
++        if (instance_exists(_target))
++        {
++            if (_target.myhealth > 0)
++            {
++                sukcon = 1;
++            }
++        }
++        else if (susie.follow == false)
++        {
++            sukcon = 4;
+         }
+     }
+ }
+ if (sukcon == 1)
+ {
+-    if (killmove)
+-    {
+-        sukcon = 0;
+-    }
+     susie.follow = false;
+     susie.fun = 1;
+     targ = instance_nearest(susie.x, susie.y, obj_susiezilla_house_single);
+@@ -39,35 +49,63 @@
+     {
+         targx = (targ.x + 36) - 8;
+     }
+-    walktime = round(point_distance(susie.x, susie.y, targ.x, targ.y) / 8);
+-    if (walktime < 1)
+-    {
+-        walktime = 1;
+-    }
+-    with (susie)
+-    {
+-        if (x > targx)
+-        {
+-            sprite_index = spr_susie_walk_left_dw;
+-        }
+-        else
+-        {
+-            sprite_index = spr_susie_walk_right_dw;
+-        }
+-        image_speed = 0.25;
+-        scr_lerpvar("x", x, targx, other.walktime);
+-        scr_lerpvar("y", y, targy, other.walktime);
+-    }
+-    sukcon = -1;
+-    scr_delay_var("sukcon", 2, walktime + 1);
++    suwalktarg.x = targx;
++    suwalktarg.y = targy;
++    sustart.x = susie.x;
++    sustart.y = susie.y;
++    walktime = scr_returnwait(susie.x, susie.y, suwalktarg.x, suwalktarg.y, 8);
++    sukcon = 1.5;
++    timer2 = 0;
+     suktimer = 0;
+ }
++if (sukcon == 1.5)
++{
++    if (global.interact == 0)
++    {
++        timer2++;
++        susie.x = lerp(sustart.x, suwalktarg.x, timer2 / walktime);
++        susie.y = lerp(sustart.y, suwalktarg.y, timer2 / walktime);
++        var facing = point_direction(susie.x, susie.y, suwalktarg.x, suwalktarg.y);
++        with (susie)
++        {
++            facing += 90;
++            if (facing > 360)
++            {
++                facing -= 360;
++            }
++            facing = round(facing / 90);
++            if (facing == 4)
++            {
++                facing = 0;
++            }
++            switch (facing)
++            {
++                case 0:
++                    sprite_index = spr_susie_walk_down_dw;
++                    break;
++                case 1:
++                    sprite_index = spr_susie_walk_right_dw;
++                    break;
++                case 2:
++                    sprite_index = spr_susie_walk_up_dw;
++                    break;
++                case 3:
++                    sprite_index = spr_susie_walk_left_dw;
++                    break;
++            }
++            image_index += 0.25;
++        }
++        if (timer2 >= walktime)
++        {
++            setxy(suwalktarg.x, suwalktarg.y, susie);
++            timer2 = 0;
++            sukcon = 2;
++            suktimer = 0;
++        }
++    }
++}
+ if (sukcon == 2)
+ {
+-    if (killmove)
+-    {
+-        sukcon = 0;
+-    }
+     suktimer++;
+     if (suktimer == 1)
+     {
+@@ -137,107 +175,98 @@
+ {
+     targ = -4;
+     targ = instance_nearest(susie.x, susie.y, obj_susiezilla_house_single);
+-    var targx, targy;
+-    if (i_ex(targ))
+-    {
+-        targx = targ.x - 36 - 18;
+-        targy = targ.y - 62;
++    if (instance_exists(targ))
++    {
++        var targx = targ.x - 36 - 18;
++        var targy = targ.y - 62;
+         if (susie.x > targ.x)
+         {
+             targx = (targ.x + 36) - 8;
+         }
+-    }
+-    if (!i_ex(targ))
++        suwalktarg.x = targx;
++        suwalktarg.y = targy;
++        sustart.x = susie.x;
++        sustart.y = susie.y;
++        walktime = scr_returnwait(susie.x, susie.y, suwalktarg.x, suwalktarg.y, 8);
++    }
++    if (!instance_exists(targ))
+     {
+         walktime = 99;
+     }
++    else if (targ.x < cx || targ.x > (cx + 640))
++    {
++        walktime = 99;
++    }
++    timer2 = 0;
++    suktimer = 0;
++    if (walktime > 20)
++    {
++        sukcon = 4;
++    }
+     else
+     {
+-        walktime = round(point_distance(susie.x, susie.y, targx, targy) / 8);
+-    }
+-    var toolong = 90;
+-    if (walktime > 90)
+-    {
+-        sukcon = 4;
+-    }
+-    else
+-    {
+-        if (walktime < 1)
+-        {
+-            walktime = 1;
+-        }
++        sukcon = 1.5;
++    }
++}
++if (sukcon == 4)
++{
++    if (global.interact == 0)
++    {
+         with (susie)
+         {
+-            if (x > targx)
+-            {
+-                sprite_index = spr_susie_walk_left_dw;
++            var _s = 
++            {
++                x: x + 18,
++                y: y + 82
++            };
++            var _k = 
++            {
++                x: obj_mainchara.x + 18,
++                y: obj_mainchara.y + 70
++            };
++            if (point_distance(_s.x, _s.y, _k.x, _k.y) > 64)
++            {
++                var _x = x;
++                var _y = y;
++                var dir = point_direction(_s.x, _s.y, _k.x, _k.y);
++                x += lengthdir_x(8, dir);
++                y += lengthdir_y(8, dir);
++                var facing = dir;
++                facing += 90;
++                if (facing > 360)
++                {
++                    facing -= 360;
++                }
++                facing = round(facing / 90);
++                if (facing == 4)
++                {
++                    facing = 0;
++                }
++                switch (facing)
++                {
++                    case 0:
++                        sprite_index = spr_susie_walk_down_dw;
++                        break;
++                    case 1:
++                        sprite_index = spr_susie_walk_right_dw;
++                        break;
++                    case 2:
++                        sprite_index = spr_susie_walk_up_dw;
++                        break;
++                    case 3:
++                        sprite_index = spr_susie_walk_left_dw;
++                        break;
++                }
++                image_index += 0.25;
+             }
+             else
+             {
+-                sprite_index = spr_susie_walk_right_dw;
+-            }
+-            image_speed = 0.25;
+-            scr_lerpvar("x", x, targx, other.walktime);
+-            scr_lerpvar("y", y, targy, other.walktime);
+-        }
+-        sukcon = -1;
+-        scr_delay_var("sukcon", 2, walktime + 1);
+-        suktimer = 0;
+-    }
+-}
+-if (sukcon == 4)
+-{
+-    with (susie)
+-    {
+-        if (point_distance(x, y, obj_mainchara.x, obj_mainchara.y) > 64)
+-        {
+-            if (x < obj_mainchara.x)
+-            {
+-                sprite_index = spr_susie_walk_right_dw;
+-            }
+-            else
+-            {
+-                sprite_index = spr_susie_walk_left_dw;
+-            }
+-            image_speed = 0.25;
+-            move_towards_point(obj_mainchara.x, obj_mainchara.y - 16, 8);
+-        }
+-        else
+-        {
+-            speed = 0;
+-            follow = true;
+-            fun = false;
+-            scr_caterpillar_interpolate();
+-            other.sukcon = 0;
+-        }
+-    }
+-}
+-if (killmove)
+-{
+-    with (obj_npc_PAspeaker)
+-    {
+-        instance_destroy();
+-    }
+-    with (obj_lerpvar)
+-    {
+-        if (target == other.susie)
+-        {
+-            debug_print("lerpkilled:" + string(id));
+-            instance_destroy();
+-        }
+-    }
+-    susie.speed = 0;
+-    if (fighthappened == false)
+-    {
+-        if (i_ex(obj_battleback))
+-        {
+-            fighthappened = true;
+-        }
+-    }
+-    if (fighthappened == true && !i_ex(obj_battleback))
+-    {
+-        fighthappened = false;
+-        killmove = 0;
++                follow = true;
++                fun = false;
++                scr_caterpillar_interpolate();
++                other.sukcon = 0;
++            }
++        }
+     }
+ }
+ if (nohouses == 0)
+@@ -245,10 +274,10 @@
+     if (!i_ex(obj_susiezilla_house_single))
+     {
+         snd_play(snd_won);
+-        scr_confetti_ext(camerax() - 10, cameray() + 300, 15, 40, 20, 192, 356, 2);
+-        scr_confetti_ext(camerax() + 640 + 10, cameray() + 300, 165, 40, 20, 192, 356, 2);
++        scr_confetti_ext(cx - 10, cy + 300, 15, 40, 20, 192, 356, 2);
++        scr_confetti_ext(cx + 640 + 10, cy + 300, 165, 40, 20, 192, 356, 2);
+         nohouses = 1;
+-        signx = camerax() + 320;
++        signx = cx + 320;
+         with (scr_lerpvar("signy", -400, 60, 40, -3, "out"))
+         {
+             respectglobalinteract = true;
+@@ -256,6 +285,3 @@
+         timer = 0;
+     }
+ }
+-if (nohouses == 1)
+-{
+-}
+FILE ch3/gml_Object_obj_gameover_retry_Draw_0.gml M 8 9
+@@ -1,14 +1,13 @@
+ split_screen_timer++;
+-if (split_screen_timer == 1)
+-{
+-    scr_lerpvar("split_screen_offset", 0, 340, 30);
+-}
+-if (split_screen_timer == 60)
++split_screen_offset = lerp(0, 340, split_screen_timer / 30);
++if (split_screen_timer > 30)
+ {
+     instance_destroy();
+     exit;
+ }
+-draw_set_color(c_black);
+-ossafe_fill_rectangle(camerax() - split_screen_offset, cameray(), (camerax() - split_screen_offset) + (view_wport[0] / 2), cameray() + view_hport[0]);
+-ossafe_fill_rectangle(camerax() + (view_wport[0] / 2) + split_screen_offset, cameray(), camerax() + view_wport[0] + split_screen_offset, cameray() + view_hport[0]);
+-draw_set_color(c_white);
++var cx = camera_get_view_x(view_camera[0]);
++var cy = camera_get_view_y(view_camera[0]);
++draw_set_color(c_red);
++var off = clamp(split_screen_offset, 0, 340);
++draw_sprite_ext(spr_pxwhite, 0, cx - off, cy, 320, 480, 0, c_black, 1);
++draw_sprite_ext(spr_pxwhite, 0, cx + 320 + off, cy, 320, 480, 0, c_black, 1);
+FILE ch3/gml_Object_obj_heroparent_Draw_0.gml M 5 0
+@@ -6,6 +6,10 @@
+ if (global.chapter == 3 && normalsprite == spr_gameshow_drowningRalsei_ralsei_origin_edit)
+ {
+     scale = 1;
++}
++if (i_ex(obj_tenna_enemy))
++{
++    d3d_set_fog(false, c_black, 0, 1);
+ }
+ if (hurt == 1 && state != 8 && global.hp[global.char[myself]] > 0)
+ {
+@@ -26,6 +30,7 @@
+ {
+     sprite_index = thissprite;
+     image_index = index;
++    image_blend = c_white;
+     draw_sprite_ext(thissprite, index, x, y, scale, scale, 0, image_blend, image_alpha);
+     if (flash == 1)
+     {
+FILE ch3/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -65,14 +65,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.089";
++global.versionno = "v0.0.091";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.085";
++    global.versionno = "v0.0.088";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.087";
++    global.versionno = "v0.0.090";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch3/gml_Object_obj_legend_Create_0.gml M 1 0
+@@ -26,3 +26,4 @@
+ }
+ skipped = 0;
+ skiptimer = 0;
++subsubcon = 0;
+FILE ch3/gml_Object_obj_legend_Draw_0.gml M 26 7
+@@ -54,15 +54,34 @@
+     if (yoff <= -260)
+     {
+         contimer += 1;
+-        if (contimer >= 40)
+-        {
+-            with (obj_switchAsyncHelper)
++        if (subsubcon == 0)
++        {
++            var dopause = false;
++            if (os_type == os_ps4 || os_type == os_ps5)
+             {
+-                docheck = false;
++                var trackpos = audio_sound_get_track_position(global.currentsong[1]);
++                var beginSil = 17.934;
++                var endSil = 19.612;
++                if (trackpos >= beginSil && trackpos <= endSil)
++                {
++                    dopause = true;
++                }
+             }
+-            audio_pause_sound(global.currentsong[1]);
+-        }
+-        if (contimer == 100)
++            else if (contimer >= 40)
++            {
++                dopause = true;
++            }
++            if (dopause)
++            {
++                subsubcon = 1;
++                with (obj_switchAsyncHelper)
++                {
++                    docheck = false;
++                }
++                audio_pause_sound(global.currentsong[1]);
++            }
++        }
++        if (contimer >= 100)
+         {
+             con = 2;
+             contimer = 0;
+FILE ch3/gml_Object_obj_lightemup_controller_Step_0.gml M 6 15
+@@ -167,21 +167,12 @@
+     else if ((button3_h() == 1 || button1_h() == 1) && cursor_shoottimer > 0 && shooting_enabled == true)
+     {
+         cursor_shoottimer = -3;
+-        if (global.hp[1] > 0 || (i_ex(obj_tenna_enemy) && obj_tenna_enemy.keep_em_alive == true))
+-        {
+-            inst = instance_create(obj_herokris.x + 27 + 34, obj_herokris.y + 33 + 12, obj_shadowman_sharpshoot_heart);
+-            inst.depth = obj_heroralsei.depth - 10;
+-        }
+-        if ((global.hp[2] > 0 && i_ex(obj_herosusie)) || (i_ex(obj_tenna_enemy) && obj_tenna_enemy.keep_em_alive == true))
+-        {
+-            inst = instance_create(obj_herosusie.x + 27 + 49, obj_herosusie.y + 42, obj_shadowman_sharpshoot_heart);
+-            inst.depth = obj_heroralsei.depth - 10;
+-        }
+-        if ((global.hp[3] > 0 && i_ex(obj_heroralsei)) || (i_ex(obj_tenna_enemy) && obj_tenna_enemy.keep_em_alive == true))
+-        {
+-            inst = instance_create(obj_heroralsei.x + 47 + 32, (obj_heroralsei.y + 50) - 3, obj_shadowman_sharpshoot_heart);
+-            inst.depth = obj_heroralsei.depth - 10;
+-        }
++        inst = instance_create(obj_herokris.x + 27 + 34, obj_herokris.y + 33 + 12, obj_shadowman_sharpshoot_heart);
++        inst.depth = obj_heroralsei.depth - 10;
++        inst = instance_create(obj_herosusie.x + 27 + 49, obj_herosusie.y + 42, obj_shadowman_sharpshoot_heart);
++        inst.depth = obj_heroralsei.depth - 10;
++        inst = instance_create(obj_heroralsei.x + 47 + 32, (obj_heroralsei.y + 50) - 3, obj_shadowman_sharpshoot_heart);
++        inst.depth = obj_heroralsei.depth - 10;
+         snd_play_x(snd_noise, 0.2, 1.1 + random(0.2));
+     }
+     if (endattack)
+FILE ch3/gml_Object_obj_npc_room_Other_10.gml M 1 1
+@@ -1855,7 +1855,7 @@
+         {
+             scr_speaker("no_name");
+             msgsetloc(0, "* Ooo la la. The purple worlds^1, you think they give the creeps./", "obj_npc_room_slash_Other_10_gml_2030_0");
+-            msgnextloc("* Tsk..^1. You have seen not but that tempered by light./", "obj_npc_room_slash_Other_10_gml_2031_0");
++            msgnextloc("* Tsk..^1. You have seen naught but that tempered by light./", "obj_npc_room_slash_Other_10_gml_2031_0");
+             msgnextloc("* You should thank Tenna for brightening everything up./%", "obj_npc_room_slash_Other_10_gml_2032_0_b");
+         }
+     }
+FILE ch3/gml_Object_obj_popularboy_act_Draw_0.gml M 4 0
+@@ -1,3 +1,7 @@
++if (timer < 2)
++{
++    exit;
++}
+ var alphaset = 0;
+ if (timer < 10)
+ {
+FILE ch3/gml_Object_obj_readable_room1_Other_10.gml M 6 0
+@@ -1,3 +1,4 @@
++var stayer = 0;
+ myinteract = 3;
+ global.msc = 0;
+ global.typer = 5;
+@@ -2747,6 +2748,7 @@
+     {
+         global.msc = 1347;
+         scr_text(global.msc);
++        stayer = 4;
+     }
+     else if (extflag == "door_susiezilla")
+     {
+@@ -2881,6 +2883,10 @@
+ if (skip == 0)
+ {
+     mydialoguer = instance_create(0, 0, obj_dialoguer);
++    with (mydialoguer)
++    {
++        stay = stayer;
++    }
+ }
+ read += 1;
+ if (skip == 1)
+FILE ch3/gml_Object_obj_shadowman_enemy_Draw_0.gml M 1 1
+@@ -1,5 +1,5 @@
+ firstframe++;
+-if (firstframe == 1)
++if (firstframe == 1 && room != room_dw_teevie_large_01)
+ {
+     exit;
+ }
+FILE ch3/gml_Object_obj_shadowman_sharpshoot_cursor_Step_0.gml M 4 7
+@@ -54,17 +54,14 @@
+     if (button3_h() == 1 && shoottimer > 0 && ammo > 0 && stopshooting == false)
+     {
+         shoottimer = -3;
+-        if (global.hp[1] > 0)
+-        {
+-            instance_create(obj_herokris.x + 27 + 34, obj_herokris.y + 33 + 12, obj_shadowman_sharpshoot_heart);
+-            ammo -= 1;
+-        }
+-        if (global.hp[2] > 0 && i_ex(obj_herosusie))
++        instance_create(obj_herokris.x + 27 + 34, obj_herokris.y + 33 + 12, obj_shadowman_sharpshoot_heart);
++        ammo -= 1;
++        if (i_ex(obj_herosusie))
+         {
+             instance_create(obj_herosusie.x + 27 + 49, obj_herosusie.y + 42, obj_shadowman_sharpshoot_heart);
+             ammo -= 1;
+         }
+-        if (global.hp[3] > 0 && i_ex(obj_heroralsei))
++        if (i_ex(obj_heroralsei))
+         {
+             instance_create(obj_heroralsei.x + 47 + 32, (obj_heroralsei.y + 50) - 3, obj_shadowman_sharpshoot_heart);
+             ammo -= 1;
+FILE ch3/gml_Object_obj_susiezilla_house_single_Create_0.gml M 1 0
+@@ -42,3 +42,4 @@
+     solidmade = 0;
+     scr_depth();
+ }
++brokemefail = 0;
+FILE ch3/gml_Object_obj_susiezilla_house_single_Step_0.gml M 16 0
+@@ -186,3 +186,19 @@
+ }
+ myxcenter = x + 20;
+ myycenter = y + 20;
++if (room == room_dw_teevie_susiezilla)
++{
++    if (sprite_index == spr_susiezilla_house)
++    {
++        if (myhealth == 0)
++        {
++            brokemefail++;
++            if (brokemefail > 3)
++            {
++                scr_marker_ext(x, y, sprite_index, 2, 2, 0, image_index, image_blend, depth);
++                instance_destroy();
++                exit;
++            }
++        }
++    }
++}
+FILE ch3/gml_Object_obj_watercooler_enemy_Step_0.gml M 1 1
+@@ -279,7 +279,7 @@
+         scr_battle_sprite_set("kris", spr_kris_zoosuit_cup, 0, true);
+         scr_battle_sprite_set("susie", spr_susie_zoosuit_cup, 0, true);
+         scr_battle_sprite_set("ralsei", spr_ralsei_zoosuit_cup, 0, true);
+-        msgsetloc(0, "* Everyone chat around the watercooler./%", "obj_watercooler_enemy_slash_Step_0_gml_226_0");
++        msgsetloc(0, "* Everyone chatted around the watercooler./%", "obj_watercooler_enemy_slash_Step_0_gml_226_0");
+         scr_battletext_default();
+         acting = 3.1;
+     }
+FILE ch3/gml_Object_obj_gamecontroller_Step_1.gml A 66 0
+if (os_type == os_windows || os_type == os_linux || os_type == os_macosx)
+{
+    var controllerUpdate = -1;
+    for (var i = 0; i < gamepad_get_device_count(); i++)
+    {
+        if (i != gamepad_id)
+        {
+            if (gamepad_button_check(i, gp_face1) || gamepad_button_check(i, gp_face2) || gamepad_button_check(i, gp_face3) || gamepad_button_check(i, gp_face4) || gamepad_button_check(i, gp_padd) || gamepad_button_check(i, gp_padr) || gamepad_button_check(i, gp_padu) || gamepad_button_check(i, gp_padl) || abs(gamepad_axis_value(i, gp_axislh)) > 0.8 || abs(gamepad_axis_value(i, gp_axislv)) > 0.8)
+            {
+                controllerUpdate = i;
+                break;
+            }
+        }
+    }
+    if (controllerUpdate != -1)
+    {
+        gamepad_id = controllerUpdate;
+        gamepad_active = 1;
+        var gamepad_description = gamepad_get_description(gamepad_id);
+        if (gamepad_get_guid(gamepad_id) == "4c05e60c000000000000504944564944")
+        {
+            show_debug_message("***** Remap controller: " + gamepad_description + " to " + "DualSense Wireless Controller");
+            var mapping = "a:b1,b:b2,x:b0,y:b3,back:b8,start:b9,leftstick:b10,rightstick:b11,leftshoulder:b4,rightshoulder:b5,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a2,righty:a5,lefttrigger:a3,righttrigger:a4,";
+            gamepad_test_mapping(gamepad_id, "4c05e60c000000000000504944564944," + gamepad_description + "," + mapping);
+            gamepad_description = "DualSense Wireless Controller";
+        }
+        gamepad_type = gamepad_description;
+        if (gamepad_type != global.gamepad_type)
+        {
+            global.gamepad_type = gamepad_type;
+            scr_controls_default();
+            if (_load_enabled)
+            {
+                if (ossafe_file_exists("config_" + string(global.filechoice) + ".ini"))
+                {
+                    ossafe_ini_open("config_" + string(global.filechoice) + ".ini");
+                    for (var i = 0; i < 10; i++)
+                    {
+                        readval = ini_read_real("KEYBOARD_CONTROLS", string(i), -1);
+                        if (readval != -1)
+                        {
+                            global.input_k[i] = readval;
+                        }
+                    }
+                    for (var i = 0; i < 10; i++)
+                    {
+                        readval = ini_read_real("GAMEPAD_CONTROLS", string(i), -1);
+                        if (readval != -1)
+                        {
+                            global.input_g[i] = readval;
+                        }
+                    }
+                    var readval = ini_read_real("SHOULDERLB_REASSIGN", "SHOULDERLB_REASSIGN", gamepad_shoulderlb_reassign);
+                    if (readval != -1)
+                    {
+                        gamepad_shoulderlb_reassign = readval;
+                    }
+                    global.button0 = global.input_g[4];
+                    global.button1 = global.input_g[5];
+                    global.button2 = global.input_g[6];
+                    ossafe_ini_close();
+                }
+            }
+        }
+    }
+}
+FILE ch3/gml_Object_obj_room_ranking_b_Other_5.gml A 1 0
+scr_keyitemremove(8);
+FILE ch3/gml_RoomCC_room_board_1_115_PreCreate.gml A 1 0
+extflag = "potspawnchecker";
+FILE ch3/gml_RoomCC_room_board_1_116_PreCreate.gml A 1 0
+extflag = "potspawnchecker";
+FILE ch4/gml_GlobalScript_scr_damage.gml M 12 0
+@@ -254,6 +254,18 @@
+                 hpdiff = 5;
+             }
+             dmgwriter = instance_create(__targx, __targy, obj_dmgwriter);
++            if (i_ex(obj_mike_attack_controller))
++            {
++                dmgwriter.x = obj_heart.x;
++                dmgwriter.y = obj_heart.y;
++                dmgwriter.xstart = dmgwriter.x;
++                dmgwriter.ystart = dmgwriter.y;
++                if (global.char[1] != 0 && global.char[2] != 0)
++                {
++                    doomtype = target;
++                }
++                dmgwriter.depth = obj_heart.depth - 1000;
++            }
+             dmgwriter.damage = hpdiff;
+             dmgwriter.type = doomtype;
+             if (global.chapter == 4)
+FILE ch4/gml_GlobalScript_scr_gamestart_chapter_override.gml M 0 1
+@@ -49,7 +49,6 @@
+         global.flag[9] = 1;
+         global.flag[10] = 1;
+         global.flag[16] = 0.85;
+-        global.flag[17] = 0.6;
+         global.flag[20] = 0;
+         global.flag[21] = 0;
+         global.flag[31] = 1;
+FILE ch4/gml_GlobalScript_scr_mic_record.gml M 5 2
+@@ -33,8 +33,11 @@
+ {
+     if (global.use_mic)
+     {
+-        audio_stop_recording(audio_record);
+-        buffer_delete(audio_buffer);
++        if (audio_record != -4)
++        {
++            audio_stop_recording(audio_record);
++            buffer_delete(audio_buffer);
++        }
+         audio_record = audio_start_recording(global.microphone);
+         audio_buffer = buffer_create(9600, buffer_fixed, 2);
+     }
+FILE ch4/gml_GlobalScript_scr_weaponinfo.gml M 2 2
+@@ -677,7 +677,7 @@
+             weaponchar4temp = 0;
+             weaponicontemp = 1;
+             weaponabilityicontemp = 7;
+-            weaponabilitytemp = "$ +5%";
++            weaponabilitytemp = stringsetloc("$ +5%", "scr_weaponinfo_slash_scr_weaponinfo_gml_716_0");
+             value = 999;
+             break;
+         case 54:
+@@ -699,7 +699,7 @@
+             weaponchar4temp = 0;
+             weaponicontemp = 2;
+             weaponabilityicontemp = 13;
+-            weaponabilitytemp = "Vampire";
++            weaponabilitytemp = stringsetloc("Vampire", "scr_weaponinfo_slash_scr_weaponinfo_gml_739_0");
+             value = 1234;
+             break;
+     }
+FILE ch4/gml_Object_obj_ch4_PDC03_catty_preach_Create_0.gml M 1 1
+@@ -3,7 +3,7 @@
+     instance_destroy();
+     exit;
+ }
+-speech = [string_hash_to_newline(stringsetloc("Oh my god, so like, the Angel,#that's watching over all of us?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_10_0")), string_hash_to_newline(stringsetloc("It has, like, this COOL prophecy,#like, foretold by time and space.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_11_0")), string_hash_to_newline(stringsetloc("And, like, um...#ummm... like, like...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_12_0")), string_hash_to_newline(stringsetloc("OK, so like, I'm kind of#paraphrasing here, but,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_13_0")), string_hash_to_newline(stringsetloc("There's, like, these heroes,#and they're like, SO cool.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_14_0")), string_hash_to_newline(stringsetloc("They have like,#swords and stuff?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_15_0")), string_hash_to_newline(stringsetloc("And there's one with like,#ummm, horns?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_16_0")), string_hash_to_newline(stringsetloc("He's honestly SO cute.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_17_0")), string_hash_to_newline(stringsetloc("I mean, there, like,#aren't any pictures, but like,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_18_0")), string_hash_to_newline(stringsetloc("IDK why, I just imagine him,#as, like, cute!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_19_0")), string_hash_to_newline(stringsetloc("Like, OMG, pinch his cheeks and#give him a pumpkin pie!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_20_0")), string_hash_to_newline(stringsetloc("Give him a, like, a fat-free#cat food coupon clipping!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_21_0")), string_hash_to_newline(stringsetloc("We, have like, such A HUGE pile#of those to get rid OMG", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_22_0")), string_hash_to_newline(stringsetloc("But, like, what's amazing,#is how, like, these heroes,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_23_0")), string_hash_to_newline(stringsetloc("Are like,#oh my god, they're like...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_24_0")), string_hash_to_newline(stringsetloc("The thing is, they could be like,#any one of us, you know?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_25_0")), string_hash_to_newline(stringsetloc("So, like, that's the thing, like,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_26_0")), string_hash_to_newline(stringsetloc("You gotta keep in mind#we could ALL be!!!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_27_0")), string_hash_to_newline(stringsetloc("Someone that might#change the world, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_28_0")), string_hash_to_newline(stringsetloc("So we should all, like...#be nice to each other, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_29_0")), string_hash_to_newline(stringsetloc("That's, like, the main... thingy?#Of our religion, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_30_0")), string_hash_to_newline(stringsetloc("Like, just be nice to everyone!#We're all family!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_31_0")), string_hash_to_newline(stringsetloc("No matter what kinda person#or who they are!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_32_0")), string_hash_to_newline(stringsetloc("Like, we believe weird crap#but we're totally, like, welcoming!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_33_0")), string_hash_to_newline(stringsetloc("You don't know who's gonna#grow up to be a hero, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_34_0")), string_hash_to_newline(stringsetloc("Like... even maybe, like,#I'm actually a Hero too?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_35_0")), string_hash_to_newline(stringsetloc("Like, maybe I'm keeping#a secret from you guys...?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_36_0")), string_hash_to_newline(stringsetloc("Psyche!#It's totally not me hahaha.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_37_0")), string_hash_to_newline(stringsetloc("... or is it?? Like, totally keeping#you guessing, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_38_0")), string_hash_to_newline(stringsetloc("And yeah, like, OK, yeah,#that's not the whole thing.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_39_0")), string_hash_to_newline(stringsetloc("Maybe bad things happen#in the story too.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_40_0")), string_hash_to_newline(stringsetloc("Like... what's it called?#A calamity? ", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_41_0")), string_hash_to_newline(stringsetloc("But, like, it's like,#all cool because, like...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_42_0")), string_hash_to_newline(stringsetloc("...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_43_0")), string_hash_to_newline(stringsetloc("OK actually#I don't remember what happens???", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_44_0")), string_hash_to_newline(stringsetloc("I always fell asleep#during the reading TBH LOLLLLL", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_45_0")), string_hash_to_newline(stringsetloc("Oh my god while I'm, like, up here,#can I like, give some shout outs?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_46_0")), string_hash_to_newline(stringsetloc("Like, shout-out to my mom and dad...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_47_0")), string_hash_to_newline(stringsetloc("Hey mom and dad!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_48_0")), string_hash_to_newline(stringsetloc("And, like, shout out to my little sister,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_49_0")), string_hash_to_newline(stringsetloc("Who couldn't make it here today.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_50_0")), string_hash_to_newline(stringsetloc("IDK what she's doing,#communing with demons or something? LOL", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_51_0")), string_hash_to_newline(stringsetloc("Yeah, she like, DOES that.#LOL. So cute am I right???", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_52_0")), string_hash_to_newline(stringsetloc("She should come here and like,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_53_0")), string_hash_to_newline(stringsetloc("Bask in like,#some totally holy light some time.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_54_0")), string_hash_to_newline(stringsetloc("Lap her tongue#in the holy bowl of cat drinking water -", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_55_0")), string_hash_to_newline(stringsetloc("Oh my god, what?#That's not for drinking?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_56_0")), string_hash_to_newline(stringsetloc("OMG, I kept drinking it#because I was thirsty!! LOL!!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_57_0")), string_hash_to_newline(stringsetloc("OMG!!! Hahahahaha!!!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_58_0")), string_hash_to_newline(stringsetloc("Hahahahaha!!!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_59_0"))];
++speech = [string_hash_to_newline(stringsetloc("Oh my god, so like, the Angel,#that's watching over all of us?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_10_0")), string_hash_to_newline(stringsetloc("It has, like, this COOL prophecy,#like, foretold by time and space.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_11_0")), string_hash_to_newline(stringsetloc("And, like, um...#ummm... like, like...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_12_0")), string_hash_to_newline(stringsetloc("OK, so like, I'm kind of#paraphrasing here, but,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_13_0")), string_hash_to_newline(stringsetloc("There's, like, these heroes,#and they're like, SO cool.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_14_0")), string_hash_to_newline(stringsetloc("They have like,#swords and stuff?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_15_0")), string_hash_to_newline(stringsetloc("And there's one with like,#ummm, horns?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_16_0")), string_hash_to_newline(stringsetloc("He's honestly SO cute.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_17_0")), string_hash_to_newline(stringsetloc("I mean, there, like,#aren't any pictures, but like,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_18_0")), string_hash_to_newline(stringsetloc("IDK why, I just imagine him,#as, like, cute!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_19_0")), string_hash_to_newline(stringsetloc("Like, OMG, pinch his cheeks and#give him a pumpkin pie!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_20_0")), string_hash_to_newline(stringsetloc("Give him a, like, a fat-free#cat food coupon clipping!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_21_0")), string_hash_to_newline(stringsetloc("We, have like, such A HUGE pile#of those to get rid of OMG", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_22_0")), string_hash_to_newline(stringsetloc("But, like, what's amazing,#is how, like, these heroes,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_23_0")), string_hash_to_newline(stringsetloc("Are like,#oh my god, they're like...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_24_0")), string_hash_to_newline(stringsetloc("The thing is, they could be like,#any one of us, you know?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_25_0")), string_hash_to_newline(stringsetloc("So, like, that's the thing, like,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_26_0")), string_hash_to_newline(stringsetloc("You gotta keep in mind#we could ALL be!!!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_27_0")), string_hash_to_newline(stringsetloc("Someone that might#change the world, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_28_0")), string_hash_to_newline(stringsetloc("So we should all, like...#be nice to each other, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_29_0")), string_hash_to_newline(stringsetloc("That's, like, the main... thingy?#Of our religion, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_30_0")), string_hash_to_newline(stringsetloc("Like, just be nice to everyone!#We're all family!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_31_0")), string_hash_to_newline(stringsetloc("No matter what kinda person#or who they are!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_32_0")), string_hash_to_newline(stringsetloc("Like, we believe weird crap#but we're totally, like, welcoming!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_33_0")), string_hash_to_newline(stringsetloc("You don't know who's gonna#grow up to be a hero, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_34_0")), string_hash_to_newline(stringsetloc("Like... even maybe, like,#I'm actually a Hero too?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_35_0")), string_hash_to_newline(stringsetloc("Like, maybe I'm keeping#a secret from you guys...?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_36_0")), string_hash_to_newline(stringsetloc("Psyche!#It's totally not me hahaha.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_37_0")), string_hash_to_newline(stringsetloc("... or is it?? Like, totally keeping#you guessing, right?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_38_0")), string_hash_to_newline(stringsetloc("And yeah, like, OK, yeah,#that's not the whole thing.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_39_0")), string_hash_to_newline(stringsetloc("Maybe bad things happen#in the story too.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_40_0")), string_hash_to_newline(stringsetloc("Like... what's it called?#A calamity? ", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_41_0")), string_hash_to_newline(stringsetloc("But, like, it's like,#all cool because, like...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_42_0")), string_hash_to_newline(stringsetloc("...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_43_0")), string_hash_to_newline(stringsetloc("OK actually#I don't remember what happens???", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_44_0")), string_hash_to_newline(stringsetloc("I always fell asleep#during the reading TBH LOLLLLL", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_45_0")), string_hash_to_newline(stringsetloc("Oh my god while I'm, like, up here,#can I like, give some shout outs?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_46_0")), string_hash_to_newline(stringsetloc("Like, shout-out to my mom and dad...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_47_0")), string_hash_to_newline(stringsetloc("Hey mom and dad!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_48_0")), string_hash_to_newline(stringsetloc("And, like, shout out to my little sister,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_49_0")), string_hash_to_newline(stringsetloc("Who couldn't make it here today.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_50_0")), string_hash_to_newline(stringsetloc("IDK what she's doing,#communing with demons or something? LOL", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_51_0")), string_hash_to_newline(stringsetloc("Yeah, she like, DOES that.#LOL. So cute am I right???", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_52_0")), string_hash_to_newline(stringsetloc("She should come here and like,", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_53_0")), string_hash_to_newline(stringsetloc("Bask in like,#some totally holy light some time.", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_54_0")), string_hash_to_newline(stringsetloc("Lap her tongue#in the holy bowl of cat drinking water -", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_55_0")), string_hash_to_newline(stringsetloc("Oh my god, what?#That's not for drinking?", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_56_0")), string_hash_to_newline(stringsetloc("OMG, I kept drinking it#because I was thirsty!! LOL!!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_57_0")), string_hash_to_newline(stringsetloc("OMG!!! Hahahahaha!!!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_58_0")), string_hash_to_newline(stringsetloc("Hahahahaha!!!", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_59_0"))];
+ cutoff_text = string_hash_to_newline(stringsetloc("Huh? The reading's over?#Aww, okay...", "obj_ch4_PDC03_catty_preach_slash_Create_0_gml_61_0"));
+ current_index = 0;
+ current_text = speech[current_index];
+FILE ch4/gml_Object_obj_cutscene_master_Create_0.gml M 34 6
+@@ -31,14 +31,42 @@
+ initialized = 0;
+ actor_selected = "noone";
+ actor_selected_id = 99999999;
+-for (i = 0; i < 20; i++)
++var inittype = 0;
++with (obj_dw_churchb_darkclimb)
+ {
+-    actor_id[i] = 99999999;
+-    actor_name[i] = "noone";
++    inittype = 1;
+ }
+-for (i = 0; i < 10; i++)
++with (obj_rhythmgame)
+ {
+-    save_object[i] = 99999999;
++    inittype = 1;
+ }
+-scr_cutscene_master_commands_initialize();
++if (inittype == 0)
++{
++    for (i = 0; i < 20; i++)
++    {
++        actor_id[i] = 99999999;
++        actor_name[i] = "noone";
++    }
++    for (i = 0; i < 10; i++)
++    {
++        save_object[i] = 99999999;
++    }
++    scr_cutscene_master_commands_initialize();
++}
++if (inittype == 1)
++{
++    actor_id = array_create(20, 99999999);
++    actor_name = array_create(20, "noone");
++    save_object = array_create(10, 99999999);
++    command = array_create(800, "terminate");
++    command_actor = array_create(800, 99999999);
++    command_arg1 = array_create(800);
++    command_arg2 = array_create(800);
++    command_arg3 = array_create(800);
++    command_arg4 = array_create(800);
++    command_arg5 = array_create(800);
++    command_arg6 = array_create(800);
++    current_command = 0;
++    maximum_command = 1;
++}
+ terminate_this_frame = 0;
+FILE ch4/gml_Object_obj_dw_church_remotepianomove_Step_0.gml M 4 6
+@@ -101,10 +101,9 @@
+                 if (name == "susie")
+                 {
+                     var pos2 = [other.x + 36, other.y - 10];
+-                    var jumpmarker = scr_marker_ext(x, y, spr_susie_dw_jump_ball, 2, 2, 0.25, 0, c_white, obj_mainchara.depth);
++                    var jumpmarker = scr_marker_ext(x, y, spr_susie_dw_jump_ball, 2, 2, 0.25, 0, c_white, 30050);
+                     with (jumpmarker)
+                     {
+-                        depth = 1000;
+                         scr_jump_to_point(pos2[0], pos2[1], jumpstrength, 16);
+                         scr_doom(self, 16);
+                     }
+@@ -112,10 +111,10 @@
+                 else
+                 {
+                     var pos2 = [other.x + 4, other.y - 6];
+-                    var jumpmarker = scr_marker_ext(x, y, spr_ralsei_jump_ball, 2, 2, 0.25, 0, c_white, obj_mainchara.depth);
++                    var jumpmarker = scr_marker_ext(x, y, spr_ralsei_jump_ball, 2, 2, 0.25, 0, c_white, 30050);
+                     with (jumpmarker)
+                     {
+-                        depth = 1000;
++                        depth = 30050;
+                         scr_jump_to_point(pos2[0], pos2[1], jumpstrength, 16);
+                         scr_doom(self, 16);
+                     }
+@@ -125,10 +124,9 @@
+             {
+                 visible = 0;
+                 image_alpha = 0;
+-                var jumpmarker = scr_marker_ext(x, y, spr_kris_jump_ball_fixed, 2, 2, 0.25, 0, c_white, obj_mainchara.depth);
++                var jumpmarker = scr_marker_ext(x, y, spr_kris_jump_ball_fixed, 2, 2, 0.25, 0, c_white, 30050);
+                 with (jumpmarker)
+                 {
+-                    depth = 1000;
+                     scr_jump_to_point(pos[0], pos[1], jumpstrength, 16);
+                     scr_doom(self, 16);
+                 }
+FILE ch4/gml_Object_obj_dw_church_waterfallroom_Step_0.gml M 1 1
+@@ -79,7 +79,7 @@
+             if (global.flag[23] == 0)
+             {
+                 scr_speaker("no_name");
+-                msgsetloc(0, "* It's too slippery to climb..^1. If only you had something help you climb./%", "obj_dw_church_waterfallroom_slash_Step_0_gml_101_0");
++                msgsetloc(0, "* It's too slippery to climb..^1. If only you had something to help you climb./%", "obj_dw_church_waterfallroom_slash_Step_0_gml_101_0");
+                 d_make();
+                 myinteract = 999;
+             }
+FILE ch4/gml_Object_obj_dw_churchb_bellroom_Create_0.gml M 4 0
+@@ -1,4 +1,8 @@
+ scr_musicer("second_church.ogg");
++if (!instance_exists(obj_hsv_shifter))
++{
++    instance_create(0, 0, obj_hsv_shifter);
++}
+ timer = 0;
+ con = 0;
+ init = 0;
+FILE ch4/gml_Object_obj_dw_churchb_darkclimb_Step_0.gml M 0 1
+@@ -882,7 +882,6 @@
+         {
+             if (x > (cx + 640 + 20))
+             {
+-                show_debug_message_concat("killdoffscreen");
+                 instance_destroy();
+             }
+             else
+FILE ch4/gml_Object_obj_holywatercooler_enemy_Step_0.gml M 1 1
+@@ -554,7 +554,7 @@
+         {
+             chatcount++;
+             acttalked = true;
+-            var chatstring = stringsetloc("* Everyone chat around the Watercooler!/", "obj_holywatercooler_enemy_slash_Step_0_gml_417_0");
++            var chatstring = stringsetloc("* Everyone chatted around the Watercooler!/", "obj_holywatercooler_enemy_slash_Step_0_gml_417_0");
+             acting = 0.6;
+             if (chatcount == 1)
+             {
+FILE ch4/gml_Object_obj_homealone_dess_closet_controller_Step_0.gml M 2 0
+@@ -26,6 +26,7 @@
+         }
+     }
+     kris = instance_create(135, 78, obj_homealone_dess_closet_kris);
++    kris.visible = false;
+     kris.depth = obj_homealone_heart.depth - 20;
+     pile_marker = scr_marker(closet.x + 1, closet.y + 68, spr_noellehouse_dess_closet_pile);
+     pile_marker.depth = kris.depth - 100;
+@@ -105,6 +106,7 @@
+ if (closet_fadein)
+ {
+     closet_fadein = false;
++    kris.visible = true;
+     with (closet)
+     {
+         kris_active = false;
+FILE ch4/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -66,14 +66,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.088";
++global.versionno = "v0.0.090";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.085";
++    global.versionno = "v0.0.088";
+ }
+ if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.086";
++    global.versionno = "v0.0.088";
+ }
+ global.game_won = false;
+ scr_input_manager_init();
+FILE ch4/gml_Object_obj_micmenu_Create_0.gml M 10 0
+@@ -41,3 +41,13 @@
+ option[i++] = stringsetloc("Select Microphone", "obj_micmenu_slash_Create_0_gml_39_0");
+ option[i++] = stringsetloc("Adjust Sensitivity", "obj_micmenu_slash_Create_0_gml_40_0");
+ option[i++] = stringsetloc("Done", "obj_micmenu_slash_Create_0_gml_41_0");
++
++get_right_click_mic_string = function()
++{
++    return stringsetloc("Mouse Right-Click [Not Recommended]", "obj_micmenu_slash_Draw_0_gml_141_0");
++};
++
++get_x_click_mic_string = function(arg0)
++{
++    return stringsetsubloc("~1 [Also Not Recommended]", arg0, "obj_micmenu_slash_Draw_0_gml_172_0");
++};
+FILE ch4/gml_Object_obj_micmenu_Draw_0.gml M 66 22
+@@ -30,25 +30,65 @@
+ }
+ if (act != 0)
+ {
+-    if (selected < array_length(mic_name))
+-    {
+-        var _n = ds_map_find_value(mic_name[selected], "name");
+-        _n = string_replace(_n, "Microphone ", "");
+-        _n = string_replace(_n, "(", "");
+-        _n = string_replace(_n, ")", "");
+-        var shortened = false;
+-        while (string_width(_n) > 600)
+-        {
+-            _n = string_copy(_n, 1, string_length(_n) - 1);
+-            shortened = true;
+-        }
+-        if (shortened)
+-        {
+-            _n = _n + "...";
++    if (selected < array_length(mic_name) || global.right_click_mic != 0)
++    {
++        var _n;
++        if (global.right_click_mic == 0 && selected < array_length(mic_name))
++        {
++            _n = ds_map_find_value(mic_name[selected], "name");
++            _n = string_replace(_n, "Microphone ", "");
++            _n = string_replace(_n, "(", "");
++            _n = string_replace(_n, ")", "");
++            var shortened = false;
++            while (string_width(_n) > 600)
++            {
++                _n = string_copy(_n, 1, string_length(_n) - 1);
++                shortened = true;
++            }
++            if (shortened)
++            {
++                _n = _n + "...";
++            }
++        }
++        else if (global.right_click_mic == 1)
++        {
++            _n = get_right_click_mic_string();
++            if (global.lang == "ja")
++            {
++                _n = string_copy(_n, 0, 8);
++            }
++            else
++            {
++                _n = string_copy(_n, 0, 17);
++            }
++        }
++        else if (global.right_click_mic == 2)
++        {
++            var inputname = scr_get_input_name(5);
++            _n = inputname;
++            if (obj_gamecontroller.gamepad_active)
++            {
++                var xoffset = 0;
++                if (global.lang == "ja")
++                {
++                    inputname = " ";
++                    xoffset = -18;
++                }
++                else
++                {
++                    inputname = " ";
++                }
++                _n = "";
++                var _sprite = scr_getbuttonsprite(global.input_g[5], false);
++                draw_sprite_ext(_sprite, 0, camerax() + mx + 190 + xoffset, (cameray() + mheight + my) - 46, 1, 1, 0, c_gray, 1);
++            }
+         }
+         draw_set_colour(c_gray);
+         draw_set_font(scr_84_get_font("main"));
+-        draw_text(camerax() + mx + 48, (cameray() + mheight + my) - 48, stringsetloc("* Current Microphone:  ", "obj_micmenu_slash_Draw_0_gml_53_0") + string(_n));
++        var micstr = stringsetloc("* Current Microphone:  ", "obj_micmenu_slash_Draw_0_gml_53_0");
++        draw_text(camerax() + mx + 48, (cameray() + mheight + my) - 48, micstr);
++        draw_set_font(fnt_ja_main);
++        draw_text((camerax() + mx + 48 + string_width(micstr)) - 16, (cameray() + mheight + my) - 48, string(_n));
+         draw_set_font(scr_84_get_font("mainbig"));
+         draw_set_colour(c_white);
+     }
+@@ -114,7 +154,7 @@
+                     }
+                     else
+                     {
+-                        _str = "   ";
++                        _str = " ";
+                     }
+                     draw_sprite(spr_sparestar, 0, camerax() + mx + 46, (cameray() + my + myy + 32 + (i * 30)) - (menu_y * 30));
+                 }
+@@ -132,7 +172,7 @@
+                 }
+                 else
+                 {
+-                    _str = "   ";
++                    _str = " ";
+                 }
+                 draw_sprite(spr_sparestar, 0, camerax() + mx + 46, (cameray() + my + myy + 32 + (i * 30)) - (menu_y * 30));
+             }
+@@ -145,7 +185,7 @@
+                 }
+                 else
+                 {
+-                    _str = "   ";
++                    _str = " ";
+                 }
+                 draw_sprite(spr_sparestar, 0, camerax() + mx + 46, (cameray() + my + myy + 32 + (i * 30)) - (menu_y * 30));
+             }
+@@ -155,6 +195,7 @@
+             }
+             if (i == (menu_max - 1))
+             {
++                draw_set_font(scr_84_get_font("mainbig"));
+                 if (i == current)
+                 {
+                     draw_sprite(spr_heart_centered, 0, camerax() + mx + 32, (cameray() + my + myy + 56 + (i * 30)) - (menu_y * 30));
+@@ -163,14 +204,16 @@
+             }
+             else if (i == (menu_max - 3) && is_pc)
+             {
++                draw_set_font(fnt_ja_mainbig);
+                 if (i == current)
+                 {
+                     draw_sprite(spr_heart_centered, 0, camerax() + mx + 32, (cameray() + my + myy + 40 + (i * 30)) - (menu_y * 30));
+                 }
+-                draw_text(camerax() + mx + 48, (cameray() + my + myy + 24 + (i * 30)) - (menu_y * 30), string(_str) + stringsetloc("Mouse Right-Click [Not Recommended]", "obj_micmenu_slash_Draw_0_gml_141_0"));
++                draw_text(camerax() + mx + 48, (cameray() + my + myy + 24 + (i * 30)) - (menu_y * 30), string(_str) + get_right_click_mic_string());
+             }
+             else if (i == (menu_max - 2) && is_pc)
+             {
++                draw_set_font(fnt_ja_mainbig);
+                 if (i == current)
+                 {
+                     draw_sprite(spr_heart_centered, 0, camerax() + mx + 32, (cameray() + my + myy + 40 + (i * 30)) - (menu_y * 30));
+@@ -184,7 +227,7 @@
+                     }
+                     else
+                     {
+-                        inputname = "    ";
++                        inputname = " ";
+                     }
+                     var _sprite = scr_getbuttonsprite(global.input_g[5], false);
+                     var xoffset = 0;
+@@ -194,10 +237,11 @@
+                     }
+                     draw_sprite_ext(_sprite, 0, camerax() + mx + 46 + xoffset, (cameray() + my + myy + 27 + (i * 30)) - (menu_y * 30), 2, 2, 0, c_white, 1);
+                 }
+-                draw_text(camerax() + mx + 48, (cameray() + my + myy + 24 + (i * 30)) - (menu_y * 30), string(_str) + stringsetsubloc("~1 [Also Not Recommended]", inputname, "obj_micmenu_slash_Draw_0_gml_172_0"));
++                draw_text(camerax() + mx + 48, (cameray() + my + myy + 24 + (i * 30)) - (menu_y * 30), string(_str) + get_x_click_mic_string(inputname));
+             }
+             else
+             {
++                draw_set_font(fnt_ja_mainbig);
+                 var _n;
+                 if (mic_on[i])
+                 {
+FILE ch4/gml_Object_obj_micmenu_Step_0.gml M 8 0
+@@ -176,6 +176,10 @@
+             {
+                 global.right_click_mic = 1;
+             }
++            if (mic_max == 2 && global.right_click_mic == 0)
++            {
++                global.right_click_mic = 2;
++            }
+         }
+         else if (current == (menu_max - 2) && is_pc)
+         {
+@@ -187,6 +191,10 @@
+             else
+             {
+                 global.right_click_mic = 2;
++            }
++            if (mic_max == 2 && global.right_click_mic == 0)
++            {
++                global.right_click_mic = 1;
+             }
+         }
+         else
+FILE ch4/gml_Object_obj_mike_attack_controller_Alarm_5.gml M 4 0
+@@ -7,4 +7,8 @@
+         y = ystart;
+     }
+ }
++with (global.charinstance[star])
++{
++    tu = 0;
++}
+ scr_healitemspell(160 - (min(pet_current[star], 3) * 40));
+FILE ch4/gml_Object_obj_mike_attack_controller_Step_0.gml M 17 0
+@@ -5,6 +5,13 @@
+         action = 13;
+         debug_mikes();
+         print_message("skipped to last attack!");
++    }
++}
++if (!(global.is_console || onSteamDeck()))
++{
++    if (audio_get_recorder_count() == 0 && global.right_click_mic == 0)
++    {
++        global.right_click_mic = 2;
+     }
+ }
+ if (phase == 0 && global.use_mic && !global.right_click_mic)
+@@ -432,6 +439,11 @@
+     {
+         with (main_text.mywriter)
+         {
++            if (global.flag[10] == 1 && button3_h())
++            {
++                other.timer = 9999;
++                pos = string_length(mystring) + 2;
++            }
+             if (pos >= (string_length(mystring) + 2))
+             {
+                 other.timer += 1;
+@@ -1640,6 +1652,11 @@
+         {
+             with (main_text.mywriter)
+             {
++                if (global.flag[10] == 1 && button3_h())
++                {
++                    other.timer = 9999;
++                    pos = string_length(mystring) + 2;
++                }
+                 if (pos >= (string_length(mystring) + 2))
+                 {
+                     with (obj_mike_battle)
+FILE ch4/gml_Object_obj_mike_controller_Create_0.gml M 1 0
+@@ -3,6 +3,7 @@
+     global.mic_sensitivity = global.flag[1701];
+ }
+ __usable = true;
++audio_record = -4;
+ instance_create_depth(0, 0, depth - 6, obj_mike_hand);
+ battle_active = false;
+ 
+FILE ch4/gml_Object_obj_mike_controller_Step_0.gml M 1 1
+@@ -424,7 +424,7 @@
+         x = lerp(x, x_target, 0.3);
+         y = lerp(y, y_target, 0.3);
+     }
+-    if (scr_mouse_leftclick() && instance_number(obj_micmenu) == 0 && !i_ex(obj_dialoguer) && hand_wait < 0 && hand_type == 0 && instance_number(obj_battleblcon) == 0 && (instance_number(obj_mike_attack_controller) == 0 || !obj_mike_attack_controller.talking))
++    if (scr_mouse_leftclick() && instance_number(obj_micmenu) == 0 && !i_ex(obj_dialoguer) && global.interact != 1 && hand_wait < 0 && hand_type == 0 && instance_number(obj_battleblcon) == 0 && (instance_number(obj_mike_attack_controller) == 0 || !obj_mike_attack_controller.talking))
+     {
+         hand_wait = hand_anim;
+         with (instance_create(mx + lengthdir_x(16, point_direction(x, y, mx, my)), my + lengthdir_y(16, point_direction(x, y, mx, my)), obj_hand_collision))
+FILE ch4/gml_Object_obj_mike_minigame_controller_Step_0.gml M 7 0
+@@ -11,6 +11,13 @@
+ with (obj_writer)
+ {
+     prevent_mash_buffer = 3;
++}
++if (!(global.is_console || onSteamDeck()))
++{
++    if (audio_get_recorder_count() == 0 && global.right_click_mic == 0)
++    {
++        global.right_click_mic = 2;
++    }
+ }
+ if (phase == 0 && canclick)
+ {
+FILE ch4/gml_Object_obj_mike_statue_cat_overworld_Create_0.gml M 2 1
+@@ -2,6 +2,7 @@
+ statue_active = true;
+ con = 0;
+ callback = -4;
++bit_index = 1;
+ statue = instance_create(x, y, obj_mike_statue_cat);
+ statue_block = instance_create(x + 10, y + 80, obj_solidblockDark);
+ statue_readable = instance_create(x + 8, y + 70, obj_readable_room1);
+@@ -47,7 +48,7 @@
+     }
+     if (callback != -4)
+     {
+-        callback();
++        callback(bit_index);
+     }
+     instance_destroy();
+ };
+FILE ch4/gml_Object_obj_noellehouse_dess_Step_0.gml M 1 1
+@@ -920,7 +920,7 @@
+     with (fall_trigger[1])
+     {
+         image_xscale = 11;
+-        image_yscale = 4.2;
++        image_yscale = 4.1;
+     }
+     fall_trigger[2] = instance_create(110, 148, obj_trigger);
+     with (fall_trigger[2])
+FILE ch4/gml_Object_obj_readable_room1_Other_10.gml M 2 2
+@@ -3472,7 +3472,7 @@
+             else
+             {
+                 scr_speaker("no_name");
+-                msgsetloc(0, "* (It's Noelle's bed. Under is a rock CD with a photo of Noelle in dark makeup.)/%", "obj_readable_room1_slash_Other_10_gml_3819_0");
++                msgsetloc(0, "* (It's Noelle's bed. Under it is a rock CD with a photo of Noelle in dark makeup.)/%", "obj_readable_room1_slash_Other_10_gml_3819_0");
+             }
+         }
+     }
+@@ -3625,7 +3625,7 @@
+     if (x > 240 && x < 280 && y > 130 && y < 150)
+     {
+         scr_speaker("no_name");
+-        msgsetloc(0, "* Rollerblades^1, wiffle bat. Looking at these things make your head hurt./%", "obj_readable_room1_slash_Other_10_gml_4011_0");
++        msgsetloc(0, "* Rollerblades^1, wiffle bat. Looking at these things makes your head hurt./%", "obj_readable_room1_slash_Other_10_gml_4011_0");
+     }
+     if (x > 240 && x < 280 && y > 160 && y < 170)
+     {
+FILE ch4/gml_Object_obj_room_castle_tv_zone_2_Create_0.gml M 10 5
+@@ -12,9 +12,9 @@
+     scr_depth();
+ }
+ 
+-remove_statue = function()
++remove_statue = function(arg0)
+ {
+-    global.flag[1694] = clamp(global.flag[1694] + 1, 0, array_length(statue_list));
++    global.flag[1694] |= 1 << arg0;
+ };
+ 
+ statue_list = [];
+@@ -39,6 +39,7 @@
+             {
+                 sprite_index = spr_statue_cat_tall;
+             }
++            statue_cat_tall.bit_index = layer_sprite_get_speed(elements[j]);
+             statue_cat_tall.init("statue_cat_tall", remove_statue);
+             statue_list[array_length(statue_list)] = statue_cat_tall;
+             with (statue_cat_tall)
+@@ -65,10 +66,14 @@
+     }
+ };
+ 
+-if (global.flag[1694] > 0)
++var remembered_flag = global.flag[1694];
++if (remembered_flag > 0)
+ {
+-    for (var i = 0; i < global.flag[1694]; i++)
++    for (var i = 0; i < array_length(statue_list); i++)
+     {
+-        statue_list[i].clean_up();
++        if (((remembered_flag >> statue_list[i].bit_index) & 1) != 0 || remembered_flag < 8)
++        {
++            statue_list[i].clean_up();
++        }
+     }
+ }
+FILE ch4/gml_Object_obj_room_castle_tv_zone_minigame_Step_0.gml M 1 0
+@@ -20,6 +20,7 @@
+     c_customfunc(function()
+     {
+         mike_controller = instance_create(0, 0, obj_mike_controller);
++        mike_controller.hand_wait = 15;
+         with (obj_mike_hand)
+         {
+             visible = 0;
+FILE ch4/gml_Object_obj_time_Create_0.gml M 8 8
+@@ -6,8 +6,8 @@
+ axis_value = 0.4;
+ fullscreen_toggle = 0;
+ quicksaved = 0;
+-dorecord = 0;
+ window_center_toggle = 0;
++isfullscreen = 0;
+ if (global.is_console)
+ {
+     if (!instance_exists(obj_gamecontroller))
+@@ -33,28 +33,28 @@
+ }
+ else
+ {
+-    display_height = display_get_height();
+-    display_width = display_get_width();
++    ini_open("true_config.ini");
++    var fullscreen_option = ini_read_real("SCREEN", "FULLSCREEN", 0);
++    ini_close();
++    var display_height = display_get_height();
++    var display_width = display_get_width();
+     window_size_multiplier = 1;
+-    for (_ww = 2; _ww < 6; _ww += 1)
++    for (var _ww = 2; _ww < 12; _ww += 1)
+     {
+         if (display_width > (640 * _ww) && display_height > (480 * _ww))
+         {
+             window_size_multiplier = _ww;
+         }
+     }
+-    if (window_size_multiplier > 1)
++    if (window_size_multiplier > 1 && !fullscreen_option)
+     {
+         window_set_size(640 * window_size_multiplier, 480 * window_size_multiplier);
+         alarm[2] = 1;
+     }
+-    ini_open("true_config.ini");
+-    var fullscreen_option = ini_read_real("SCREEN", "FULLSCREEN", 0);
+     if (fullscreen_option == 1 && !window_get_fullscreen())
+     {
+         alarm[1] = 1;
+     }
+-    ini_close();
+     if (scr_is_switch_os())
+     {
+         switch_controller_support_set_defaults();
+FILE ch4/gml_Object_obj_time_Draw_77.gml M 19 3
+@@ -1,6 +1,6 @@
+ if (scr_debug())
+ {
+-    if ((sunkus_kb_check_pressed(ord("G")) || dorecord == 1) && !sunkus_kb_check(vk_control) && gif_recording == 0)
++    if (sunkus_kb_check_pressed(ord("G")) && !sunkus_kb_check(vk_control) && gif_recording == 0)
+     {
+         gif_recording = 1;
+         gif_timer = 0;
+@@ -9,7 +9,7 @@
+     if (gif_recording)
+     {
+         var gif_release = 0;
+-        if (sunkus_kb_check_released(ord("G")) || dorecord == 2)
++        if (sunkus_kb_check_released(ord("G")))
+         {
+             gif_release = 1;
+         }
+@@ -33,8 +33,24 @@
+             gif_save(gif_image, "game_" + gif_date + ".gif");
+             gif_timer = 0;
+             gif_recording = false;
+-            dorecord = 0;
+         }
+         gif_timer++;
+     }
+ }
++if (!global.is_console)
++{
++    var nowfullscreen = window_get_fullscreen();
++    if (nowfullscreen != isfullscreen)
++    {
++        ini_open("true_config.ini");
++        ini_write_real("SCREEN", "FULLSCREEN", nowfullscreen);
++        ini_close();
++        show_debug_message("fullscreen switched:" + string(nowfullscreen));
++        if (!nowfullscreen)
++        {
++            window_set_size(640 * window_size_multiplier, 480 * window_size_multiplier);
++            alarm[2] = 1;
++        }
++    }
++    isfullscreen = nowfullscreen;
++}
+FILE ch4/gml_Object_obj_time_Step_0.gml M 2 1
+@@ -13,6 +13,7 @@
+ {
+     if (!i_ex(obj_border_controller))
+     {
+-        instance_create(0, 0, obj_border_controller);
++        var border_controller = instance_create(0, 0, obj_border_controller);
++        border_controller.init_border();
+     }
+ }
+FILE ch4/gml_Object_obj_time_Step_1.gml M 1 1
+@@ -196,7 +196,7 @@
+ {
+     for (var i = 0; i < 4; i += 1)
+     {
+-        if (sunkus_kb_check(global.input_k[i]) || gamepad_button_check(obj_gamecontroller.gamepad_id, global.input_g[i]) || scr_gamepad_axis_check(obj_gamecontroller.gamepad_id, i))
++        if (sunkus_kb_check(global.input_k[i]) || (i_ex(obj_gamecontroller) && (gamepad_button_check(obj_gamecontroller.gamepad_id, global.input_g[i]) || scr_gamepad_axis_check(obj_gamecontroller.gamepad_id, i))))
+         {
+             if (global.input_held[i] == 0)
+             {
+FILE ch4/gml_Object_obj_gamecontroller_Step_1.gml A 66 0
+if (os_type == os_windows || os_type == os_linux || os_type == os_macosx)
+{
+    var controllerUpdate = -1;
+    for (var i = 0; i < gamepad_get_device_count(); i++)
+    {
+        if (i != gamepad_id)
+        {
+            if (gamepad_button_check(i, gp_face1) || gamepad_button_check(i, gp_face2) || gamepad_button_check(i, gp_face3) || gamepad_button_check(i, gp_face4) || gamepad_button_check(i, gp_padd) || gamepad_button_check(i, gp_padr) || gamepad_button_check(i, gp_padu) || gamepad_button_check(i, gp_padl) || abs(gamepad_axis_value(i, gp_axislh)) > 0.8 || abs(gamepad_axis_value(i, gp_axislv)) > 0.8)
+            {
+                controllerUpdate = i;
+                break;
+            }
+        }
+    }
+    if (controllerUpdate != -1)
+    {
+        gamepad_id = controllerUpdate;
+        gamepad_active = 1;
+        var gamepad_description = gamepad_get_description(gamepad_id);
+        if (gamepad_get_guid(gamepad_id) == "4c05e60c000000000000504944564944")
+        {
+            show_debug_message("***** Remap controller: " + gamepad_description + " to " + "DualSense Wireless Controller");
+            var mapping = "a:b1,b:b2,x:b0,y:b3,back:b8,start:b9,leftstick:b10,rightstick:b11,leftshoulder:b4,rightshoulder:b5,dpup:h0.1,dpdown:h0.4,dpleft:h0.8,dpright:h0.2,leftx:a0,lefty:a1,rightx:a2,righty:a5,lefttrigger:a3,righttrigger:a4,";
+            gamepad_test_mapping(gamepad_id, "4c05e60c000000000000504944564944," + gamepad_description + "," + mapping);
+            gamepad_description = "DualSense Wireless Controller";
+        }
+        gamepad_type = gamepad_description;
+        if (gamepad_type != global.gamepad_type)
+        {
+            global.gamepad_type = gamepad_type;
+            scr_controls_default();
+            if (_load_enabled)
+            {
+                if (ossafe_file_exists("config_" + string(global.filechoice) + ".ini"))
+                {
+                    ossafe_ini_open("config_" + string(global.filechoice) + ".ini");
+                    for (var i = 0; i < 10; i++)
+                    {
+                        readval = ini_read_real("KEYBOARD_CONTROLS", string(i), -1);
+                        if (readval != -1)
+                        {
+                            global.input_k[i] = readval;
+                        }
+                    }
+                    for (var i = 0; i < 10; i++)
+                    {
+                        readval = ini_read_real("GAMEPAD_CONTROLS", string(i), -1);
+                        if (readval != -1)
+                        {
+                            global.input_g[i] = readval;
+                        }
+                    }
+                    var readval = ini_read_real("SHOULDERLB_REASSIGN", "SHOULDERLB_REASSIGN", gamepad_shoulderlb_reassign);
+                    if (readval != -1)
+                    {
+                        gamepad_shoulderlb_reassign = readval;
+                    }
+                    global.button0 = global.input_g[4];
+                    global.button1 = global.input_g[5];
+                    global.button2 = global.input_g[6];
+                    ossafe_ini_close();
+                }
+            }
+        }
+    }
+}
+FILE ch4/gml_RoomCC_room_dw_church_pianopiece_right_123_PreCreate.gml A 1 0
+extflag = "FLOOR1";

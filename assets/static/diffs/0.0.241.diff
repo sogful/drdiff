@@ -1,0 +1,582 @@
+FILE ch5/gml_GlobalScript_scr_damage.gml M 37 2
+@@ -53,13 +53,48 @@
+         chartarget = 3;
+         if (global.chapter == 5 && i_ex(obj_flowery_enemy))
+         {
++            var dam_reduction = 0;
++            if (global.tempflag[74] == 7)
++            {
++                dam_reduction = -0.05;
++            }
++            if (global.tempflag[74] == 8)
++            {
++                dam_reduction = -0.1;
++            }
++            if (global.tempflag[74] == 9)
++            {
++                dam_reduction = -0.12;
++            }
++            if (global.tempflag[74] == 10)
++            {
++                dam_reduction = -0.15;
++            }
++            if (global.tempflag[74] == 11)
++            {
++                dam_reduction = -0.18;
++            }
++            if (global.tempflag[74] == 12)
++            {
++                dam_reduction = -0.21;
++            }
++            if (global.tempflag[74] >= 13)
++            {
++                dam_reduction = -0.25;
++            }
+             if (obj_flowery_enemy.partydefenselowered == true)
+             {
+-                damage = ceil(damage * 1.1);
++                damage = ceil(damage * (1.1 + dam_reduction));
++                dam_reduction = 0;
+             }
+             if (obj_flowery_enemy.remove_ralsei_con > 0)
+             {
+-                damage = ceil(damage * 0.8);
++                damage = ceil(damage * (0.8 + dam_reduction));
++                dam_reduction = 0;
++            }
++            if (dam_reduction != 0)
++            {
++                damage = ceil(damage * (1 + dam_reduction));
+             }
+             if (obj_flowery_enemy.ralsei_removed == true && target == 2)
+             {
+FILE ch5/gml_GlobalScript_scr_gamestart_chapter_override.gml M 1 0
+@@ -106,4 +106,5 @@
+     {
+         scr_get_shadow_crystal(4);
+     }
++    global.darkzone = 0;
+ }
+FILE ch5/gml_Object_obj_attack_green_cookingtime_Draw_0.gml M 96 90
+@@ -56,30 +56,33 @@
+     mode2count++;
+     if ((mode2count % 3) == 0 && obj_orange_green_controller.powerup != 5)
+     {
+-        candy = instance_create(x - 48, (y + 46) - 10, obj_regularbullet);
+-        candy.sprite_index = spr_bullet_green_flame;
+-        candy.image_speed = 0.25;
+-        candy.depth = depth - 100;
+-        candy.image_xscale = 2;
+-        candy.image_yscale = 2;
+-        candy.gravity = 0.35;
+-        candy.target = 4;
+-        candy.damage = 96;
+-        with (candy)
+-        {
+-            scr_lerpvar("x", x, location_x, 15, 2, "out");
+-        }
+-        with (candy)
+-        {
+-            scr_lerpvar("y", y, cameray() + 30 + random_range(-10, 10), 10, 2, "out");
+-        }
+-        if (i_ex(obj_orange_green_controller) && obj_orange_green_controller.powerup >= 1 && mode == 2)
+-        {
+-            candy.gravity = choose(0.35, 0.45, 0.25);
+-        }
+-        if (i_ex(obj_orange_green_controller) && obj_orange_green_controller.powerup >= 3)
+-        {
++        if (i_ex(obj_heart))
++        {
++            candy = instance_create(x - 48, (y + 46) - 10, obj_regularbullet);
++            candy.sprite_index = spr_bullet_green_flame;
++            candy.image_speed = 0.25;
++            candy.depth = depth - 100;
++            candy.image_xscale = 2;
++            candy.image_yscale = 2;
+             candy.gravity = 0.35;
++            candy.target = 4;
++            candy.damage = 96;
++            with (candy)
++            {
++                scr_lerpvar("x", x, location_x, 15, 2, "out");
++            }
++            with (candy)
++            {
++                scr_lerpvar("y", y, cameray() + 30 + random_range(-10, 10), 10, 2, "out");
++            }
++            if (i_ex(obj_orange_green_controller) && obj_orange_green_controller.powerup >= 1 && mode == 2)
++            {
++                candy.gravity = choose(0.35, 0.45, 0.25);
++            }
++            if (i_ex(obj_orange_green_controller) && obj_orange_green_controller.powerup >= 3)
++            {
++                candy.gravity = 0.35;
++            }
+         }
+         if (obj_orange_green_controller.powerup == 2)
+         {
+@@ -126,74 +129,77 @@
+                 sharewithorange_counter = 0;
+             }
+         }
+-        if (foodtype == 0)
+-        {
+-            candy = instance_create(x - 48, (y + 46) - 10, obj_bullet_healing);
+-            candy.sprite_index = spr_bullet_green_egg;
+-            candy.image_speed = 0.25;
+-            candy.image_blend = hexcolor(c_lime);
+-            candy.depth = depth - 100;
+-            candy.gravity = 0.35;
+-            with (candy)
+-            {
+-                scr_lerpvar("x", x, location_x + 18, 15, 2, "out");
+-            }
+-            with (candy)
+-            {
+-                scr_lerpvar("y", y, cameray() + 30 + random_range(-10, 10), 10, 2, "out");
+-            }
+-            if (i_ex(obj_orange_green_controller) && obj_orange_green_controller.powerup >= 1 && mode == 1)
+-            {
+-                candy.gravity = choose(0.35, 0.35, 0.1);
+-            }
+-            if (i_ex(obj_orange_green_controller) && obj_orange_green_controller.powerup >= 3)
+-            {
++        if (i_ex(obj_heart))
++        {
++            if (foodtype == 0)
++            {
++                candy = instance_create(x - 48, (y + 46) - 10, obj_bullet_healing);
++                candy.sprite_index = spr_bullet_green_egg;
++                candy.image_speed = 0.25;
++                candy.image_blend = hexcolor(c_lime);
++                candy.depth = depth - 100;
+                 candy.gravity = 0.35;
+-            }
+-            candy.con = location_i;
+-        }
+-        if (foodtype == 1)
+-        {
+-            candy = instance_create(x - 48, (y + 46) - 10, obj_bullet_healing);
+-            candy.sprite_index = spr_donut_bullet;
+-            candy.image_blend = hexcolor(c_lime);
+-            candy.depth = depth - 100;
+-            candy.image_xscale = 1;
+-            candy.image_yscale = 1;
+-            candy.vspeed = -14 - random(6);
+-        }
+-        if (foodtype == 2)
+-        {
+-            candy = instance_create(x - 48, (y + 46) - 10, obj_bullet_healing);
+-            candy.sprite_index = spr_swatchling_platter_candy;
+-            candy.image_blend = hexcolor(c_lime);
+-            candy.depth = depth - 100;
+-            candy.image_xscale = 1;
+-            candy.image_yscale = 1;
+-            if (con == 0)
+-            {
+-                location_x = ((obj_growtangle.x + 12) - (obj_growtangle.sprite_width * 0.5)) + irandom(25);
+-                con = 1;
+-            }
+-            else
+-            {
+-                location_x = (obj_growtangle.x + (obj_growtangle.sprite_width * 0.5)) - 10 - irandom(25);
+-                con = 0;
+-            }
+-            with (candy)
+-            {
+-                scr_lerpvar("x", x, location_x, 10, 2, "out");
+-            }
+-            with (candy)
+-            {
+-                scr_lerpvar("y", y, cameray() + 40, 10, 2, "out");
+-            }
+-            timer = -2;
+-        }
+-    }
+-    if (foodtype == 0)
+-    {
+-        scr_doom(candy, 80);
++                with (candy)
++                {
++                    scr_lerpvar("x", x, location_x + 18, 15, 2, "out");
++                }
++                with (candy)
++                {
++                    scr_lerpvar("y", y, cameray() + 30 + random_range(-10, 10), 10, 2, "out");
++                }
++                if (i_ex(obj_orange_green_controller) && obj_orange_green_controller.powerup >= 1 && mode == 1)
++                {
++                    candy.gravity = choose(0.35, 0.35, 0.1);
++                }
++                if (i_ex(obj_orange_green_controller) && obj_orange_green_controller.powerup >= 3)
++                {
++                    candy.gravity = 0.35;
++                }
++                candy.con = location_i;
++            }
++            if (foodtype == 1)
++            {
++                candy = instance_create(x - 48, (y + 46) - 10, obj_bullet_healing);
++                candy.sprite_index = spr_donut_bullet;
++                candy.image_blend = hexcolor(c_lime);
++                candy.depth = depth - 100;
++                candy.image_xscale = 1;
++                candy.image_yscale = 1;
++                candy.vspeed = -14 - random(6);
++            }
++            if (foodtype == 2)
++            {
++                candy = instance_create(x - 48, (y + 46) - 10, obj_bullet_healing);
++                candy.sprite_index = spr_swatchling_platter_candy;
++                candy.image_blend = hexcolor(c_lime);
++                candy.depth = depth - 100;
++                candy.image_xscale = 1;
++                candy.image_yscale = 1;
++                if (con == 0)
++                {
++                    location_x = ((obj_growtangle.x + 12) - (obj_growtangle.sprite_width * 0.5)) + irandom(25);
++                    con = 1;
++                }
++                else
++                {
++                    location_x = (obj_growtangle.x + (obj_growtangle.sprite_width * 0.5)) - 10 - irandom(25);
++                    con = 0;
++                }
++                with (candy)
++                {
++                    scr_lerpvar("x", x, location_x, 10, 2, "out");
++                }
++                with (candy)
++                {
++                    scr_lerpvar("y", y, cameray() + 40, 10, 2, "out");
++                }
++                timer = -2;
++            }
++            if (foodtype == 0)
++            {
++                scr_doom(candy, 80);
++            }
++        }
+     }
+ }
+ draw_self();
+FILE ch5/gml_Object_obj_dw_garden_aquaplatforming_Step_0.gml M 13 5
+@@ -272,21 +272,29 @@
+                 d_make_plat(0, 3);
+             }
+         }
+-        if (enemywavetimer >= 2700)
++        if (enemywavetimer >= 2700 && instance_exists(obj_plat_enm_aqua_miniboss))
+         {
+             with (obj_plat_enm_aqua_miniboss)
+             {
+-                hp = 999;
++                hp = 999999;
+                 hit = 20;
+                 con = 99;
+                 with (obj_plat_bulletred)
+                 {
+                     if (sprite_index == spr_faqua_knife_cracked)
+                     {
+-                        if (variable_instance_exists(id, "owner") && owner.id == other)
++                        if (variable_instance_exists(id, "owner"))
+                         {
+-                            event_user(10);
+-                            lifetime = 0;
++                            if (!instance_exists(owner))
++                            {
++                                event_user(10);
++                                lifetime = 0;
++                            }
++                            else if (owner.id == other.id)
++                            {
++                                event_user(10);
++                                lifetime = 0;
++                            }
+                         }
+                     }
+                 }
+FILE ch5/gml_Object_obj_dw_garden_mushrooms_Step_0.gml M 8 1
+@@ -212,7 +212,7 @@
+         foxcon = 0;
+     }
+ }
+-if (!puzzle_solved && global.flag[1362])
++if (!puzzle_solved && global.flag[1362] && !d_ex())
+ {
+     global.interact = 1;
+     with (obj_darkcontroller)
+@@ -223,6 +223,13 @@
+     global.submenu = 0;
+     netskiecon = 1;
+     snd_play(snd_noise);
++    with (npc_floradinn)
++    {
++        face0allowed = false;
++        face1allowed = false;
++        face2allowed = false;
++        face3allowed = false;
++    }
+     global.facing = 3;
+     with (npc_floradinn)
+     {
+FILE ch5/gml_Object_obj_flowerdie_Alarm_0.gml M 24 21
+@@ -1,32 +1,35 @@
+-if (regroup_target != -4)
++if (instance_exists(particle_system))
+ {
+-    if (regroup_target == id)
++    if (regroup_target != -4)
+     {
+-        var arrlen = array_length(particle_system.particle_data);
+-        for (var i = 0; i < arrlen; i++)
++        if (regroup_target == id)
+         {
+-            with (particle_system.particle_data[i])
++            var arrlen = array_length(particle_system.particle_data);
++            for (var i = 0; i < arrlen; i++)
+             {
+-                custom_data.redirecting = true;
+-                custom_data.startx = x;
+-                custom_data.starty = y;
+-                custom_data.gx = other.gx;
+-                custom_data.gy = other.gy;
++                with (particle_system.particle_data[i])
++                {
++                    custom_data.redirecting = true;
++                    custom_data.startx = x;
++                    custom_data.starty = y;
++                    custom_data.gx = other.gx;
++                    custom_data.gy = other.gy;
++                }
+             }
+         }
+-    }
+-    else
+-    {
+-        var arrlen = array_length(particle_system.particle_data);
+-        for (var i = 0; i < arrlen; i++)
++        else
+         {
+-            with (particle_system.particle_data[i])
++            var arrlen = array_length(particle_system.particle_data);
++            for (var i = 0; i < arrlen; i++)
+             {
+-                custom_data.redirecting = true;
+-                custom_data.startx = x;
+-                custom_data.starty = y;
+-                custom_data.gx = other.regroup_target.x;
+-                custom_data.gy = other.regroup_target.y;
++                with (particle_system.particle_data[i])
++                {
++                    custom_data.redirecting = true;
++                    custom_data.startx = x;
++                    custom_data.starty = y;
++                    custom_data.gx = other.regroup_target.x;
++                    custom_data.gy = other.regroup_target.y;
++                }
+             }
+         }
+     }
+FILE ch5/gml_Object_obj_flowery_enemy_Create_0.gml M 2 0
+@@ -22,6 +22,7 @@
+ orange_jump_timer = 0;
+ aqua_phase_balloon_order = 1;
+ orange_phase_balloon_order = 1;
++moar_tension = 1;
+ introcon = 1;
+ global.tempflag[65]++;
+ global.flag[1865] = global.tempflag[65];
+@@ -29,6 +30,7 @@
+ {
+     introcon = 3;
+ }
++global.tempflag[74]++;
+ hold_it_objection = false;
+ global.flag[1894] = global.tempflag[70];
+ global.flag[1874] = global.tempflag[73];
+FILE ch5/gml_Object_obj_flowery_enemy_Step_0.gml M 28 0
+@@ -44,6 +44,34 @@
+     {
+         ralseiflower = instance_create_depth(x, y, obj_heroralsei.depth, obj_flowery_hero_flower);
+         ralseiflower.hero = 3;
++    }
++    if (global.tempflag[74] == 7)
++    {
++        moar_tension = 1.1;
++    }
++    if (global.tempflag[74] == 8)
++    {
++        moar_tension = 1.2;
++    }
++    if (global.tempflag[74] == 9)
++    {
++        moar_tension = 1.25;
++    }
++    if (global.tempflag[74] == 10)
++    {
++        moar_tension = 1.3;
++    }
++    if (global.tempflag[74] == 11)
++    {
++        moar_tension = 1.35;
++    }
++    if (global.tempflag[74] == 12)
++    {
++        moar_tension = 1.4;
++    }
++    if (global.tempflag[74] >= 13)
++    {
++        moar_tension = 1.5;
+     }
+     init = true;
+ }
+FILE ch5/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -62,14 +62,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.240";
++global.versionno = "v0.0.241";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.240";
++    global.versionno = "v0.0.241";
+ }
+ else if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.240";
++    global.versionno = "v0.0.241";
+ }
+ global.pause_plat = false;
+ global.game_won = false;
+FILE ch5/gml_Object_obj_orangeheart_floweryjarona_Step_0.gml M 16 4
+@@ -212,7 +212,10 @@
+             {
+                 attack_speed = scr_approach(attack_speed, attack_speed_limit, attack_speed_change);
+                 x = obj_orangeheart.x + 20;
+-                scr_tensionheal(12);
++                if (i_ex(obj_flowery_enemy))
++                {
++                    scr_tensionheal(12 * obj_flowery_enemy.moar_tension);
++                }
+                 do_hit_event();
+                 if (abs(obj_debug_orangeheartcontroller.fakecamxspeedadditional) > 13)
+                 {
+@@ -375,7 +378,10 @@
+             if (abs(obj_debug_orangeheartcontroller.fakecamxspeedadditional) > 13)
+             {
+                 snd_play(snd_parry_fast_nodelay, 1, 1);
+-                scr_tensionheal(10);
++                if (i_ex(obj_flowery_enemy))
++                {
++                    scr_tensionheal(10 * obj_flowery_enemy.moar_tension);
++                }
+             }
+             x = remx;
+             y = remy;
+@@ -1085,7 +1091,10 @@
+             {
+                 attack_speed = scr_approach(attack_speed, attack_speed_limit, attack_speed_change);
+                 x = obj_orangeheart.x + 20;
+-                scr_tensionheal(12);
++                if (i_ex(obj_flowery_enemy))
++                {
++                    scr_tensionheal(12 * obj_flowery_enemy.moar_tension);
++                }
+                 if (ds_list_size(final_list))
+                 {
+                     do_hit_event();
+@@ -1311,7 +1320,10 @@
+             damage_flash = 8;
+             snd_play(snd_punchheavythunder, undefined, 1.2);
+             snd_play(snd_parry_fast_nodelay, 1, 1);
+-            scr_tensionheal(10);
++            if (i_ex(obj_flowery_enemy))
++            {
++                scr_tensionheal(10 * obj_flowery_enemy.moar_tension);
++            }
+             x = remx;
+             y = remy;
+             hspeed = 34;
+FILE ch5/gml_Object_obj_orangeheart_helpful_flower_Create_0.gml M 4 1
+@@ -23,7 +23,10 @@
+         glowup = 1;
+     }
+     snd_play(snd_power);
+-    scr_tensionheal(10);
++    if (i_ex(obj_flowery_enemy))
++    {
++        scr_tensionheal(10 * obj_flowery_enemy.moar_tension);
++    }
+     instance_destroy();
+ };
+ 
+FILE ch5/gml_Object_obj_orangeheart_jumppad_Step_0.gml M 4 1
+@@ -12,7 +12,10 @@
+ {
+     if (dashing)
+     {
+-        scr_tensionheal(7.5);
++        if (i_ex(obj_flowery_enemy))
++        {
++            scr_tensionheal(7.5 * obj_flowery_enemy.moar_tension);
++        }
+         with (obj_orangeheart)
+         {
+             height_frames = scr_approach(height_frames, 18, 4);
+FILE ch5/gml_Object_obj_orangeheart_wall_Create_0.gml M 4 1
+@@ -89,7 +89,10 @@
+     var hit_length = obj_orangeheart.y - y;
+     var a1 = hit_length;
+     var a2 = image_yscale - a1;
+-    scr_tensionheal(3.75);
++    if (i_ex(obj_flowery_enemy))
++    {
++        scr_tensionheal(3.75 * obj_flowery_enemy.moar_tension);
++    }
+     with (instance_create(x, y, obj_marker))
+     {
+         hspeed = 7 + random(2);
+FILE ch5/gml_Object_obj_orangeheart_wall_Step_0.gml M 4 1
+@@ -58,7 +58,10 @@
+                 {
+                     do_hit_event();
+                     do_hitstop(1);
+-                    scr_tensionheal(tensionvalue);
++                    if (i_ex(obj_flowery_enemy))
++                    {
++                        scr_tensionheal(tensionvalue * obj_flowery_enemy.moar_tension);
++                    }
+                     deathcon = 1;
+                     deathtimer = 0;
+                     with (obj_orangeheart)
+FILE ch5/gml_Object_obj_pink_enemy_Step_0.gml M 2 2
+@@ -2340,9 +2340,9 @@
+         {
+             msgset(0, susnoeffectstring);
+             scr_battletext_default();
+-            actingral = 0;
++            actingsus = 0;
+             actcon = 1;
+-            actconral = 0;
++            actconsus = 0;
+         }
+         else
+         {
+FILE ch5/gml_Object_obj_windowglow_Create_0.gml M 5 2
+@@ -4,9 +4,12 @@
+ 
+ function scr_windowlayercolour_start()
+ {
+-    if (event_number == 0)
++    if (i_ex(obj_windowglow))
+     {
+-        pal_swap_set(spr_churchwindow_palette, obj_windowglow.pal_index, false);
++        if (event_number == 0)
++        {
++            pal_swap_set(spr_churchwindow_palette, obj_windowglow.pal_index, false);
++        }
+     }
+ }
+ 

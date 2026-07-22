@@ -1,0 +1,220 @@
+FILE ch1/gml_GlobalScript_scr_load.gml M 1 1
+@@ -346,6 +346,6 @@
+         __loadedroom = 131;
+     }
+     room_goto(__loadedroom);
++    scr_tempsave();
+     global.currentroom = __loadedroom;
+-    scr_tempsave();
+ }
+FILE ch1/gml_Object_obj_elevatorcontroller_Create_0.gml M 1 0
+@@ -26,6 +26,7 @@
+ mergespeed = 0.1;
+ mergecon = 0;
+ mergetimer = 0;
++pitchcount = 0;
+ movecon = 0;
+ movetimer = 0;
+ rectspacing = 600;
+FILE ch1/gml_Object_obj_elevatorcontroller_Step_0.gml M 6 2
+@@ -431,7 +431,8 @@
+     if (con == 6 && !d_ex())
+     {
+         ele_noise = snd_init("elevator.ogg");
+-        ele_noise_ind = mus_loop_ext(ele_noise, 0.6, 0.1);
++        ele_noise_ind = snd_loop(ele_noise);
++        snd_volume(ele_noise_ind, 0.6, 0);
+         with (r)
+         {
+             sprite_index = spr_ralseiu;
+@@ -441,6 +442,7 @@
+         newcno = 2;
+         con = 7;
+         pitchcount = 0.1;
++        snd_pitch(ele_noise_ind, pitchcount);
+         alarm[4] = 45;
+     }
+     if (con == 7)
+@@ -896,9 +898,11 @@
+         con = 101;
+         snd_play(snd_spearappear);
+         ele_noise = snd_init("elevator.ogg");
+-        ele_noise_ind = mus_loop_ext(ele_noise, 0.7, 0.5);
++        ele_noise_ind = snd_loop(ele_noise);
+         pitchcount = 0.5;
+         volcount = 0.7;
++        snd_volume(ele_noise_ind, volcount, 0);
++        snd_pitch(ele_noise_ind, pitchcount);
+         pitchtimer = 0;
+         alarm[4] = 40;
+     }
+FILE ch1/gml_Object_obj_initializer2_Create_0.gml M 1 1
+@@ -43,7 +43,7 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.16";
++global.version = "1.17";
+ if (os_type == os_switch)
+ {
+     global.version = "1.07";
+FILE ch1/gml_Object_obj_legend_Create_0.gml M 1 0
+@@ -23,3 +23,4 @@
+ skipped = 0;
+ skiptimer = 0;
+ draw_screen = true;
++skip_buffer = 10;
+FILE ch1/gml_Object_obj_legend_Draw_0.gml M 8 0
+@@ -608,6 +608,14 @@
+ draw_set_alpha(1);
+ if (ingame == 0)
+ {
++    if (skip_buffer > 0)
++    {
++        if (!button1_p())
++        {
++            skip_buffer--;
++        }
++        exit;
++    }
+     if (button1_p() && skipped == 0)
+     {
+         skipped = 1;
+FILE ch1/gml_Object_obj_savemenu_Create_0.gml M 1 0
+@@ -61,3 +61,4 @@
+ {
+     name = scr_84_get_lang_string("obj_savemenu_slash_Create_0_gml_43_0");
+ }
++time_current = global.time;
+FILE ch1/gml_Object_obj_savemenu_Draw_0.gml M 6 2
+@@ -1,5 +1,9 @@
+ xx = __view_get(e__VW.XView, 0);
+ yy = __view_get(e__VW.YView, 0);
++if (saved == 0)
++{
++    time_current = global.time;
++}
+ scr_84_set_draw_font("main");
+ if (d == 2)
+ {
+@@ -36,7 +40,7 @@
+     {
+         draw_text((78 * d) + xx, (80 * d) + yy, string_hash_to_newline(scr_84_get_lang_string("obj_savemenu_slash_Draw_0_gml_33_0") + string(level)));
+     }
+-    draw_text((210 * d) + xx, (80 * d) + yy, string_hash_to_newline(string(minutes) + ":" + string(seconds)));
++    draw_text((196 * d) + xx, (80 * d) + yy, scr_timedisp(time_current));
+     draw_set_halign(fa_center);
+     draw_text((160 * d) + xx, (100 * d) + yy, string_hash_to_newline(roomname));
+     draw_set_halign(fa_left);
+@@ -106,7 +110,7 @@
+     {
+         draw_text((175 * d) + xx, (60 * d) + yy, string_hash_to_newline(scr_84_get_lang_string("obj_savemenu_slash_Draw_0_gml_33_0") + string(level)));
+     }
+-    draw_text((210 * d) + xx, (60 * d) + yy, string_hash_to_newline(string(minutes) + ":" + string(seconds)));
++    draw_text((210 * d) + xx, (60 * d) + yy, scr_timedisp(time_current));
+     draw_text((70 * d) + xx, (80 * d) + yy, string_hash_to_newline(roomname));
+     if (coord == 0)
+     {
+FILE ch2/gml_GlobalScript_scr_load.gml M 4 0
+@@ -326,6 +326,10 @@
+             {
+                 global.currentroom = scr_get_id_by_room_index(62);
+             }
++            if (global.currentroom == scr_get_id_by_room_index(200))
++            {
++                global.currentroom = scr_get_id_by_room_index(199);
++            }
+         }
+     }
+     __loadedroom = scr_get_room_by_id(global.currentroom);
+FILE ch2/gml_GlobalScript_scr_roomname.gml M 1 1
+@@ -81,7 +81,7 @@
+     {
+         roomname = stringsetloc("Queen's Mansion - 4F", "scr_roomname_slash_scr_roomname_gml_20_0");
+     }
+-    if (arg0 == 199)
++    if (arg0 == 199 || arg0 == 200)
+     {
+         roomname = stringsetloc("Queen's Mansion - Rooftop", "scr_roomname_slash_scr_roomname_gml_23_0");
+     }
+FILE ch2/gml_Object_DEVICE_MENU_Create_0.gml M 2 2
+@@ -173,7 +173,7 @@
+             {
+                 TIME_SECONDS_STRING[i] = "0" + string(TIME_SECONDS[i]);
+             }
+-            TIME_STRING[i] = string(TIME_MINUTES[i]) + ":" + TIME_SECONDS_STRING[i];
++            TIME_STRING[i] = scr_timedisp(TIME[i]);
+         }
+     }
+     var cadd = 3;
+@@ -215,7 +215,7 @@
+             {
+                 COMPLETETIME_SECONDS_STRING[i] = "0" + string(COMPLETETIME_SECONDS[i]);
+             }
+-            COMPLETETIME_STRING[i] = string(COMPLETETIME_MINUTES[i]) + ":" + COMPLETETIME_SECONDS_STRING[i];
++            COMPLETETIME_STRING[i] = scr_timedisp(COMPLETEFILE_PREV_TIME[i]);
+         }
+         if (INCOMPLETEFILE_PREV[i])
+         {
+FILE ch2/gml_Object_obj_ch2_city07_Step_0.gml M 2 2
+@@ -341,7 +341,7 @@
+     c_talk_wait();
+     c_sel(gi);
+     c_stickto_stop();
+-    c_var_instance(gi_actor, "depth", ra_actor + 100);
++    c_var_instance(gi_actor, "depth", ra_actor.depth + 100);
+     c_var_lerp_instance(gi_actor, "y", 178, 164, 3);
+     c_wait(3);
+     c_var_lerp_instance(gi_actor, "y", 164, 214, 8);
+@@ -501,7 +501,7 @@
+     c_wait(30);
+     c_sel(gi);
+     c_stickto_stop();
+-    c_var_instance(gi_actor, "depth", su_actor + 100);
++    c_var_instance(gi_actor, "depth", su_actor.depth + 100);
+     c_var_lerp_instance(gi_actor, "y", 188, 176, 3);
+     c_wait(3);
+     c_var_lerp_instance(gi_actor, "y", 176, 236, 8);
+FILE ch2/gml_Object_obj_dw_cyber_battle_maze_controller_Create_0.gml M 2 0
+@@ -1 +1,3 @@
+ triggered = 0;
++enem = -4;
++enem2 = -4;
+FILE ch2/gml_Object_obj_initializer2_Create_0.gml M 1 1
+@@ -47,7 +47,7 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.version = "1.16";
++global.version = "1.17";
+ if (os_type == os_switch)
+ {
+     global.version = "1.07";
+FILE ch2/gml_Object_obj_legend_Create_0.gml M 1 0
+@@ -23,3 +23,4 @@
+ skipped = 0;
+ skiptimer = 0;
+ draw_screen = true;
++skip_buffer = 10;
+FILE ch2/gml_Object_obj_legend_Draw_0.gml M 8 0
+@@ -608,6 +608,14 @@
+ draw_set_alpha(1);
+ if (ingame == 0)
+ {
++    if (skip_buffer > 0)
++    {
++        if (!button1_p())
++        {
++            skip_buffer--;
++        }
++        exit;
++    }
+     if (button1_p() && skipped == 0)
+     {
+         skipped = 1;
+FILE ch2/gml_Object_obj_weirdroute_manipulator_Create_0.gml M 1 0
+@@ -580,3 +580,4 @@
+         instance_destroy();
+     }
+ }
++image_alpha = 0;

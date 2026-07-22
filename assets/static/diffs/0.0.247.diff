@@ -1,0 +1,2599 @@
+FILE ch5/gml_GlobalScript_scr_complete_save_file.gml M 250 1
+@@ -122,7 +122,7 @@
+             fought_flag = 1047;
+             break;
+         case 4:
+-            fought_flag = 1629;
++            fought_flag = 852;
+             break;
+         case 5:
+             fought_flag = 1908;
+@@ -217,6 +217,255 @@
+         new_result = 3;
+     }
+     scr_set_ura_value(arg0, slot, new_result);
++}
++
++function scr_get_chapter_flag(arg0, arg1, arg2)
++{
++    var flag_value = 0;
++    var file_name = "filech" + string(arg0) + "_" + string(arg1 + 3);
++    if (ossafe_file_exists(file_name))
++    {
++        var file = file_name;
++        var myfileid = ossafe_file_text_open_read(file);
++        ossafe_file_text_read_string(myfileid);
++        ossafe_file_text_readln(myfileid);
++        if (!global.is_console)
++        {
++            for (var i = 0; i < 6; i += 1)
++            {
++                ossafe_file_text_read_string(myfileid);
++                ossafe_file_text_readln(myfileid);
++            }
++        }
++        else
++        {
++            var othername_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(othername_list);
++            ossafe_file_text_readln(myfileid);
++        }
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        if (global.is_console)
++        {
++            var hp_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(hp_list);
++            ossafe_file_text_readln(myfileid);
++            var maxhp_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(maxhp_list);
++            ossafe_file_text_readln(myfileid);
++            var at_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(at_list);
++            ossafe_file_text_readln(myfileid);
++            var df_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(df_list);
++            ossafe_file_text_readln(myfileid);
++            var mag_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(mag_list);
++            ossafe_file_text_readln(myfileid);
++            var guts_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(guts_list);
++            ossafe_file_text_readln(myfileid);
++            var charweapon_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(charweapon_list);
++            ossafe_file_text_readln(myfileid);
++            var chararmor1_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(chararmor1_list);
++            ossafe_file_text_readln(myfileid);
++            var chararmor2_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(chararmor2_list);
++            ossafe_file_text_readln(myfileid);
++            var weaponstyle_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(weaponstyle_list);
++            ossafe_file_text_readln(myfileid);
++        }
++        for (var i = 0; i < 5; i += 1)
++        {
++            if (!global.is_console)
++            {
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++            }
++            for (var q = 0; q < 4; q += 1)
++            {
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++            }
++            for (var j = 0; j < 12; j += 1)
++            {
++                ossafe_file_text_read_real(myfileid);
++                ossafe_file_text_readln(myfileid);
++            }
++        }
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        if (global.is_console)
++        {
++            var item_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(item_list);
++            ossafe_file_text_readln(myfileid);
++            var keyitem_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(keyitem_list);
++            ossafe_file_text_readln(myfileid);
++            var weapon_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(weapon_list);
++            ossafe_file_text_readln(myfileid);
++            var armor_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(armor_list);
++            ossafe_file_text_readln(myfileid);
++            var pocket_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(pocket_list);
++            ossafe_file_text_readln(myfileid);
++        }
++        else
++        {
++            for (var j = 0; j < 13; j += 1)
++            {
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++            }
++            for (var j = 0; j < 48; j += 1)
++            {
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++            }
++            for (var j = 0; j < 72; j += 1)
++            {
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++            }
++        }
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        ossafe_file_text_read_real(myfileid);
++        ossafe_file_text_readln(myfileid);
++        if (global.is_console)
++        {
++            var litem_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(litem_list);
++            ossafe_file_text_readln(myfileid);
++            var phone_list = scr_ds_list_read(myfileid);
++            ds_list_destroy(phone_list);
++            ossafe_file_text_readln(myfileid);
++            var flag_list = scr_ds_list_read(myfileid);
++            flag_value = ds_list_find_value(flag_list, arg2);
++            for (var i = 0; i < (arg2 + 1); i += 1)
++            {
++                if (i == arg2)
++                {
++                    flag_value = ds_list_find_value(flag_list, i);
++                }
++            }
++            ds_list_destroy(flag_list);
++            ossafe_file_text_readln(myfileid);
++        }
++        else
++        {
++            for (var i = 0; i < 8; i += 1)
++            {
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++                file_text_read_real(myfileid);
++                file_text_readln(myfileid);
++            }
++            for (var i = 0; i < (arg2 + 1); i += 1)
++            {
++                if (i == arg2)
++                {
++                    flag_value = file_text_read_real(myfileid);
++                    file_text_readln(myfileid);
++                }
++                else
++                {
++                    file_text_read_real(myfileid);
++                    file_text_readln(myfileid);
++                }
++            }
++        }
++        ossafe_file_text_close(myfileid);
++    }
++    return flag_value;
+ }
+ 
+ function scr_get_video_ini_value()
+FILE ch5/gml_GlobalScript_scr_credit.gml M 2 2
+@@ -11,7 +11,7 @@
+     credits[0] = [new scr_credit([stringsetloc("-Main Artist-", "scr_credit_slash_scr_credit_gml_18_0"), stringsetloc("-Main Animator-", "scr_credit_slash_scr_credit_gml_19_0")], [stringset("Temmie Chang")])];
+     credits[1] = [new scr_credit([stringsetloc("-Main Team-", "scr_credit_slash_scr_credit_gml_29_0")], [stringset("Sarah O'Donnell"), stringset("Juju (Taxiderby)"), stringset("Fred Wood"), stringset("Jean Canellas"), stringset("AlexMdle"), stringset("PureQuestion")])];
+     credits[2] = [new scr_credit([stringsetloc("-Main Team-", "scr_credit_slash_scr_credit_gml_44_0_b")], [stringset("Enjl"), stringset("Joost (waddle)"), stringset("Sara Spalding (SaraJS)"), stringset("Robert Sephazon (Producer)"), stringset("Andy Brophy"), stringset("Xan Wetherall")])];
+-    credits[3] = [new scr_credit([stringsetloc("-Area & Fashion Concept Art-", "scr_credit_slash_scr_credit_gml_58_0")], [stringset("Gigi DG")]), new scr_credit([stringsetloc("-Platforming System Development-", "scr_credit_slash_scr_credit_gml_65_0")], [stringset("ondydev"), stringset("Enjl")]), new scr_credit([stringsetloc("-Guest Bullet Program-", "scr_credit_slash_scr_credit_gml_74_0")], [stringset("Eebrozgi")])];
++    credits[3] = [new scr_credit([stringsetloc("-Concept Art-", "scr_credit_slash_scr_credit_gml_58_0")], [stringsetloc("Gigi DG (Susie outfits)", "scr_credit_slash_scr_credit_gml_62_0"), stringsetloc("Matt Cummings (Festival)", "scr_credit_slash_scr_credit_gml_63_0")]), new scr_credit([stringsetloc("-Platforming System Development-", "scr_credit_slash_scr_credit_gml_65_0")], [stringset("ondydev"), stringset("Enjl")]), new scr_credit([stringsetloc("-Guest Bullet Program-", "scr_credit_slash_scr_credit_gml_74_0")], [stringset("Eebrozgi")]), new scr_credit([stringsetloc("-Platforming VFX-", "scr_credit_slash_scr_credit_gml_82_0")], [stringset("Zu Ehtisham")])];
+     credits[4] = [new scr_credit([stringsetloc("-Flowery Intro Animation-", "scr_credit_slash_scr_credit_gml_84_0"), stringsetloc("-Director and Storyboard-", "scr_credit_slash_scr_credit_gml_85_0"), stringsetloc("-Animation Character Design-", "scr_credit_slash_scr_credit_gml_86_0"), stringsetloc("-Key Animation-", "scr_credit_slash_scr_credit_gml_87_0")], [stringsetloc("Toko Yatabe", "scr_credit_slash_scr_credit_gml_90_0_b")]), new scr_credit([stringsetloc("-In-between Animation-", "scr_credit_slash_scr_credit_gml_95_0_b")], [stringsetloc("Yasuhito Murata", "scr_credit_slash_scr_credit_gml_98_0"), stringsetloc("Mayuko Kanosue", "scr_credit_slash_scr_credit_gml_99_0")], 2), new scr_credit([stringsetloc("-Color Design-", "scr_credit_slash_scr_credit_gml_103_0"), stringsetloc("-Color Coordination Inspection-", "scr_credit_slash_scr_credit_gml_104_0")], [stringsetloc("Akiko Inoue", "scr_credit_slash_scr_credit_gml_107_0_b")])];
+     credits[5] = [new scr_credit([stringsetloc("-Flowery Intro Animation Cont.-", "scr_credit_slash_scr_credit_gml_114_0"), stringsetloc("-Color Clean-up-", "scr_credit_slash_scr_credit_gml_115_0")], [stringsetloc("Wish", "scr_credit_slash_scr_credit_gml_118_0"), stringsetloc("Hikaru Takigawa", "scr_credit_slash_scr_credit_gml_119_0"), stringsetloc("Shiho Okamiya", "scr_credit_slash_scr_credit_gml_120_0")]), new scr_credit([stringsetloc("-Color Clean-up Manager-", "scr_credit_slash_scr_credit_gml_125_0")], [stringsetloc("Kosuke Kobashi", "scr_credit_slash_scr_credit_gml_128_0")]), new scr_credit([stringsetloc("-Backgrounds-", "scr_credit_slash_scr_credit_gml_132_0")], [stringsetloc("Akane Iwakuma", "scr_credit_slash_scr_credit_gml_135_0")])];
+     credits[6] = [new scr_credit([stringsetloc("-Flowery Intro Animation Cont.-", "scr_credit_slash_scr_credit_gml_142_0_b"), stringsetloc("-Backgrounds Manager-", "scr_credit_slash_scr_credit_gml_143_0")], [stringsetloc("Kaoru Inamura", "scr_credit_slash_scr_credit_gml_146_0")]), new scr_credit([stringsetloc("-Filming-", "scr_credit_slash_scr_credit_gml_151_0_b")], [stringsetloc("Nanae Hirabayashi", "scr_credit_slash_scr_credit_gml_154_0")]), new scr_credit([stringsetloc("-Animation Producer-", "scr_credit_slash_scr_credit_gml_159_0_b")], [stringsetloc("Yuki Sugitani", "scr_credit_slash_scr_credit_gml_162_0")]), new scr_credit([stringsetloc("-Production Studio-", "scr_credit_slash_scr_credit_gml_166_0")], [stringsetloc("studio khara", "scr_credit_slash_scr_credit_gml_169_0")])];
+@@ -28,7 +28,7 @@
+         music_credits = stringsetloc("(??????)", "scr_credit_slash_scr_credit_gml_142_0");
+     }
+     credits[9] = [new scr_credit([stringsetloc("-Guest Music Arrangement-", "scr_credit_slash_scr_credit_gml_148_0")], [[stringsetloc("(Rakuichi Buster)", "scr_credit_slash_scr_credit_gml_151_0")], stringset("rakuichi"), [stringset(music_credits), stringsetloc("(Flower Man)", "scr_credit_slash_scr_credit_gml_160_0")], stringset("Camellia"), [stringsetloc("(Chapter 5 Credits)", "scr_credit_slash_scr_credit_gml_159_0"), stringsetloc("(Deltarune Piano Collections)", "scr_credit_slash_scr_credit_gml_160_0_b")], stringset("Trevor Alan Gomes")])];
+-    credits[10] = [new scr_credit([stringsetloc("-Guest Music Arrangement-", "scr_credit_slash_scr_credit_gml_148_0")], [[stringsetloc("(I guess I'm in love)", "scr_credit_slash_scr_credit_gml_173_0_b")], stringset("Itoki Hana")]), new scr_credit([stringsetloc("-Anime Cutscene SFX-", "scr_credit_slash_scr_credit_gml_90_0")], [stringset("Power-Up Audio")]), new scr_credit([stringsetloc("-Development Tools (Cool)-", "scr_credit_slash_scr_credit_gml_164_0")], [stringset("Juju Adams")])];
++    credits[10] = [new scr_credit([stringsetloc("-Guest Music Arrangement-", "scr_credit_slash_scr_credit_gml_148_0")], [[stringsetloc("(I guess I'm in love)", "scr_credit_slash_scr_credit_gml_173_0_b")], stringset("Itoki Hana")]), new scr_credit([stringsetloc("-Musical Assistance-", "scr_credit_slash_scr_credit_gml_273_0")], [stringset("Marcy Nabors")]), new scr_credit([stringsetloc("-Anime Cutscene SFX-", "scr_credit_slash_scr_credit_gml_90_0")], [stringset("Power-Up Audio")]), new scr_credit([stringsetloc("-Development Tools (Cool)-", "scr_credit_slash_scr_credit_gml_164_0")], [stringset("Juju Adams")])];
+     credits[11] = [new scr_credit([stringsetloc("-Japanese Localization-", "scr_credit_slash_scr_credit_gml_170_0")], [stringsetloc("8-4, Ltd.", "scr_credit_slash_scr_credit_gml_173_0")]), new scr_credit([stringsetloc("-Translator-", "scr_credit_slash_scr_credit_gml_177_0")], [stringset("Keiko Fukuichi")])];
+     credits[12] = [new scr_credit([stringsetloc("-Localization Producers-", "scr_credit_slash_scr_credit_gml_187_0")], [stringset("Tina Carter"), stringset("John Ricciardi")]), new scr_credit([stringsetloc("-Localization Support-", "scr_credit_slash_scr_credit_gml_195_0")], [stringset("Graeme Howard"), stringset("Hiroyuki Matsushita"), stringset("Yutaka Ohbuchi"), stringset("Sami Ragone"), stringset("JP Wentz")])];
+     credits[13] = [new scr_credit([stringsetloc("-QA-", "scr_credit_slash_scr_credit_gml_231_0"), stringsetloc("DIGITAL HEARTS Co., Ltd.", "scr_credit_slash_scr_credit_gml_234_0")], [stringsetloc("Shuhei Kaji [QA Project Manager]", "scr_credit_slash_scr_credit_gml_294_0"), stringsetloc("Yu Takamori [QA Lead]", "scr_credit_slash_scr_credit_gml_295_0"), stringsetloc("Tatsuki Imai [Sales Dept]", "scr_credit_slash_scr_credit_gml_296_0")])];
+FILE ch5/gml_GlobalScript_scr_enemy_object_init.gml M 7 3
+@@ -23,9 +23,13 @@
+     mytarget = 0;
+     ambushed = 0;
+     firststrike = 0;
+-    damage = -1;
+-    grazepoints = -1;
+-    timepoints = -1;
++    damage = 1;
++    grazepoints = 0;
++    timepoints = 0;
++    if (object_index == obj_aqua_enemy)
++    {
++        timepoints = 1;
++    }
+     inv = -1;
+     target = -1;
+     grazed = -1;
+FILE ch5/gml_GlobalScript_scr_get_cliff_items.gml M 16 0
+@@ -5,6 +5,21 @@
+     {
+         var chapter = i + 1;
+         var boss_result = scr_get_ura_value(chapter, global.filechoice);
++        if (chapter == 4 && boss_result == 1)
++        {
++            boss_result = scr_get_secret_boss_result(chapter);
++            if (boss_result == 0 && scr_completed_chapter(4))
++            {
++                var prev_flag = scr_get_chapter_flag(4, global.filechoice, scr_get_secret_boss_flag(4));
++                boss_result = prev_flag;
++            }
++            if (boss_result == 1)
++            {
++                boss_result = 2;
++            }
++            scr_set_ura_value(chapter, global.filechoice, boss_result);
++            scr_set_ini_value(chapter, global.filechoice, "UraBoss", boss_result);
++        }
+         if (boss_result > 0)
+         {
+             var boss_data = [];
+@@ -84,6 +99,7 @@
+             _item_id = 26;
+             break;
+         case 4:
++            _item_type = "weapon";
+             _item_id = 52;
+             break;
+         default:
+FILE ch5/gml_GlobalScript_scr_get_room_by_id.gml M 0 5
+@@ -64,10 +64,5 @@
+ function scr_get_room_list()
+ {
+     var idsarr = [new scr_room(room_krisroom, 50013), new scr_room(room_town_south, 50024), new scr_room(room_dw_castle_town, 50054), new scr_room(PLACE_MENU, 50075), new scr_room(room_dw_castle_tv, 50114), new scr_room(room_dw_garden_intro, 50122), new scr_room(room_dw_garden_floradinnencounter, 50124), new scr_room(room_dw_garden_hospital, 50125), new scr_room(room_dw_garden_enemyrush, 50131), new scr_room(room_dw_garden_diner, 50135), new scr_room(room_dw_garden_aqua, 50138), new scr_room(room_dw_garden_aquahole, 50143), new scr_room(room_dw_garden_aquaplatforming, 50145), new scr_room(room_dw_garden_cliffexit, 50146), new scr_room(room_dw_garden_aquadash, 50152), new scr_room(room_dw_cliff_dash_runner, 50161), new scr_room(room_dw_cliff_seth_miniboss, 50162), new scr_room(room_dw_cliff_shop, 50163), new scr_room(room_dw_cliff_sethaqua_battle, 50169), new scr_room(room_dw_cliff_verticalwind_post, 50170), new scr_room(room_dw_fcastle_cafe, 50181), new scr_room(room_dw_fcastle_foyer, 50182), new scr_room(room_dw_fcastle_post_party_jail, 50183), new scr_room(room_dw_fcastle_left_twodoors, 50187), new scr_room(room_dw_fcastle_dangerous_platforming, 50190), new scr_room(room_dw_fcastle_blueroom, 50191), new scr_room(room_dw_fcastle_onsen, 50193), new scr_room(room_dw_fcastle_second_diner, 50207), new scr_room(room_dw_fcastle_obscured_bullets, 50208), new scr_room(room_dw_fcastle_right_penultimate, 50210), new scr_room(room_dw_fcastle_right_endingscene, 50212), new scr_room(room_dw_fcastle_orange_gauntlet, 50217), new scr_room(room_dw_fcastle_top_staircase_1, 50225), new scr_room(room_dw_fcastle_top_entrance, 50228), new scr_room(room_dw_fcastle_green_checkpoint, 50230), new scr_room(room_dw_fcastle_final_save, 50231), new scr_room(room_dw_fcastle_flowery, 50232), new scr_room(room_dw_fcastle_pinkroom, 50236), new scr_room(room_dw_fcastle_top_ascent, 50248)];
+-    if (scr_debug())
+-    {
+-        idsarr = [new scr_room(PLACE_CONTACT, 50012), new scr_room(room_krisroom, 50013), new scr_room(room_krishallway, 50014), new scr_room(room_torroom, 50015), new scr_room(room_torhouse, 50016), new scr_room(room_torbathroom, 50017), new scr_room(room_town_krisyard, 50018), new scr_room(room_town_northwest, 50019), new scr_room(room_town_north, 50020), new scr_room(room_beach, 50021), new scr_room(room_town_mid, 50022), new scr_room(room_town_apartments, 50023), new scr_room(room_town_south, 50024), new scr_room(room_town_school, 50025), new scr_room(room_town_church, 50026), new scr_room(room_graveyard, 50027), new scr_room(room_town_shelter, 50028), new scr_room(room_hospital_lobby, 50029), new scr_room(room_hospital_hallway, 50030), new scr_room(room_hospital_rudy, 50031), new scr_room(room_hospital_room2, 50032), new scr_room(room_diner, 50033), new scr_room(room_townhall, 50034), new scr_room(room_flowershop_1f, 50035), new scr_room(room_flowershop_2f, 50036), new scr_room(room_library, 50037), new scr_room(room_alphysalley, 50038), new scr_room(room_lw_computer_lab, 50039), new scr_room(room_lw_library_upstairs, 50040), new scr_room(room_lw_police, 50041), new scr_room(room_lw_conbini, 50042), new scr_room(room_lw_icee_pizza, 50043), new scr_room(room_torielclass, 50044), new scr_room(room_schoollobby, 50045), new scr_room(room_alphysclass, 50046), new scr_room(room_schooldoor, 50047), new scr_room(room_insidecloset, 50048), new scr_room(room_school_unusedroom, 50049), new scr_room(room_castle_tutorial, 50050), new scr_room(room_dw_castle_east_door, 50051), new scr_room(room_dw_castle_west_cliff, 50052), new scr_room(room_dw_castle_area_1, 50053), new scr_room(room_dw_castle_town, 50054), new scr_room(room_dw_ralsei_castle_front, 50055), new scr_room(room_dw_castle_restaurant, 50056), new scr_room(room_dw_castle_cafe, 50057), new scr_room(room_dw_castle_dojo, 50058), new scr_room(room_dw_ralsei_castle_1f, 50059), new scr_room(room_dw_ralsei_castle_2f, 50060), new scr_room(room_dw_ralsei_castle_3f, 50061), new scr_room(room_dw_castle_dungeon, 50062), new scr_room(room_dw_castle_rooms_kris, 50063), new scr_room(room_dw_castle_rooms_susie, 50064), new scr_room(room_dw_castle_rooms_ralsei, 50065), new scr_room(PLACE_DOG, 50066), new scr_room(room_legend, 50067), new scr_room(room_legend_neo, 50068), new scr_room(room_shop1, 50069), new scr_room(room_shop_music, 50070), new scr_room(room_gameover, 50071), new scr_room(PLACE_LOGO, 50072), new scr_room(PLACE_FAILURE, 50073), new scr_room(PLACE_NAMING_JIKKEN, 50074), new scr_room(PLACE_MENU, 50075), new scr_room(room_ed, 50076), new scr_room(room_empty, 50077), new scr_room(room_DARKempty, 50078), new scr_room(room_DARKbase_GMS2, 50079), new scr_room(room_cc_lancer, 50080), new scr_room(room_cc_clover, 50081), new scr_room(room_cc_fountain, 50082), new scr_room(PLACE_DOGCHECK2, 50083), new scr_room(room_debug_smallface_dark, 50084), new scr_room(room_debug_smallface, 50085), new scr_room(room_debug_choicer_dark, 50086), new scr_room(room_debug_choicer_light, 50087), new scr_room(room_debug_battleBalloon, 50088), new scr_room(room_overworldBulletEnemyTest, 50089), new scr_room(room_lerptest, 50090), new scr_room(room_bullettest, 50091), new scr_room(room_bullettest_new, 50092), new scr_room(room_animexampletest, 50093), new scr_room(rm_blank, 50094), new scr_room(room_climbtest, 50095), new scr_room(room_chapter_continue, 50096), new scr_room(room_towery_tester, 50098), new scr_room(room_animtest, 50099), new scr_room(PLACE_DOGCHECK_CH5, 50100), new scr_room(room_darkbulbTest, 50101), new scr_room(room_dw_fcastle_shadowplatformTest, 50102), new scr_room(room_plat_lab, 50103), new scr_room(room_lw_church_choir, 50104), new scr_room(room_lw_church_entrance, 50105), new scr_room(room_lw_church_main, 50106), new scr_room(room_lw_church_office, 50107), new scr_room(room_lw_noellehouse_dess, 50108), new scr_room(room_town_noellehouse, 50109), new scr_room(room_dw_rhythm, 50110), new scr_room(room_dw_rhythm_countdown, 50111), new scr_room(room_dw_rhythm_empty, 50112), new scr_room(room_rhythmgame_editor, 50113), new scr_room(room_dw_castle_tv, 50114), new scr_room(room_dw_castle_tv_rhythm, 50115), new scr_room(room_dw_castle_church_entrance, 50116), new scr_room(room_dw_castle_church_climb, 50117), new scr_room(room_dw_ralsei_castle_basketball, 50118), new scr_room(room_shop_ch5, 50119), new scr_room(room_dw_garden_meetflowery, 50120), new scr_room(room_dw_garden_video, 50121), new scr_room(room_dw_garden_intro, 50122), new scr_room(room_dw_garden_ralseicupboard, 50123), new scr_room(room_dw_garden_floradinnencounter, 50124), new scr_room(room_dw_garden_hospital, 50125), new scr_room(room_dw_garden_fishingspot, 50126), new scr_room(room_dw_garden_shearydodge, 50127), new scr_room(room_dw_garden_hopschef, 50128), new scr_room(room_dw_garden_platshortcut, 50129), new scr_room(room_dw_garden_riverchest, 50130), new scr_room(room_dw_garden_enemyrush, 50131), new scr_room(room_dw_garden_pedestal, 50132), new scr_room(room_dw_garden_mushrooms, 50133), new scr_room(room_dw_garden_flowerygardening, 50134), new scr_room(room_dw_garden_diner, 50135), new scr_room(room_dw_garden_starwalkerdash, 50136), new scr_room(room_dw_garden_hardpressureplates, 50137), new scr_room(room_dw_garden_aqua, 50138), new scr_room(room_dw_garden_finalplatforming, 50139), new scr_room(room_dw_garden_finalplatforming_right, 50140), new scr_room(room_dw_garden_wateringcan_aqua, 50141), new scr_room(room_dw_garden_aquadarkness, 50142), new scr_room(room_dw_garden_aquahole, 50143), new scr_room(room_dw_garden_aquashrine, 50144), new scr_room(room_dw_garden_aquaplatforming, 50145), new scr_room(room_dw_garden_cliffexit, 50146), new scr_room(room_dw_garden_susiechase, 50147), new scr_room(room_dw_garden_newdash, 50148), new scr_room(room_dw_garden_shearyguide, 50149), new scr_room(room_dw_pink_encounter, 50150), new scr_room(room_dw_garden_aquatransition, 50151), new scr_room(room_dw_garden_aquadash, 50152), new scr_room(room_dw_garden_aquahole_left, 50153), new scr_room(room_dw_garden_firstdash, 50154), new scr_room(room_dw_garden_aquadash_plat, 50155), new scr_room(room_dw_cliff_gardentransition_new, 50156), new scr_room(room_dw_cliff_climbrefresher, 50157), new scr_room(room_dw_cliff_cutdown_tutorial, 50158), new scr_room(room_dw_cliff_bunnyfarm, 50159), new scr_room(room_dw_cliff_silver_hammer, 50160), new scr_room(room_dw_cliff_dash_runner, 50161), new scr_room(room_dw_cliff_seth_miniboss, 50162), new scr_room(room_dw_cliff_shop, 50163), new scr_room(room_dw_cliff_netskieclimb, 50164), new scr_room(room_dw_cliff_finaldash, 50165), new scr_room(room_dw_cliff_yellowcave, 50166), new scr_room(room_dw_cliff_shicave, 50167), new scr_room(room_dw_cliff_verticalwind, 50168), new scr_room(room_dw_cliff_sethaqua_battle, 50169), new scr_room(room_dw_cliff_verticalwind_post, 50170), new scr_room(room_dw_cliff_netskieclimb_behind, 50171), new scr_room(room_dw_cliff_eastcliff, 50172), new scr_room(room_dw_cliff_bonuscombat, 50173), new scr_room(room_dw_cliff_twirlflowerplatforming, 50174), new scr_room(room_dw_cliff_kawkawdash, 50175), new scr_room(room_dw_cliff_precipice, 50176), new scr_room(room_dw_cliff_twirlflowerwind, 50177), new scr_room(room_dogplatforming, 50179), new scr_room(room_dw_fcastle_entrance, 50180), new scr_room(room_dw_fcastle_cafe, 50181), new scr_room(room_dw_fcastle_foyer, 50182), new scr_room(room_dw_fcastle_post_party_jail, 50183), new scr_room(room_dw_fcastle_shinobeetle_encounter, 50184), new scr_room(room_dw_fcastle_left_wing_floweryscene, 50185), new scr_room(room_dw_fcastle_bounce_1, 50186), new scr_room(room_dw_fcastle_left_twodoors, 50187), new scr_room(room_dw_fcastle_yellow_miniboss, 50188), new scr_room(room_dw_fcastle_sandtrap, 50189), new scr_room(room_dw_fcastle_dangerous_platforming, 50190), new scr_room(room_dw_fcastle_blueroom, 50191), new scr_room(room_dw_fcastle_yellowjail, 50192), new scr_room(room_dw_fcastle_onsen, 50193), new scr_room(room_dw_fcastle_left_penultimate, 50194), new scr_room(room_dw_flowery_tree, 50195), new scr_room(room_dw_fcastle_bounce_3, 50196), new scr_room(room_dw_fcastle_shinobeetle_3d, 50197), new scr_room(room_dw_fcastle_heldmushrooms, 50198), new scr_room(room_dw_fcastle_flowerydash, 50199), new scr_room(room_dw_fcastle_partyjail, 50200), new scr_room(room_dw_fcastle_terracotta_encounter, 50201), new scr_room(room_dw_fcastle_terracotta_bonus, 50202), new scr_room(room_dw_fcastle_fusumadodge, 50203), new scr_room(room_dw_fcastle_right_wing_floweryscene, 50204), new scr_room(room_dw_fcastle_orange_puppet_introduction, 50205), new scr_room(room_dw_fcastle_gloves_tower, 50206), new scr_room(room_dw_fcastle_second_diner, 50207), new scr_room(room_dw_fcastle_obscured_bullets, 50208), new scr_room(room_dw_fcastle_foxhunt, 50209), new scr_room(room_dw_fcastle_right_penultimate, 50210), new scr_room(room_dw_fcastle_green_orange_battle, 50211), new scr_room(room_dw_fcastle_right_endingscene, 50212), new scr_room(room_dw_fcastle_right_puzzle, 50213), new scr_room(room_dw_castle_music, 50214), new scr_room(room_man, 50215), new scr_room(room_dw_dogballoon, 50216), new scr_room(room_dw_fcastle_orange_gauntlet, 50217), new scr_room(room_dw_fcastle_sidepuzzle, 50218), new scr_room(room_dw_castle_tv_mike, 50219), new scr_room(room_dw_fcastle_zenlooker, 50220), new scr_room(room_dw_fcastle_trainroom, 50221), new scr_room(room_dw_post_flowery_battle, 50222), new scr_room(room_dw_fcastle_flowerclimb, 50223), new scr_room(room_dw_fcastle_top_intro, 50224), new scr_room(room_dw_fcastle_top_staircase_1, 50225), new scr_room(room_dw_fcastle_ultradash, 50226), new scr_room(room_dw_fcastle_yellowblue, 50227), new scr_room(room_dw_fcastle_top_entrance, 50228), new scr_room(room_dw_fcastle_top_staircase_2, 50229), new scr_room(room_dw_fcastle_green_checkpoint, 50230), new scr_room(room_dw_fcastle_final_save, 50231), new scr_room(room_dw_fcastle_flowery, 50232), new scr_room(room_dw_fcastle_seth_encounter, 50233), new scr_room(room_dw_fcastle_top_descent, 50234), new scr_room(room_dw_fcastle_top_pinkdoor, 50235), new scr_room(room_dw_fcastle_pinkroom, 50236), new scr_room(room_dw_fcastle_top_fountain, 50237), new scr_room(room_dw_post_fountain_close, 50238), new scr_room(room_dw_fcastle_pinkshop, 50239), new scr_room(room_dw_fcastle_foxhunt_terakota, 50240), new scr_room(room_dw_fcastle_foxhunt_socks, 50241), new scr_room(room_dw_fcastle_foxhunt_chaos, 50242), new scr_room(room_dw_fcastle_foxhunt_secret, 50243), new scr_room(room_dw_castle_tv_kikky, 50244), new scr_room(room_dw_fcastle_terracotta_puzzle, 50246), new scr_room(room_dw_fcastle_bromides, 50247), new scr_room(room_dw_fcastle_top_ascent, 50248), new scr_room(room_dw_fcastle_top_challenge, 50249)];
+-        array_push(idsarr, new scr_room(room_animexampletest, 100002), new scr_room(room_darkbulbTest, 100004), new scr_room(room_dw_fcastle_shadowplatformTest, 100005));
+-    }
+     return idsarr;
+ }
+FILE ch5/gml_GlobalScript_scr_monstersetup.gml M 1 1
+@@ -161,7 +161,7 @@
+     }
+     if (global.monstertype[myself] == 74)
+     {
+-        global.monstername[myself] = stringsetloc("KawKaw", "scr_monstersetup_slash_scr_monstersetup_gml_1991_0_b");
++        global.monstername[myself] = stringsetloc("Kawkaw", "scr_monstersetup_slash_scr_monstersetup_gml_1991_0_b");
+         global.monstermaxhp[myself] = 515;
+         global.monsterhp[myself] = 515;
+         global.monsterat[myself] = 16;
+FILE ch5/gml_GlobalScript_scr_text.gml M 2 1
+@@ -7042,7 +7042,8 @@
+             if (global.choice == 0)
+             {
+                 scr_speaker("no_name");
+-                msgsetloc(0, "* If you SPARE or PACIFY enough enemies of the same type^1, they will be RECRUITed./", "scr_text_slash_scr_text_gml_7511_0");
++                msgsetloc(0, "* If you SPARE enough enemies of the same type^1, they will be RECRUITed./", "scr_text_slash_scr_text_gml_7511_0");
++                msgnextloc("* Ralsei's PACIFY and Susie's SCYTHEMARE spell can RECRUIT TIRED enemies as well./", "scr_text_slash_scr_text_gml_7513_0_b");
+                 msgnextloc("* RECRUITs will appear in your TOWN. Wonder what happens if you get them all...?/", "scr_text_slash_scr_text_gml_7512_0");
+                 msgnextloc("* You can check the area's RECRUIT status at SAVE POINTS. Certain BOSSES are excluded./%", "scr_text_slash_scr_text_gml_7513_0");
+             }
+FILE ch5/gml_GlobalScript_scr_weaponinfo.gml M 2 2
+@@ -674,7 +674,7 @@
+             weaponchar1temp = 1;
+             weaponchar2temp = 0;
+             weaponchar3temp = 0;
+-            weaponchar4temp = 1;
++            weaponchar4temp = 0;
+             weaponicontemp = 27;
+             weaponabilityicontemp = 7;
+             weaponabilitytemp = stringsetloc("Critical", "scr_weaponinfo_slash_scr_weaponinfo_gml_716_0");
+@@ -718,7 +718,7 @@
+             weaponchar1temp = 0;
+             weaponchar2temp = 0;
+             weaponchar3temp = 1;
+-            weaponchar4temp = 1;
++            weaponchar4temp = 0;
+             weaponicontemp = 3;
+             weaponabilityicontemp = 0;
+             weaponabilitytemp = "";
+FILE ch5/gml_Object_obj_battleLayerHighlight_Create_0.gml M 4 0
+@@ -6,3 +6,7 @@
+ layer_depth("TILES_BATTLEBORDER_ANIM", 777777);
+ layer_script_begin("TILES_BATTLEBORDER_ANIM", scr_layer_alpha_begin);
+ layer_script_end("TILES_BATTLEBORDER_ANIM", scr_layer_alpha_end);
++if (!layer_exists("TILES_BATTLEBORDER_ANIM") && !layer_exists("TILES_BATTLEBORDER"))
++{
++    instance_destroy(id, false);
++}
+FILE ch5/gml_Object_obj_battlecontroller_Create_0.gml M 1 0
+@@ -268,3 +268,4 @@
+ disablesusieralseiattack = false;
+ skipsusieturn = false;
+ skipralseiturn = false;
++bonsai_stop = false;
+FILE ch5/gml_Object_obj_battlecontroller_Step_0.gml M 1 1
+@@ -182,7 +182,7 @@
+         }
+     }
+ }
+-if (i_ex(obj_flowery_enemy) && obj_flowery_enemy.introcon == 2)
++if ((i_ex(obj_flowery_enemy) && obj_flowery_enemy.introcon == 2) || bonsai_stop == true)
+ {
+ }
+ else if (global.myfight == 0)
+FILE ch5/gml_Object_obj_castlereflect_Create_0.gml M 0 1
+@@ -10,7 +10,6 @@
+ u_uvs2 = shader_get_uniform(shd_castlereflect_layerblend, "u_tile_surface_uvs");
+ u_uvs3 = shader_get_uniform(shd_castlereflect_layerblend, "u_mask_surface_uvs");
+ u_bounds = shader_get_uniform(shd_castlereflect_layerblend, "u_bounds");
+-cachelist = ds_list_create();
+ 
+ generate_tiles = function()
+ {
+FILE ch5/gml_Object_obj_ch5_DWCR01_Step_0.gml M 2 0
+@@ -178,6 +178,7 @@
+     c_wait_talk();
+     c_customfunc(function()
+     {
++        interjection = -1;
+         with (roomcontroller)
+         {
+             with (orange_bubble)
+@@ -194,6 +195,7 @@
+     c_wait_talk();
+     c_customfunc(function()
+     {
++        interjection = -1;
+         with (roomcontroller)
+         {
+             with (orange_bubble)
+FILE ch5/gml_Object_obj_ch5_LW01_Step_0.gml M 4 0
+@@ -43,6 +43,10 @@
+                 {
+                     instance_destroy();
+                 }
++                with (cage_fallen_marker)
++                {
++                    instance_destroy();
++                }
+                 con = 100;
+                 cutscene_master = scr_cutscene_make();
+                 scr_maincharacters_actors();
+FILE ch5/gml_Object_obj_confetti_wind_Step_0.gml M 1 0
+@@ -40,3 +40,4 @@
+         instance_destroy();
+     }
+ }
++ds_list_destroy(_list);
+FILE ch5/gml_Object_obj_dbulletcontroller_Create_0.gml M 6 2
+@@ -2,8 +2,12 @@
+ btimer = 99;
+ timermax = 12;
+ damage = -1;
+-grazepoints = -1;
+-timepoints = -1;
++grazepoints = 0;
++timepoints = 0;
++if (i_ex(obj_aqua_enemy))
++{
++    timepoints = 1;
++}
+ inv = -1;
+ grazed = -1;
+ grazetimer = -1;
+FILE ch5/gml_Object_obj_dbulletcontroller_Step_0.gml M 3 0
+@@ -3220,6 +3220,7 @@
+         made = true;
+         var d = instance_create(camerax() + 434, cameray() + 181, obj_blue_guidelines);
+         scr_bullet_inherit(d);
++        d.grazepoints = 12;
+     }
+ }
+ if (type == 302)
+@@ -3229,6 +3230,7 @@
+         var d = instance_create(obj_blue_enemy.x, obj_blue_enemy.y, obj_enemy_blue_boxspin);
+         d.mode = 1;
+         scr_bullet_inherit(d);
++        d.grazepoints = 8;
+         made = true;
+     }
+ }
+@@ -3253,6 +3255,7 @@
+             scr_lerpvar("yanchor", yanchor, cameray() + 90, 30, 1, "out");
+         }
+         scr_bullet_inherit(d);
++        d.grazepoints = 6;
+     }
+ }
+ if (type == 305)
+FILE ch5/gml_Object_obj_dw_cliff_seth_miniboss_Step_0.gml M 127 127
+@@ -722,134 +722,134 @@
+         if (!global.pause_plat)
+         {
+             timer++;
+-        }
+-        if (timer < 1000)
+-        {
+-            if (timer >= 13 && (timer % 45) == 14)
+-            {
+-                var dir = -1;
+-                if ((timer % 90) >= 46)
+-                {
+-                    dir = 1;
+-                }
+-                with (npc_seth)
+-                {
+-                    scr_lerpvar("x", x, x + (24 * dir), 8, 1, "out");
+-                }
+-                npc_seth.image_xscale = dir * 2;
+-                with (bullet_pattern_object)
+-                {
+-                    jerky_motion(dir);
+-                }
+-                with (npc_aqua)
+-                {
+-                    image_xscale = -dir * 2;
+-                    sprite_image_index = 0;
+-                    image_speed = 0;
+-                    scr_lerpvar("sprite_image_index", 0, 3, 8);
+-                }
+-            }
+-            npc_aqua.x = (npc_seth.x + (sin(timer / 3) * 4)) - 6;
+-            npc_aqua.y = npc_seth.y - 70;
+-            if (timer == 13)
+-            {
+-                npc_aqua.visible = 1;
+-                with (npc_aqua)
+-                {
+-                    force_animation(6241);
+-                }
+-                with (npc_seth)
+-                {
+-                    force_animation(8059);
+-                }
+-            }
+-            if (timer == 72)
+-            {
+-                scr_speaker("seth");
+-                msgsetsubloc(0, "~1* G..^1. get off of me--!", (global.lang == "ja") ? "\\m1\t\t\t" : "\\m1\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_cliff_seth_miniboss_slash_Step_0_gml_841_0");
+-                d_make_plat(0, 6, undefined, undefined, 1);
+-            }
+-            if (timer > 82 && !i_ex(obj_dialoguer_plat) && !global.pause_plat)
+-            {
+-                timer = 1000;
+-            }
+-        }
+-        else
+-        {
+-            if (timer == 1001)
+-            {
+-                snd_play(snd_boost);
+-                npc_aqua.image_xscale = 2;
+-                with (npc_aqua)
+-                {
+-                    with (scr_afterimage_monochrome(16776960, true))
++            if (timer < 1000)
++            {
++                if (timer >= 13 && (timer % 45) == 14)
++                {
++                    var dir = -1;
++                    if ((timer % 90) >= 46)
+                     {
+-                        sprite_index = other.sprite_draw;
+-                        image_index = other.sprite_image_index;
+-                        depth = other.depth - 1;
+-                        x -= ((0.5 * sprite_width) - 21);
+-                        y -= (0.5 * sprite_height);
++                        dir = 1;
+                     }
+-                }
+-            }
+-            if (timer == 1031)
+-            {
+-                var dir = -2;
+-                with (npc_seth)
+-                {
+-                    force_animation(4983);
+-                    image_xscale = 2;
+-                    image_speed = 0;
+-                    sprite_image_index = 2;
+-                    scr_lerpvar("x", x, x + (28 * dir), 8, 1, "out");
+-                    scr_lerpvar("y", y, y + 60, 8, 1, "out");
+-                }
+-                with (bullet_pattern_object)
+-                {
+-                    jerky_motion(-2);
+-                }
+-                with (npc_aqua)
+-                {
+-                    snd_play(snd_jump);
+-                    force_animation(3476);
+-                    vspeed = -12;
+-                    entity_gravity = 1.25;
+-                    physics = true;
+-                    gravity = 1.25;
+-                    hspeed = 8;
+-                    scr_delay_var("depth", 50000, 12);
+-                    if (x > (camerax() + (0.5 * camerawidth())))
++                    with (npc_seth)
+                     {
+-                        scr_delay_var("image_xscale", 2, 12);
++                        scr_lerpvar("x", x, x + (24 * dir), 8, 1, "out");
+                     }
+-                    else
++                    npc_seth.image_xscale = dir * 2;
++                    with (bullet_pattern_object)
+                     {
+-                        scr_delay_var("image_xscale", -2, 12);
++                        jerky_motion(dir);
+                     }
+-                    scr_delay_var("image_blend", 16777215, 12);
+-                    image_speed = 0.25;
+-                }
+-            }
+-            if (timer < 1031)
+-            {
+-                npc_aqua.x = npc_seth.x;
++                    with (npc_aqua)
++                    {
++                        image_xscale = -dir * 2;
++                        sprite_image_index = 0;
++                        image_speed = 0;
++                        scr_lerpvar("sprite_image_index", 0, 3, 8);
++                    }
++                }
++                npc_aqua.x = (npc_seth.x + (sin(timer / 3) * 4)) - 6;
+                 npc_aqua.y = npc_seth.y - 70;
+-            }
+-            if (timer == 1061)
+-            {
+-                con = 17;
+-                scr_plat_barrier_disable();
+-                with (npc_seth)
+-                {
+-                    x += 56;
+-                    force_animation(6736);
+-                    scr_lerpvar("y", y, y - 60, 20, 1, "out");
+-                    image_speed = 0;
+-                    if (x > (camerax() + (0.5 * camerawidth())))
++                if (timer == 13)
++                {
++                    npc_aqua.visible = 1;
++                    with (npc_aqua)
+                     {
+-                        scr_delay_var("image_xscale", -2, 12);
++                        force_animation(6241);
+                     }
+-                    scr_delay_var("image_speed", 0.25, 12);
++                    with (npc_seth)
++                    {
++                        force_animation(8059);
++                    }
++                }
++                if (timer == 72)
++                {
++                    scr_speaker("seth");
++                    msgsetsubloc(0, "~1* G..^1. get off of me--!", (global.lang == "ja") ? "\\m1\t\t\t" : "\\m1\t\t", (global.lang == "ja") ? "&\t\t\t\t" : "&\t\t", "obj_dw_cliff_seth_miniboss_slash_Step_0_gml_841_0");
++                    d_make_plat(0, 6, undefined, undefined, 1);
++                }
++                if (timer > 82 && !i_ex(obj_dialoguer_plat) && !global.pause_plat)
++                {
++                    timer = 1000;
++                }
++            }
++            else
++            {
++                if (timer == 1001)
++                {
++                    snd_play(snd_boost);
++                    npc_aqua.image_xscale = 2;
++                    with (npc_aqua)
++                    {
++                        with (scr_afterimage_monochrome(16776960, true))
++                        {
++                            sprite_index = other.sprite_draw;
++                            image_index = other.sprite_image_index;
++                            depth = other.depth - 1;
++                            x -= ((0.5 * sprite_width) - 21);
++                            y -= (0.5 * sprite_height);
++                        }
++                    }
++                }
++                if (timer == 1031)
++                {
++                    var dir = -2;
++                    with (npc_seth)
++                    {
++                        force_animation(4983);
++                        image_xscale = 2;
++                        image_speed = 0;
++                        sprite_image_index = 2;
++                        scr_lerpvar("x", x, x + (28 * dir), 8, 1, "out");
++                        scr_lerpvar("y", y, y + 60, 8, 1, "out");
++                    }
++                    with (bullet_pattern_object)
++                    {
++                        jerky_motion(-2);
++                    }
++                    with (npc_aqua)
++                    {
++                        snd_play(snd_jump);
++                        force_animation(3476);
++                        vspeed = -12;
++                        entity_gravity = 1.25;
++                        physics = true;
++                        gravity = 1.25;
++                        hspeed = 8;
++                        scr_delay_var("depth", 50000, 12);
++                        if (x > (camerax() + (0.5 * camerawidth())))
++                        {
++                            scr_delay_var("image_xscale", 2, 12);
++                        }
++                        else
++                        {
++                            scr_delay_var("image_xscale", -2, 12);
++                        }
++                        scr_delay_var("image_blend", 16777215, 12);
++                        image_speed = 0.25;
++                    }
++                }
++                if (timer < 1031)
++                {
++                    npc_aqua.x = npc_seth.x;
++                    npc_aqua.y = npc_seth.y - 70;
++                }
++                if (timer == 1061)
++                {
++                    con = 17;
++                    scr_plat_barrier_disable();
++                    with (npc_seth)
++                    {
++                        x += 56;
++                        force_animation(6736);
++                        scr_lerpvar("y", y, y - 60, 20, 1, "out");
++                        image_speed = 0;
++                        if (x > (camerax() + (0.5 * camerawidth())))
++                        {
++                            scr_delay_var("image_xscale", -2, 12);
++                        }
++                        scr_delay_var("image_speed", 0.25, 12);
++                    }
+                 }
+             }
+         }
+@@ -860,14 +860,14 @@
+         if (!global.pause_plat)
+         {
+             timer++;
+-        }
+-        if (timer >= 80 && !i_ex(obj_plat_enm_sethglasses_miniboss))
+-        {
+-            con = 19;
+-            timer = 0;
+-            with (obj_darkcontroller)
+-            {
+-                charcon = 0;
++            if (timer >= 80 && !i_ex(obj_plat_enm_sethglasses_miniboss))
++            {
++                con = 19;
++                timer = 0;
++                with (obj_darkcontroller)
++                {
++                    charcon = 0;
++                }
+             }
+         }
+     }
+FILE ch5/gml_Object_obj_dw_dogplatforming_Step_0.gml M 1 1
+@@ -81,7 +81,7 @@
+     global.facing = 2;
+     global.flag[7] = 1;
+ }
+-if (climbcon == 1 && !instance_exists(obj_climb_kris))
++if (climbcon == 1 && !instance_exists(obj_climb_kris) && global.interact == 0)
+ {
+     global.interact = 1;
+     climbcon = 2;
+FILE ch5/gml_Object_obj_dw_fcastle_pinkshop_Create_0.gml M 6 3
+@@ -263,11 +263,14 @@
+                 }
+                 with (obj_dialoguer)
+                 {
+-                    with (writer)
++                    if (i_ex(writer))
+                     {
+-                        if (msgno >= targetmessagenumber)
++                        with (writer)
+                         {
+-                            goahead = true;
++                            if (msgno >= targetmessagenumber)
++                            {
++                                goahead = true;
++                            }
+                         }
+                     }
+                 }
+FILE ch5/gml_Object_obj_dw_fcastle_seth_encounter_Step_0.gml M 2 1
+@@ -416,8 +416,9 @@
+     {
+         seth.sprite_index = spr_seth_point;
+         seth.image_index = 1;
++        scr_miniface_init_flowers();
+         scr_speaker("seth");
+-        msgsetloc(0, "* Now!/%", "obj_dw_fcastle_seth_encounter_slash_Step_0_gml_512_0");
++        msgsetsubloc(0, "~1* Now!/%", (global.lang == "ja") ? "\\m1\t\t\t" : "\\m1\t\t", "obj_dw_fcastle_seth_encounter_slash_Step_0_gml_512_0");
+         d_make();
+         con = 7;
+     }
+FILE ch5/gml_Object_obj_dw_fcastle_yellow_combat_Step_0.gml M 12 0
+@@ -187,6 +187,18 @@
+                 instance_destroy(back);
+             }
+             instance_destroy();
++        }
++    }
++    with (obj_plat_floor)
++    {
++        if (extflag == "becomesolid")
++        {
++            var block = instance_create(x, y, obj_plat_block);
++            block.image_xscale = image_xscale;
++            block.image_yscale = image_yscale;
++            block.visible = false;
++            instance_destroy();
++            break;
+         }
+     }
+     cutscene_master = scr_cutscene_make();
+FILE ch5/gml_Object_obj_dw_garden_floradinnencounter_Step_0.gml M 4 0
+@@ -168,6 +168,10 @@
+         instance_change(obj_blocktree_pink_bg, true);
+     }
+ }
++if (waiting_exit && instance_exists(obj_testoverworldenemy))
++{
++    waiting_exit = false;
++}
+ if (waiting_exit && !d_ex())
+ {
+     global.interact = 0;
+FILE ch5/gml_Object_obj_dw_garden_mushrooms_Other_10.gml M 1 0
+@@ -86,6 +86,7 @@
+         scr_speaker("no_name");
+         msgsetloc(0, "* (The theaters sold out.)/%", "obj_dw_garden_mushrooms_slash_Other_10_gml_78_0");
+         scr_flag_set(1319, scr_flag_get(1319) + 1);
++        scr_flag_set(7, 1);
+         with (obj_dw_garden_mushrooms)
+         {
+             cutscenecon = 1;
+FILE ch5/gml_Object_obj_dw_garden_mushrooms_Step_0.gml M 1 0
+@@ -392,6 +392,7 @@
+     global.interact = 1;
+     if (!i_ex(cutscene_master))
+     {
++        scr_flag_set(7, 0);
+         with (yellow_marker)
+         {
+             instance_destroy();
+FILE ch5/gml_Object_obj_dw_garden_shearyguide_Step_0.gml M 5 2
+@@ -344,7 +344,6 @@
+         {
+             instance_destroy();
+         }
+-        global.flag[7] = 0;
+     }
+     waitforbattle++;
+     with (obj_solidblocksized_alt)
+@@ -373,6 +372,7 @@
+ if (cutscenecon == 6 && !i_ex(obj_cutscene_master))
+ {
+     global.interact = 0;
++    global.flag[7] = 0;
+     cutscenecon = 7;
+     scr_flag_set_ext(grass1flag, tutorialbit, 1);
+     with (obj_mainchara)
+@@ -382,7 +382,10 @@
+         freeze = 0;
+     }
+     global.flag[1374] = 1;
+-    var newshear = instance_create(camerax(), -100, obj_scissor_flower_chaser_scissor);
++    var newshear = instance_create_depth(camerax(), -100, 0, obj_scissor_flower_chaser_scissor, 
++    {
++        has_bulletarea: true
++    });
+     newshear.startspeed = 6;
+     newshear.flower_range = 20;
+     newshear.despawn_when_stuck = true;
+FILE ch5/gml_Object_obj_dw_garden_shearyguide_Step_2.gml M 6 3
+@@ -1,12 +1,15 @@
+-if (cutscenecon >= 1 && cutscenecon <= 6)
++if ((cutscenecon >= 1 && cutscenecon <= 6) || shrubcon != 0)
+ {
+     with (obj_mainchara)
+     {
+-        drawbattlemode = 0;
+         battleheart.image_alpha = 0;
+         battlealpha = 0;
+         battlemode = 0;
+-        cutscene = 1;
++        if (other.shrubcon == 0)
++        {
++            drawbattlemode = 0;
++            cutscene = 1;
++        }
+     }
+ }
+ with (obj_darkcontroller)
+FILE ch5/gml_Object_obj_floradinn_enemy_Step_0.gml M 84 0
+@@ -215,6 +215,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.03;
+             msgsetloc(0, "Do you^1, uh,&really have to,&flirt with someone?/%", "obj_floradinn_enemy_slash_Step_0_gml_197_0");
+@@ -228,6 +232,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.04;
+             msgsetloc(0, "..^1. if you&like them?/%", "obj_floradinn_enemy_slash_Step_0_gml_210_0");
+@@ -241,6 +249,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.05;
+             scr_battle_sprite_set("kris", spr_krisb_act_lookdown, 0, 1);
+@@ -269,6 +281,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.07;
+             msgsetloc(0, "Kris^1, um^1, how would&YOU show if you liked&someone?/%", "obj_floradinn_enemy_slash_Step_0_gml_250_0");
+@@ -282,6 +298,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.08;
+             scr_battle_sprite_set("kris", spr_krisb_act_lookdown2, 0, 1);
+@@ -327,6 +347,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.23;
+             msgsetloc(0, "So far,&all I know is&that someone.../%", "obj_floradinn_enemy_slash_Step_0_gml_311_0");
+@@ -339,6 +363,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.24;
+             msgsetloc(0, "..^1. someone's,&just gotta&like you first./%", "obj_floradinn_enemy_slash_Step_0_gml_324_0");
+@@ -381,6 +409,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.28;
+             global.typer = 50;
+@@ -393,6 +425,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 0;
+             actcon = 1;
+@@ -414,6 +450,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.43;
+             msgsetloc(0, "It may struggle&with the seasons,&but.../%", "obj_floradinn_enemy_slash_Step_0_gml_411_0");
+@@ -427,6 +467,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.44;
+             msgsetloc(0, "If you believe^1, it&will blossom with more&colors than the rainbow./%", "obj_floradinn_enemy_slash_Step_0_gml_426_0");
+@@ -440,6 +484,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.45;
+             var _txt = choose(stringsetloc("boyfriend", "obj_floradinn_enemy_slash_Step_0_gml_441_0"), stringsetloc("girlfriend", "obj_floradinn_enemy_slash_Step_0_gml_441_1"));
+@@ -453,6 +501,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.46;
+             msgsetloc(0, "N..^1. no./%", "obj_floradinn_enemy_slash_Step_0_gml_456_0");
+@@ -466,6 +518,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             talktimer = 0;
+             acting = 1.47;
+             global.typer = 50;
+@@ -559,6 +615,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             msgsetloc(0, ".../%", "obj_floradinn_enemy_slash_Step_0_gml_570_0");
+             global.typer = 75;
+             scr_heroblcon("susie");
+@@ -571,6 +631,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             msgsetloc(0, "'cept^1, I&guess..^1. if.../%", "obj_floradinn_enemy_slash_Step_0_gml_584_0");
+             global.typer = 75;
+             scr_heroblcon("susie");
+@@ -583,6 +647,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             msgsetloc(0, "If me and Noelle are...&a thing.../%", "obj_floradinn_enemy_slash_Step_0_gml_598_0");
+             global.typer = 75;
+             scr_heroblcon("susie");
+@@ -607,6 +675,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             msgsetloc(0, "* Susie got psyched out^1! You just did a flower impression instead!/%", "obj_floradinn_enemy_slash_Step_0_gml_626_0");
+             scr_battletext_default();
+             scr_mercyadd(myself, 100);
+@@ -666,6 +738,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             msgsetloc(0, "If you come to our side...&we can all be friends!/%", "obj_floradinn_enemy_slash_Step_0_gml_709_0");
+             global.typer = 74;
+             var heroballoon = scr_enemyblcon(obj_heroralsei.x + 100 + 30, obj_heroralsei.y + 40 + 20, 10);
+@@ -679,6 +755,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             msgsetloc(0, "* (Floradinn agreed!)/%", "obj_floradinn_enemy_slash_Step_0_gml_725_0");
+             scr_battletext_default();
+             acting = 4.4;
+@@ -719,6 +799,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             weaponraise = false;
+             flipped = false;
+             disappointed = true;
+FILE ch5/gml_Object_obj_flowery_enemy_Step_0.gml M 1 1
+@@ -1041,7 +1041,7 @@
+             else if ((ballooncon == 32 && balloonend == 1) || ballooncon == 34)
+             {
+                 global.typer = 50;
+-                scr_enemyblcon(purple_marker.x - 18, purple_marker.y + 20, 10);
++                scr_enemyblcon(camerax() + 514, purple_marker.y + 20, 10);
+                 ballooncon = 0;
+                 with (obj_battleblcon)
+                 {
+FILE ch5/gml_Object_obj_initializer2_Create_0.gml M 3 3
+@@ -62,14 +62,14 @@
+ global.savedata_async_load = false;
+ global.savedata_error = false;
+ global.savedata_debuginfo = "";
+-global.versionno = "v0.0.244";
++global.versionno = "v0.0.247";
+ if (scr_is_switch_os())
+ {
+-    global.versionno = "v0.0.244";
++    global.versionno = "v0.0.247";
+ }
+ else if (os_type == os_ps4 || os_type == os_ps5)
+ {
+-    global.versionno = "v0.0.244";
++    global.versionno = "v0.0.247";
+ }
+ global.pause_plat = false;
+ global.game_won = false;
+FILE ch5/gml_Object_obj_kawkaw_enemy_Step_0.gml M 1 1
+@@ -159,7 +159,7 @@
+             state = 0;
+             global.faceaction[myself] = 0;
+         }
+-        msgsetloc(0, "* You put your arms into a hoop!&* KawKaw takes it as affection!", "obj_kawkaw_enemy_slash_Step_0_gml_162_0");
++        msgsetloc(0, "* You put your arms into a hoop!&* Kawkaw takes it as affection!", "obj_kawkaw_enemy_slash_Step_0_gml_162_0");
+         scr_battletext_default();
+         acting = 2.1;
+         obj_herokris.x += 10;
+FILE ch5/gml_Object_obj_leafling_enemy_Step_0.gml M 4 0
+@@ -289,6 +289,10 @@
+         talktimer++;
+         if ((button3_h() && talktimer > 15) || !instance_exists(obj_writer))
+         {
++            with (obj_writer)
++            {
++                instance_destroy();
++            }
+             acting = 0;
+             actcon = 1;
+             with (obj_herosusie)
+FILE ch5/gml_Object_obj_noellehouse_festival_Step_0.gml M 1 1
+@@ -201,7 +201,7 @@
+     global.choicemsg[2] = stringset("");
+     global.choicemsg[3] = stringset("");
+     scr_speaker("catty");
+-    msgsetloc(0, "\\E5* OMG^1, like^1, talk about second-paw embarassment!/", "obj_noellehouse_festival_slash_Step_0_gml_269_0");
++    msgsetloc(0, "\\E5* OMG^1, like^1, talk about second-paw embarrassment!/", "obj_noellehouse_festival_slash_Step_0_gml_269_0");
+     msgnextloc("\\E3* OMG^1, this is like NEVER LEAVE THE HOUSE AGAIN level pathetic!/", "obj_noellehouse_festival_slash_Step_0_gml_270_0");
+     msgnextloc("\\E2* It's like^1, kinda cute!/", "obj_noellehouse_festival_slash_Step_0_gml_271_0");
+     msgnextloc("\\E6* Y'know^1, like^1, a dying mouse^1? Umm..^1. I could like^1, save him./", "obj_noellehouse_festival_slash_Step_0_gml_272_0");
+FILE ch5/gml_Object_obj_orangeheart_Create_0.gml M 8 1
+@@ -88,7 +88,14 @@
+             }
+         }
+     }
+-    if (global.inv > 24)
++    if (global.chararmor1[1] == 35 || global.chararmor2[1] == 35 || global.chararmor1[2] == 35 || global.chararmor2[2] == 35 || global.chararmor1[3] == 35 || global.chararmor2[3] == 35)
++    {
++        if (global.inv > 29)
++        {
++            global.inv = 29;
++        }
++    }
++    else if (global.inv > 24)
+     {
+         global.inv = 24;
+     }
+FILE ch5/gml_Object_obj_plat_antisoftlock_zone_Step_0.gml M 0 1
+@@ -34,7 +34,6 @@
+ {
+     markerdelay = 0;
+ }
+-var memlist = ds_list_create();
+ var ground = obj_plat_player.bbox_bottom;
+ var groundorig = ground;
+ var dm = debugmarker;
+FILE ch5/gml_Object_obj_plat_bread_manager_Draw_0.gml M 4 3
+@@ -50,10 +50,11 @@
+ }
+ if (best_time > 0 && count_up)
+ {
+-    var ss = floor(best_time / 30);
+-    var msms = floor(((best_time % 30) / 30) * 1000);
++    var real_length = string_length(floor(best_time / 30));
++    var decimal_length = string_length(floor(((best_time % 30) / 30) * 1000));
++    var timestring = string_format(best_time / 30, real_length, max(3, decimal_length));
+     draw_set_color(c_white);
+     draw_set_alpha(1);
+     draw_set_font(scr_84_get_font("mainbig"));
+-    draw_text(xx, yy + 80, stringsetloc("BEST: ", "obj_plat_bread_manager_slash_Draw_0_gml_64_0") + string(ss) + "." + string(msms));
++    draw_text(xx, yy + 80, stringsetloc("BEST: ", "obj_plat_bread_manager_slash_Draw_0_gml_64_0") + timestring);
+ }
+FILE ch5/gml_Object_obj_plat_enm_sethglasses_miniboss_CleanUp_0.gml M 4 0
+@@ -33,3 +33,7 @@
+ {
+     surface_free(glasssurf);
+ }
++if (ds_exists(bifurcate, ds_type_list))
++{
++    ds_list_destroy(bifurcate);
++}
+FILE ch5/gml_Object_obj_plat_enm_sethglasses_miniboss_Collision_obj_plat_susieaxe_hbx.gml M 4 0
+@@ -1,3 +1,7 @@
++if (simple)
++{
++    exit;
++}
+ if (hit <= 0)
+ {
+     hit = 3;
+FILE ch5/gml_Object_obj_plat_enm_sethglasses_miniboss_Create_0.gml M 1 0
+@@ -9,6 +9,7 @@
+ image_speed = 1;
+ hit = 0;
+ scr_plat_set_difference();
++bifurcate = ds_list_create();
+ glasssurf = -4;
+ auraalph = 0;
+ npc_seth = -4;
+FILE ch5/gml_Object_obj_plat_enm_sethglasses_miniboss_Step_2.gml M 3 3
+@@ -78,7 +78,7 @@
+ {
+     exit;
+ }
+-var bifurcate = ds_list_create();
++ds_list_clear(bifurcate);
+ left_lens_hitbox.image_angle = image_angle;
+ right_lens_hitbox.image_angle = image_angle;
+ left_lens_hitbox.x = x - lengthdir_x(92, image_angle);
+@@ -88,7 +88,7 @@
+ bifurcate_hitbox.image_angle = image_angle;
+ with (bifurcate_hitbox)
+ {
+-    instance_place_list(x, y, 38, bifurcate, false);
++    instance_place_list(x, y, 38, other.bifurcate, false);
+ }
+ for (var i = 0; i < ds_list_size(bifurcate); i++)
+ {
+@@ -104,7 +104,7 @@
+ bifurcate_hitbox.image_angle = image_angle;
+ with (bifurcate_hitbox)
+ {
+-    instance_place_list(x, y, 38, bifurcate, false);
++    instance_place_list(x, y, 38, other.bifurcate, false);
+ }
+ for (var i = 0; i < ds_list_size(bifurcate); i++)
+ {
+FILE ch5/gml_Object_obj_platswap_helper_Create_0.gml M 2 0
+@@ -63,6 +63,7 @@
+             floortex = ds_list_find_value(li, i);
+         }
+     }
++    ds_list_destroy(li);
+     return floortex;
+ };
+ 
+@@ -78,6 +79,7 @@
+             floortex = ds_list_find_value(li, i);
+         }
+     }
++    ds_list_destroy(li);
+     return floortex;
+ };
+ 
+FILE ch5/gml_Object_obj_room_castle_tv_kikky_Create_0.gml M 1 0
+@@ -10,6 +10,7 @@
+ snd_stop_all();
+ global.currentsong[0] = snd_init("kikky_upgrade.ogg");
+ global.currentsong[1] = mus_loop_ext(global.currentsong[0], 1, 1);
++scr_flag_set(1771, 4);
+ is_tigerbomb = (irandom(19) == 0) ? 1 : 0;
+ bomb_marker = scr_dark_marker(500, 310, (irandom(is_tigerbomb) == 0) ? spr_kikky_bomb : spr_tigerbomb);
+ bomb_interact = instance_create(500, 310, obj_readable_room1);
+FILE ch5/gml_Object_obj_room_castle_tv_mike_Step_0.gml M 6 1
+@@ -3,12 +3,17 @@
+     if (scr_flag_get(1771) >= 2)
+     {
+         door_timer++;
+-        if (door_timer > 900)
++        if (door_timer > 900 || scr_flag_get(1771) >= 4)
+         {
+             with (obj_dw_green_room_wall_fx)
+             {
+                 if (image_xscale == 4)
+                 {
++                    if (scr_flag_get(1771) >= 4)
++                    {
++                        bg_speed_y = 44;
++                        other.secret_door = 1;
++                    }
+                     bg_speed_y = scr_approach(bg_speed_y, 0.5, 0.01);
+                     if (bg_speed_y == 0.5)
+                     {
+FILE ch5/gml_Object_obj_rudebuster_bolt_plat_Step_0.gml M 9 0
+@@ -5,6 +5,15 @@
+ else
+ {
+     image_alpha = 1;
++}
++if (instance_exists(obj_encounterbasic))
++{
++    image_alpha -= 0.5;
++    if (image_alpha <= 0)
++    {
++        instance_destroy();
++        exit;
++    }
+ }
+ if (global.pause_plat)
+ {
+FILE ch5/gml_Object_obj_sakurafubuki_new_CleanUp_0.gml M 4 0
+@@ -6,3 +6,7 @@
+ }
+ part_type_destroy(pt_petal);
+ part_type_destroy(pt_petal_whirl);
++if (surface_exists(surf_view1))
++{
++    surface_free(surf_view1);
++}
+FILE ch5/gml_Object_obj_shop_ch5_Create_0.gml M 36 2
+@@ -1,5 +1,5 @@
+-var bg = instance_create(0, 0, obj_shop_ch5_bg);
+-bg.depth = depth + 10;
++_bg = instance_create(0, 0, obj_shop_ch5_bg);
++_bg.depth = depth + 10;
+ idletimer = 0;
+ idlefacer = 0;
+ talkfacer = 0;
+@@ -143,6 +143,11 @@
+ {
+     _exit_text = stringsetloc("* Treasure this world^1, won't you?/%", "obj_shop_ch5_slash_Create_0_gml_189_0");
+ }
++_music_fade = false;
++_music_fade_out = false;
++_music_overlay = false;
++_music_alt[0] = -4;
++_music_alt[1] = -4;
+ _talk_options = [stringsetloc("What is this place?", "obj_shop_ch5_slash_Create_0_gml_193_0"), stringsetloc("What's your name, human?", "obj_shop_ch5_slash_Create_0_gml_194_0"), stringsetloc("Human ears?", "obj_shop_ch5_slash_Create_0_gml_195_0"), stringsetloc("Other people?", "obj_shop_ch5_slash_Create_0_gml_196_0")];
+ 
+ load_dialogue = function(arg0)
+@@ -229,6 +234,35 @@
+                 msgnextloc("* And Ory^1, I'll be making sure Asgore is watering you properly^1, OK!?/%", "obj_shop_ch5_slash_Create_0_gml_287_0");
+             }
+             break;
++        case UnknownEnum.Value_5:
++            if (scr_flag_get(1711) == 0)
++            {
++                scr_flag_set(1711, 1);
++            }
++            _music_fade = true;
++            _music_overlay = true;
++            global.flag[20] = 0;
++            with (_bg)
++            {
++                _overlay_active = true;
++            }
++            mus_volume(global.currentsong[1], 0, 1);
++            scr_speaker("no_name");
++            msgsetloc(0, "* (Suddenly^1, the shopkeeper's body took your hand^1, and talked in a low voice only you could hear...)/", "obj_shop_ch5_slash_Create_0_gml_313_0");
++            msgnextloc("\\M1\\cp* Kris^1, is your hand okay? It looks like..^1. you've got a cat bite^1, mew.\\cW/", "obj_shop_ch5_slash_Create_0_gml_314_0");
++            msgnextloc("\\cp* Cats can be nasty creatures^1, can't they^1, mew...?\\cW/", "obj_shop_ch5_slash_Create_0_gml_315_0");
++            msgnextloc("\\cp* ..^1. I once met someone who REALLY liked cats^1, mew.\\cW/", "obj_shop_ch5_slash_Create_0_gml_316_0");
++            msgnextloc("\\cp* They liked cats so much^1, they owned a whole hunting pack of them^1, mew!\\cW/", "obj_shop_ch5_slash_Create_0_gml_317_0");
++            msgnextloc("\\cp* Of course^1, cats are fickle creatures^1, but they were very good at finding protein.\\cW/", "obj_shop_ch5_slash_Create_0_gml_318_0");
++            msgnextloc("\\cp* Kris^1, if you have any protein^1, you must keep it hidden^1, and never let anyone see it.\\cW/", "obj_shop_ch5_slash_Create_0_gml_319_0");
++            msgnextloc("\\cp* The cats are not too smart^1, but once they find a target^1, they never stop chasing it until they get bored.\\cW/", "obj_shop_ch5_slash_Create_0_gml_320_0");
++            msgnextloc("\\cp* And when they find you^1, they bite..^1. very^1, VERY^1, hard.\\cW/", "obj_shop_ch5_slash_Create_0_gml_321_0");
++            msgnextloc("\\cp* Some people would do anything to get away from them^1, even change their appearance^1, or go into hiding...\\cW/", "obj_shop_ch5_slash_Create_0_gml_322_0");
++            msgnextloc("\\cp* Oh^1, Kris^1, it's terrible^1, mew. It's terrible...\\cW/", "obj_shop_ch5_slash_Create_0_gml_323_0");
++            msgnextloc("\\M2\\cp* Please be careful^1, Kris..^1. promise...\\cW/", "obj_shop_ch5_slash_Create_0_gml_324_0");
++            msgnextloc("\\M3* H..^1. huh? Wh..^1. why am I trembling? Was my body saying something...?/", "obj_shop_ch5_slash_Create_0_gml_325_0");
++            msgnextloc("* Hey^1, don't have any conversations without me!^1! Communication is key^1, right^1, body^1! Body!?/%", "obj_shop_ch5_slash_Create_0_gml_326_0");
++            break;
+     }
+     instance_create(30, 270, obj_writer);
+ };
+FILE ch5/gml_Object_obj_shop_ch5_Draw_0.gml M 8 1
+@@ -593,7 +593,14 @@
+         {
+             if (scr_flag_get(1846) >= 2)
+             {
+-                load_dialogue(UnknownEnum.Value_4);
++                if (scr_flag_get(1895) > 0 && scr_flag_get(941) > 0 && scr_flag_get(1711) == 0)
++                {
++                    load_dialogue(UnknownEnum.Value_5);
++                }
++                else
++                {
++                    load_dialogue(UnknownEnum.Value_4);
++                }
+             }
+             else
+             {
+FILE ch5/gml_Object_obj_shop_ch5_bg_Create_0.gml M 2 0
+@@ -20,3 +20,5 @@
+     array_push(sun_glow_markers, marker);
+     marker.visible = 0;
+ }
++_overlay_active = false;
++_overlay_alpha = 1;
+FILE ch5/gml_Object_obj_shop_ch5_bg_Draw_0.gml M 20 0
+@@ -31,3 +31,23 @@
+ {
+     draw_sprite_ext(spr_shop_ch5_06, _bg_speed, 208, 176, 2, 2, 0, c_white, 1);
+ }
++if (_overlay_active)
++{
++    if (global.flag[20] == 3)
++    {
++        if (_overlay_alpha > 0)
++        {
++            _overlay_alpha = scr_movetowards(_overlay_alpha, 0, 0.08);
++        }
++        else
++        {
++            _overlay_active = false;
++        }
++    }
++    draw_set_color(c_black);
++    draw_set_alpha(_overlay_alpha);
++    d_rectangle(0, 0, 80, 240);
++    d_rectangle(208, 0, 640, 240);
++    draw_set_alpha(1);
++    draw_set_color(c_white);
++}
+FILE ch5/gml_Object_obj_smallface_Draw_0.gml M 4 0
+@@ -1,3 +1,7 @@
++if (instance_exists(obj_plat_player) && obj_plat_player.targetmode)
++{
++    exit;
++}
+ var drawsurf = 0;
+ if (global.darkzone == 0)
+ {
+FILE ch5/gml_Object_obj_sunshadows_Create_0.gml M 26 0
+@@ -81,6 +81,32 @@
+ 
+ generate_shadow_surface = function(arg0, arg1, arg2)
+ {
++    var _surface_needed = false;
++    for (var i = 0; i < array_length(arg0); i++)
++    {
++        if (layer_exists(layer_get_id(arg0[i])))
++        {
++            _surface_needed = true;
++        }
++    }
++    for (var i = 0; i < array_length(arg1); i++)
++    {
++        if (layer_exists(layer_get_id(arg1[i])))
++        {
++            _surface_needed = true;
++        }
++    }
++    for (var i = 0; i < array_length(arg2); i++)
++    {
++        if (i_ex(arg2[i]))
++        {
++            _surface_needed = true;
++        }
++    }
++    if (!_surface_needed)
++    {
++        return -4;
++    }
+     surface_depth_disable(true);
+     shader_replace_simple_set_hook(37);
+     var _surf = surface_create(room_width, room_height);
+FILE ch5/gml_Object_obj_sunshadows_Draw_0.gml M 16 4
+@@ -78,7 +78,10 @@
+ }
+ surface_set_target(surf_dyna_shadows);
+ draw_clear_alpha(c_black, 0);
+-draw_surface(surf_static_shadows, -cx, -cy);
++if (surface_exists(surf_static_shadows))
++{
++    draw_surface(surf_static_shadows, -cx, -cy);
++}
+ if (resize_mode)
+ {
+     draw_surface_ext(surf_resize, 0, 0, 2, 2, 0, c_white, 1);
+@@ -131,7 +134,10 @@
+ }
+ cast_shadow_self(827);
+ gpu_set_blendmode(bm_subtract);
+-draw_surface(surf_static_cutout, -cx, -cy);
++if (surface_exists(surf_static_cutout))
++{
++    draw_surface(surf_static_cutout, -cx, -cy);
++}
+ if (!skip_main_characters)
+ {
+     cast_shadow_self(1198, true);
+@@ -235,8 +241,14 @@
+     if (subtract_highlights)
+     {
+         gpu_set_blendmode(bm_subtract);
+-        draw_surface(surf_static_cutout, -cx, -cy);
+-        draw_surface(surf_static_hcutout, -cx, -cy);
++        if (surface_exists(surf_static_cutout))
++        {
++            draw_surface(surf_static_cutout, -cx, -cy);
++        }
++        if (surface_exists(surf_static_hcutout))
++        {
++            draw_surface(surf_static_hcutout, -cx, -cy);
++        }
+         gpu_set_blendmode(bm_normal);
+     }
+     surface_reset_target();
+FILE ch5/gml_Object_obj_terracota_enemy_Step_0.gml M 3 3
+@@ -70,15 +70,15 @@
+                 }
+                 if (global.flag[1462] == 1)
+                 {
+-                    scr_turntimer(270);
++                    scr_turntimer(275);
+                 }
+                 if (global.flag[1462] == 2)
+                 {
+-                    scr_turntimer(240);
++                    scr_turntimer(245);
+                 }
+                 if (global.flag[1462] == 3)
+                 {
+-                    scr_turntimer(360);
++                    scr_turntimer(365);
+                 }
+                 global.flag[1462]++;
+                 if (global.flag[1462] > 3)
+FILE ch5/gml_Object_obj_terracota_pots_controller_Draw_0.gml M 9 0
+@@ -4,7 +4,16 @@
+     {
+         global.turntimer = 3;
+         obj_terracota_enemy.bonsaicon = 1;
++        with (obj_battlecontroller)
++        {
++            bonsai_stop = true;
++        }
+     }
++}
++else if (global.turntimer <= 5)
++{
++    global.turntimer = 0;
++    exit;
+ }
+ timer++;
+ if (timer == timermax && i_ex(obj_terracota_enemy) && obj_terracota_enemy.bonsaicon == 0)
+FILE ch5/gml_Object_obj_town_mid_ferris_Step_0.gml M 1 1
+@@ -506,7 +506,7 @@
+         c_msgnextloc("* Sure^1, that's a cool pose^1. I'll match./", "obj_town_mid_ferris_slash_Step_0_gml_685_0");
+         c_msgnextloc("* Hey Noelle^1! Look at our cool pose!/", "obj_town_mid_ferris_slash_Step_0_gml_686_0");
+         c_msgnextloc("* .../", "obj_town_mid_ferris_slash_Step_0_gml_687_0");
+-        c_msgnextloc("* Huh..^1. I dunno if know she likes it./%", "obj_town_mid_ferris_slash_Step_0_gml_688_0");
++        c_msgnextloc("* Huh..^1. I dunno if she likes it./%", "obj_town_mid_ferris_slash_Step_0_gml_688_0");
+         c_talk_wait();
+         c_wait(30);
+         c_sel(kr);
+FILE ch5/gml_Object_obj_yellow_guided_bullet_Step_0.gml M 1 0
+@@ -7,6 +7,7 @@
+         {
+             snd_play_pitch(snd_bump, 1.35);
+             var randangle = choose(0, 22.5, -22.5);
++            grazepoints = 12;
+             for (var a = 0; a < 8; a++)
+             {
+                 with (scr_fire_bullet(ds_list_find_value(line_list, 0).x, ds_list_find_value(line_list, 0).y, obj_regularbullet, (45 * a) + randangle, 9, spr_enemy_blue_bullet_petal, 0, true))
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_106_PreCreate.gml M 2 5
+@@ -1,5 +1,2 @@
+-index = 6;
+-strength = 7.3;
+-stem_ease_x = ease_out_quad;
+-stem_ease_y = ease_in_quad;
+-orb_col = 4289901234;
++despawn_in_ow_mode = false;
++yellow_spawned = true;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_107_PreCreate.gml M 5 2
+@@ -1,2 +1,5 @@
+-freq = 0.05;
+-amp = 100;
++index = 6;
++strength = 7.3;
++stem_ease_x = ease_out_quad;
++stem_ease_y = ease_in_quad;
++orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_108_PreCreate.gml M 2 2
+@@ -1,2 +1,2 @@
+-freq = 0.06;
+-amp = 160;
++freq = 0.05;
++amp = 100;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_109_PreCreate.gml M 2 2
+@@ -1,2 +1,2 @@
+-freq = 0.08;
+-amp = 90;
++freq = 0.06;
++amp = 160;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_110_PreCreate.gml M 2 1
+@@ -1 +1,2 @@
+-nudgey = -40;
++freq = 0.08;
++amp = 90;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_112_PreCreate.gml M 1 3
+@@ -1,3 +1 @@
+-freq = 0.06;
+-amp = 160;
+-offset = 80;
++nudgey = -40;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_113_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ freq = 0.06;
+ amp = 160;
+-offset = 40;
++offset = 80;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_114_PreCreate.gml M 3 2
+@@ -1,2 +1,3 @@
+-freq = 0.08;
+-amp = 90;
++freq = 0.06;
++amp = 160;
++offset = 40;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_117_PreCreate.gml M 2 2
+@@ -1,2 +1,2 @@
+-freq = 0.06;
+-amp = 160;
++freq = 0.08;
++amp = 90;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_118_PreCreate.gml M 0 1
+@@ -1,3 +1,2 @@
+ freq = 0.06;
+ amp = 160;
+-offset = 80;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_119_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+ freq = 0.06;
+ amp = 160;
+-offset = 40;
++offset = 80;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_120_PreCreate.gml M 3 1
+@@ -1 +1,3 @@
+-index = 1;
++freq = 0.06;
++amp = 160;
++offset = 40;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_121_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 2;
++index = 1;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_122_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 3;
++index = 2;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_123_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 4;
++index = 3;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_124_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 5;
++index = 4;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_125_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 6;
++index = 5;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_126_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 7;
++index = 6;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_127_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 8;
++index = 7;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_128_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 12;
++index = 8;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_129_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 13;
++index = 12;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_130_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 11;
++index = 13;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_131_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 14;
++index = 11;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_132_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 15;
++index = 14;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_133_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 16;
++index = 15;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_134_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 17;
++index = 16;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_135_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 18;
++index = 17;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_136_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 19;
++index = 18;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_137_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 20;
++index = 19;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_138_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 21;
++index = 20;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_139_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 22;
++index = 21;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_140_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 23;
++index = 22;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_141_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 25;
++index = 23;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_142_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-index = 24;
++index = 25;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_143_PreCreate.gml M 1 4
+@@ -1,4 +1 @@
+-floor_layers = ["TILES_Grass", "TILES_Grass2", "TILES_Tracks"];
+-front_sprite = [3682];
+-sprite = [6459];
+-back_sprite = [];
++index = 24;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_144_PreCreate.gml M 2 2
+@@ -1,4 +1,4 @@
+ floor_layers = ["TILES_Grass", "TILES_Grass2", "TILES_Tracks"];
+-front_sprite = [4083];
+-sprite = [263];
++front_sprite = [3682];
++sprite = [6459];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_145_PreCreate.gml M 4 2
+@@ -1,2 +1,4 @@
+-ymin = 1920;
+-ymax = 2280;
++floor_layers = ["TILES_Grass", "TILES_Grass2", "TILES_Tracks"];
++front_sprite = [4083];
++sprite = [263];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_146_PreCreate.gml M 1 0
+@@ -1 +1,2 @@
++ymin = 1920;
+ ymax = 2280;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_147_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-ymax = 1480;
++ymax = 2280;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_148_PreCreate.gml M 0 1
+@@ -1,2 +1 @@
+ ymax = 1480;
+-ymin = 1360;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_149_PreCreate.gml M 1 0
+@@ -1 +1,2 @@
++ymax = 1480;
+ ymin = 1360;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_150_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-ymax = 2320;
++ymin = 1360;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_151_PreCreate.gml M 1 4
+@@ -1,4 +1 @@
+-ymax = 2840;
+-ymin = 2840;
+-mode = "Gradual - Right";
+-gradual_extflag = "grad1";
++ymax = 2320;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_152_PreCreate.gml M 4 4
+@@ -1,4 +1,4 @@
+-ymax = 3200;
+-ymin = 2880;
+-mode = "Constant";
+-extflag = "grad1";
++ymax = 2840;
++ymin = 2840;
++mode = "Gradual - Right";
++gradual_extflag = "grad1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_153_PreCreate.gml M 3 0
+@@ -1 +1,4 @@
++ymax = 3200;
+ ymin = 2880;
++mode = "Constant";
++extflag = "grad1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_154_PreCreate.gml M 1 4
+@@ -1,4 +1 @@
+-ymax = 2320;
+-mode = "Gradual - Right";
+-gradual_extflag = "grad2";
+-ymin = 2320;
++ymin = 2880;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_155_PreCreate.gml M 4 3
+@@ -1,3 +1,4 @@
+-ymax = 2460;
+-ymin = 2460;
+-extflag = "grad2";
++ymax = 2320;
++mode = "Gradual - Right";
++gradual_extflag = "grad2";
++ymin = 2320;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_156_PreCreate.gml M 2 0
+@@ -1 +1,3 @@
++ymax = 2460;
+ ymin = 2460;
++extflag = "grad2";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_157_PreCreate.gml M 1 5
+@@ -1,5 +1 @@
+-index = 0;
+-strength = 5.9;
+-stem_ease_x = ease_inout_back;
+-stem_ease_y = ease_linear;
+-orb_col = 4289901234;
++ymin = 2460;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_158_PreCreate.gml M 5 1
+@@ -1 +1,5 @@
+-extflag = "blue_ribbon";
++index = 0;
++strength = 5.9;
++stem_ease_x = ease_inout_back;
++stem_ease_y = ease_linear;
++orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_159_PreCreate.gml M 1 7
+@@ -1,7 +1 @@
+-depthcast_ignore = true;
+-wall_layers = ["TILES_backlayer"];
+-floor_layers = [];
+-depthbonus = 1000;
+-front_sprite = [6182];
+-sprite = [];
+-back_sprite = [];
++extflag = "blue_ribbon";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_160_PreCreate.gml M 1 1
+@@ -2,6 +2,6 @@
+ wall_layers = ["TILES_backlayer"];
+ floor_layers = [];
+ depthbonus = 1000;
+-front_sprite = [835];
++front_sprite = [6182];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_161_PreCreate.gml M 7 1
+@@ -1 +1,7 @@
+-appear_condition = global.flag[1454] == 100 && scr_flag_get_ext(1310, 1) == 0;
++depthcast_ignore = true;
++wall_layers = ["TILES_backlayer"];
++floor_layers = [];
++depthbonus = 1000;
++front_sprite = [835];
++sprite = [];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_164_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "p6_seth";
++appear_condition = global.flag[1454] == 100 && scr_flag_get_ext(1310, 1) == 0;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_167_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "p6_shi";
++extflag = "p6_seth";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_169_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "p6_flora";
++extflag = "p6_shi";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_170_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "p6_shi";
++extflag = "p6_flora";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_171_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "p6_flora";
++extflag = "p6_shi";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_172_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "p6_shi";
++extflag = "p6_flora";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_173_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-appear_condition = global.flag[1454] == 100;
++extflag = "p6_shi";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_178_PreCreate.gml M 1 2
+@@ -1,2 +1 @@
+-freq = 0.04;
+-amp = 88;
++appear_condition = global.flag[1454] == 100;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_182_PreCreate.gml M 2 3
+@@ -1,3 +1,2 @@
+-front_sprite = [7654];
+-sprite = [3948];
+-back_sprite = [];
++freq = 0.04;
++amp = 88;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_183_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [638];
+-sprite = [3128];
++front_sprite = [7654];
++sprite = [3948];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_191_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [52];
+-sprite = [757];
++front_sprite = [638];
++sprite = [3128];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_194_PreCreate.gml M 3 4
+@@ -1,4 +1,3 @@
+-confetti_amount = 18;
+-wind_speed = 60;
+-zen_mode = true;
+-wind_direction = -135;
++front_sprite = [52];
++sprite = [757];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_195_PreCreate.gml M 4 5
+@@ -1,5 +1,4 @@
+-index = 11;
+-strength = 5.9;
+-stem_ease_y = ease_in_quad;
+-stem_ease_x = ease_out_quad;
+-orb_col = 4289901234;
++confetti_amount = 18;
++wind_speed = 60;
++zen_mode = true;
++wind_direction = -135;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_196_PreCreate.gml M 5 7
+@@ -1,7 +1,5 @@
+-depthcast_ignore = true;
+-wall_layers = ["TILES_backlayer"];
+-floor_layers = [];
+-depthbonus = 20000;
+-front_sprite = [834];
+-sprite = [];
+-back_sprite = [];
++index = 11;
++strength = 5.9;
++stem_ease_y = ease_in_quad;
++stem_ease_x = ease_out_quad;
++orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_197_PreCreate.gml M 3 1
+@@ -1,5 +1,7 @@
++depthcast_ignore = true;
+ wall_layers = ["TILES_backlayer"];
++floor_layers = [];
+ depthbonus = 20000;
+-front_sprite = [1123];
++front_sprite = [834];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_198_PreCreate.gml M 3 1
+@@ -1,3 +1,5 @@
+-front_sprite = [1305];
++wall_layers = ["TILES_backlayer"];
++depthbonus = 20000;
++front_sprite = [1123];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_199_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [4967];
+-sprite = [488];
++front_sprite = [1305];
++sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_19_PreCreate.gml M 1 3
+@@ -1,3 +1 @@
+-front_sprite = [];
+-sprite = [4999];
+-back_sprite = [];
++extflag = "becomesolid";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_200_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [7593];
+-sprite = [6634];
++front_sprite = [4967];
++sprite = [488];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_201_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [632];
+-sprite = [];
++front_sprite = [7593];
++sprite = [6634];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_202_PreCreate.gml M 1 5
+@@ -1,7 +1,3 @@
+-depthcast_ignore = true;
+-wall_layers = ["TILES_backlayer"];
+-floor_layers = [];
+-depthbonus = 20000;
+-front_sprite = [947];
++front_sprite = [632];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_203_PreCreate.gml M 1 1
+@@ -2,6 +2,6 @@
+ wall_layers = ["TILES_backlayer"];
+ floor_layers = [];
+ depthbonus = 20000;
+-front_sprite = [5511];
++front_sprite = [947];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_204_PreCreate.gml M 7 1
+@@ -1 +1,7 @@
+-extflag = "no_early_jump";
++depthcast_ignore = true;
++wall_layers = ["TILES_backlayer"];
++floor_layers = [];
++depthbonus = 20000;
++front_sprite = [5511];
++sprite = [];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_20_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [6542];
+-sprite = [1851];
++front_sprite = [];
++sprite = [4999];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_21_PreCreate.gml M 3 1
+@@ -1 +1,3 @@
+-extflag = "yellow_pan_scene";
++front_sprite = [6542];
++sprite = [1851];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_22_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "yellow_rail_scene";
++extflag = "yellow_pan_scene";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_23_PreCreate.gml M 1 3
+@@ -1,3 +1 @@
+-front_sprite = [4117];
+-sprite = [6078];
+-back_sprite = [];
++extflag = "yellow_rail_scene";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_24_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [5534];
+-sprite = [757];
++front_sprite = [4117];
++sprite = [6078];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_25_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [8029];
+-sprite = [];
++front_sprite = [5534];
++sprite = [757];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_26_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+-front_sprite = [590];
++front_sprite = [8029];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_27_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [5772];
+-sprite = [1536];
++front_sprite = [590];
++sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_28_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [646];
+-sprite = [];
++front_sprite = [5772];
++sprite = [1536];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_29_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+-front_sprite = [652];
++front_sprite = [646];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_30_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+-front_sprite = [4150];
++front_sprite = [652];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_31_PreCreate.gml M 1 1
+@@ -1,3 +1,3 @@
+-front_sprite = [3769];
++front_sprite = [4150];
+ sprite = [];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_32_PreCreate.gml M 3 3
+@@ -1,3 +1,3 @@
+-index = 7;
+-strength = 10.5;
+-orb_col = 4289901234;
++front_sprite = [3769];
++sprite = [];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_33_PreCreate.gml M 3 1
+@@ -1 +1,3 @@
+-nudgey = -90;
++index = 7;
++strength = 10.5;
++orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_34_PreCreate.gml M 1 3
+@@ -1,3 +1 @@
+-front_sprite = [2006];
+-sprite = [6634];
+-back_sprite = [];
++nudgey = -90;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_35_PreCreate.gml M 2 4
+@@ -1,5 +1,3 @@
+-floor_layers = ["TILES_Grass", "TILES_Grass2", "TILES_Tracks"];
+-wall_layers = ["TILES_Bricks"];
+-front_sprite = [6158];
+-sprite = [858];
++front_sprite = [2006];
++sprite = [6634];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_36_PreCreate.gml M 5 5
+@@ -1,5 +1,5 @@
+-index = 12;
+-strength = 5.9;
+-stem_ease_y = ease_linear;
+-stem_ease_x = ease_inout_back;
+-orb_col = 4289901234;
++floor_layers = ["TILES_Grass", "TILES_Grass2", "TILES_Tracks"];
++wall_layers = ["TILES_Bricks"];
++front_sprite = [6158];
++sprite = [858];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_37_PreCreate.gml M 4 4
+@@ -1,5 +1,5 @@
+-index = 22;
+-strength = 7;
+-stem_ease_y = ease_in_quad;
+-stem_ease_x = ease_out_quad;
++index = 12;
++strength = 5.9;
++stem_ease_y = ease_linear;
++stem_ease_x = ease_inout_back;
+ orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_38_PreCreate.gml M 3 3
+@@ -1,5 +1,5 @@
+-index = 24;
+-strength = 8.9;
++index = 22;
++strength = 7;
+ stem_ease_y = ease_in_quad;
+-stem_ease_x = ease_out_back;
++stem_ease_x = ease_out_quad;
+ orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_39_PreCreate.gml M 1 1
+@@ -1,4 +1,4 @@
+-index = 25;
++index = 24;
+ strength = 8.9;
+ stem_ease_y = ease_in_quad;
+ stem_ease_x = ease_out_back;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_40_PreCreate.gml M 5 3
+@@ -1,3 +1,5 @@
+-front_sprite = [7177];
+-sprite = [2900];
+-back_sprite = [];
++index = 25;
++strength = 8.9;
++stem_ease_y = ease_in_quad;
++stem_ease_x = ease_out_back;
++orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_41_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [411];
+-sprite = [1798];
++front_sprite = [7177];
++sprite = [2900];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_42_PreCreate.gml M 3 5
+@@ -1,5 +1,3 @@
+-index = 15;
+-strength = 5.7;
+-stem_ease_y = ease_in_quad;
+-stem_ease_x = ease_out_back;
+-orb_col = 4289901234;
++front_sprite = [411];
++sprite = [1798];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_43_PreCreate.gml M 1 1
+@@ -1,4 +1,4 @@
+-index = 14;
++index = 15;
+ strength = 5.7;
+ stem_ease_y = ease_in_quad;
+ stem_ease_x = ease_out_back;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_44_PreCreate.gml M 2 2
+@@ -1,5 +1,5 @@
+-index = 16;
+-strength = 6;
++index = 14;
++strength = 5.7;
+ stem_ease_y = ease_in_quad;
+ stem_ease_x = ease_out_back;
+ orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_45_PreCreate.gml M 1 1
+@@ -1,4 +1,4 @@
+-index = 18;
++index = 16;
+ strength = 6;
+ stem_ease_y = ease_in_quad;
+ stem_ease_x = ease_out_back;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_46_PreCreate.gml M 2 2
+@@ -1,5 +1,5 @@
+-index = 21;
+-strength = 7;
++index = 18;
++strength = 6;
+ stem_ease_y = ease_in_quad;
+ stem_ease_x = ease_out_back;
+ orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_47_PreCreate.gml M 1 1
+@@ -1,4 +1,4 @@
+-index = 23;
++index = 21;
+ strength = 7;
+ stem_ease_y = ease_in_quad;
+ stem_ease_x = ease_out_back;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_48_PreCreate.gml M 3 3
+@@ -1,5 +1,5 @@
+-index = 17;
+-strength = 5.7;
++index = 23;
++strength = 7;
+ stem_ease_y = ease_in_quad;
+-stem_ease_x = ease_out_quad;
++stem_ease_x = ease_out_back;
+ orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_49_PreCreate.gml M 2 2
+@@ -1,5 +1,5 @@
+-index = 19;
++index = 17;
+ strength = 5.7;
+ stem_ease_y = ease_in_quad;
+-stem_ease_x = ease_out_back;
++stem_ease_x = ease_out_quad;
+ orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_50_PreCreate.gml M 1 1
+@@ -1,4 +1,4 @@
+-index = 20;
++index = 19;
+ strength = 5.7;
+ stem_ease_y = ease_in_quad;
+ stem_ease_x = ease_out_back;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_51_PreCreate.gml M 5 2
+@@ -1,2 +1,5 @@
+-doorRoom = room_dw_fcastle_bounce_3;
+-doorEntrance = 3;
++index = 20;
++strength = 5.7;
++stem_ease_y = ease_in_quad;
++stem_ease_x = ease_out_back;
++orb_col = 4289901234;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_52_PreCreate.gml M 2 2
+@@ -1,2 +1,2 @@
+-xmin = 3320;
+-ymax = 2840;
++doorRoom = room_dw_fcastle_bounce_3;
++doorEntrance = 3;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_53_PreCreate.gml M 2 3
+@@ -1,3 +1,2 @@
+-nudgey = -60;
+-nudgex = -120;
+-mode = "Gradual - Left";
++xmin = 3320;
++ymax = 2840;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_54_PreCreate.gml M 3 2
+@@ -1,2 +1,3 @@
+-xmax = 3320;
+-ymin = 1920;
++nudgey = -60;
++nudgex = -120;
++mode = "Gradual - Left";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_55_PreCreate.gml M 2 2
+@@ -1,2 +1,2 @@
+-nudgey = -60;
+-mode = "Gradual - Down";
++xmax = 3320;
++ymin = 1920;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_56_PreCreate.gml M 2 2
+@@ -1,2 +1,2 @@
+-xmin = 3320;
+-xmax = 3320;
++nudgey = -60;
++mode = "Gradual - Down";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_57_PreCreate.gml M 2 1
+@@ -1 +1,2 @@
+-extflag = "toomuchfun";
++xmin = 3320;
++xmax = 3320;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_58_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "toomuchfun_stop";
++extflag = "toomuchfun";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_59_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "toomuchfun";
++extflag = "toomuchfun_stop";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_60_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "railscene";
++extflag = "toomuchfun";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_61_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "yellow_rail_scene_stop";
++extflag = "railscene";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_62_PreCreate.gml M 1 3
+@@ -1,3 +1 @@
+-front_sprite = [334];
+-sprite = [757];
+-back_sprite = [];
++extflag = "yellow_rail_scene_stop";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_63_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [3443];
+-sprite = [6634];
++front_sprite = [334];
++sprite = [757];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_64_PreCreate.gml M 2 2
+@@ -1,3 +1,3 @@
+-front_sprite = [1594];
+-sprite = [6068];
++front_sprite = [3443];
++sprite = [6634];
+ back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_65_PreCreate.gml M 3 1
+@@ -1 +1,3 @@
+-index = 30;
++front_sprite = [1594];
++sprite = [6068];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_66_PreCreate.gml M 0 2
+@@ -1,3 +1 @@
+ index = 30;
+-strength = 5;
+-draw_yellow = true;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_67_PreCreate.gml M 3 1
+@@ -1 +1,3 @@
+-extflag = "initiate_combatscene";
++index = 30;
++strength = 5;
++draw_yellow = true;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_68_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "punishmentgun";
++extflag = "initiate_combatscene";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_69_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "dbg_boss_shortcut";
++extflag = "punishmentgun";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_70_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "dbg_returnpath";
++extflag = "dbg_boss_shortcut";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_71_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "blue_platform";
++extflag = "dbg_returnpath";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_72_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "blue_punish";
++extflag = "blue_platform";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_73_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "blue_rails";
++extflag = "blue_punish";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_74_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "blue_socks";
++extflag = "blue_rails";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_75_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutykr1";
++extflag = "blue_socks";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_76_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutysu1";
++extflag = "cutykr1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_77_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutyra1";
++extflag = "cutysu1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_78_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "jail_chute";
++extflag = "cutyra1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_79_PreCreate.gml M 1 3
+@@ -1,3 +1 @@
+-front_sprite = [8278];
+-sprite = [488];
+-back_sprite = [];
++extflag = "jail_chute";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_80_PreCreate.gml M 3 1
+@@ -1 +1,3 @@
+-extflag = "cutysu2";
++front_sprite = [8278];
++sprite = [488];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_81_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutyra2";
++extflag = "cutysu2";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_82_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutykr2";
++extflag = "cutyra2";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_83_PreCreate.gml M 1 3
+@@ -1,3 +1 @@
+-front_sprite = [6259];
+-sprite = [];
+-back_sprite = [];
++extflag = "cutykr2";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_84_PreCreate.gml M 3 1
+@@ -1 +1,3 @@
+-extflag = "blue_platform_2";
++front_sprite = [6259];
++sprite = [];
++back_sprite = [];
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_85_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutbkr1";
++extflag = "blue_platform_2";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_86_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutbsu1";
++extflag = "cutbkr1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_87_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutbra1";
++extflag = "cutbsu1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_88_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutblu1";
++extflag = "cutbra1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_89_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-extflag = "cutblu2";
++extflag = "cutblu1";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_90_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-ymax = 840;
++extflag = "cutblu2";
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_91_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-nudgey = -80;
++ymax = 840;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_92_PreCreate.gml M 1 1
+@@ -1 +1 @@
+-ymin = 530;
++nudgey = -80;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_93_PreCreate.gml M 1 2
+@@ -1,2 +1 @@
+-xmin = 1080;
+-xmax = 1080;
++ymin = 530;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_94_PreCreate.gml M 0 1
+@@ -1,3 +1,2 @@
+ xmin = 1080;
+ xmax = 1080;
+-ymax = 2480;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_95_PreCreate.gml M 3 2
+@@ -1,2 +1,3 @@
+-doorRoom = room_dw_fcastle_sandtrap;
+-doorEntrance = 1;
++xmin = 1080;
++xmax = 1080;
++ymax = 2480;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_96_PreCreate.gml M 2 1
+@@ -1 +1,2 @@
+-extflag = "went_over_wall";
++doorRoom = room_dw_fcastle_sandtrap;
++doorEntrance = 1;
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_97_PreCreate.gml M 1 2
+@@ -1,2 +1 @@
+-despawn_in_ow_mode = false;
+-yellow_spawned = true;
++extflag = "went_over_wall";
+FILE ch5/gml_Object_obj_dw_fcastle_dangerous_platforming_Step_2.gml A 7 0
+with (npc_notevidencepapers)
+{
+    if (variable_instance_exists(id, "y_ow") && instance_exists(marker))
+    {
+        marker.y = y_ow + (30 * array_get(scr_platswap_yscale(), 0));
+    }
+}
+FILE ch5/gml_Object_obj_dw_garden_aquashrine_CleanUp_0.gml A 1 0
+snd_stop(wind_sound);
+FILE ch5/gml_Object_obj_shop_ch5_Other_5.gml A 8 0
+if (_music_alt == -4)
+{
+    exit;
+}
+if (audio_is_playing(_music_alt[1]))
+{
+    snd_free(_music_alt[0]);
+}
+FILE ch5/gml_Object_obj_shop_ch5_Step_0.gml A 24 0
+if (_music_fade)
+{
+    if (global.flag[20] == 1)
+    {
+        if (_music_alt[0] == -4)
+        {
+            _music_alt[0] = snd_init("shop_3.ogg");
+            _music_alt[1] = mus_loop_ext(_music_alt[0], global.flag[17], 0.5);
+        }
+    }
+    else if (global.flag[20] == 2)
+    {
+        if (!_music_fade_out)
+        {
+            _music_fade_out = true;
+            mus_volume(_music_alt[1], 0, 30);
+        }
+    }
+    else if (global.flag[20] == 3)
+    {
+        _music_fade = false;
+        mus_volume(global.currentsong[1], 1, 30);
+    }
+}
+FILE ch5/gml_RoomCC_room_dw_fcastle_dangerous_platforming_205_PreCreate.gml A 1 0
+extflag = "no_early_jump";
