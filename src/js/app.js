@@ -144,10 +144,11 @@ function buildrail() {
     lab.textContent = ERALABEL[g.era] || g.era;
     row.appendChild(lab);
     for (const v of g.items) {
-      const chip = el("button", "vchip");
+      const baseline = !transitionTo(v.label);          // nothing before it to diff against
+      const chip = el("button", "vchip" + (baseline ? " baseline" : ""));
       chip.dataset.v = v.label;
       chip.innerHTML = esc(v.label) + "<span class=\"vdate\" fnt_small>" + esc(v.date || "") + "</span>";
-      chip.addEventListener("click", () => selectversion(v.label));
+      if (!baseline) chip.addEventListener("click", () => selectversion(v.label));
       row.appendChild(chip);
     }
     rail.appendChild(row);
@@ -244,7 +245,7 @@ function buildchapters(diff) {
 
 function markchaptertab() {
   for (const t of document.querySelectorAll(".ctab"))
-    t.classList.toggle("active", sel.mode === "diff" && t.dataset.part === sel.chapter);
+    t.classList.toggle("active", t.dataset.part === sel.chapter);
   for (const b of document.querySelectorAll(".cswbtn"))
     b.classList.toggle("on", sel.mode === "changelog" && sel.clview === b.dataset.view);
 }
@@ -288,8 +289,10 @@ function renderfilelist() {
   const d = sel.diff && sel.chapter ? sel.diff.parts[sel.chapter] : null;
   if (!d) {list.innerHTML = "<div class=\"fempty\">no chapter selected.</div>"; return;}
   if (d.collapsed) {
-    list.innerHTML = "<div class=\"fempty\">chapter 5 was added here.<br>" + d.added_count +
-      " new code entries.<br>excluded from the line diff.</div>";
+    list.innerHTML = "<div class=\"fempty\">" + (d.added_count
+      ? esc(PARTLABEL[sel.chapter]) + " was added here.<br>" + d.added_count + " new code entries."
+      : esc(PARTLABEL[sel.chapter]) + " was restructured here.<br>" + d.removed_count + " entries removed.") +
+      "<br>excluded from the line diff.</div>";
     return;
   }
   const rows = [];
@@ -390,15 +393,18 @@ async function getcl(version) {
 }
 
 function parsemd(text) {
-  const out = {title: "", subtitle: "", intro: "", table: null, sections: [], footer: ""};
-  let cur = null;
+  const out = {title: "", subtitle: "", intro: "", table: null, sections: [], outro: [], footer: ""};
+  let cur = null, prevblank = true;
   const introLines = [];
   for (const raw of text.split("\n")) {
     const l = raw.replace(/\s+$/, "");
-    if (l.startsWith("# ")) {out.title = l.slice(2).trim(); continue;}
-    if (l.startsWith("## ")) {out.subtitle = l.slice(3).trim(); continue;}
+    if (!l.trim()) {prevblank = true; continue;}
+    if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(l)) {cur = null; prevblank = true; continue;}   // horizontal rule
+    if (l.startsWith("# ")) {out.title = l.slice(2).trim(); prevblank = false; continue;}
+    if (l.startsWith("## ")) {out.subtitle = l.slice(3).trim(); prevblank = false; continue;}
     if (l.startsWith("### ")) {
       const name = l.slice(4).trim();
+      prevblank = false;
       if (name === "Version Numbers") {out.table = {cols: [], rows: []}; cur = "table"; continue;}
       cur = {header: name, items: []};
       out.sections.push(cur);
@@ -406,6 +412,7 @@ function parsemd(text) {
     }
     if (l.trim().startsWith("|") && cur === "table") {
       const cells = l.split("|").slice(1, -1).map(x => x.trim());
+      prevblank = false;
       if (cells.every(x => /^-*$/.test(x))) continue;          // separator row
       if (!out.table.cols.length && cells[0] === "") out.table.cols = cells.slice(1);
       else out.table.rows.push(cells);
@@ -418,15 +425,16 @@ function parsemd(text) {
       if (m) {tag = m[1]; txt = txt.slice(m[0].length);}
       if (!cur || !cur.items) {cur = {header: "", items: []}; out.sections.push(cur);}
       cur.items.push({text: txt, tag});
+      prevblank = false;
       continue;
     }
-    if (l.startsWith("> ")) {out.footer = (out.footer + " " + l.slice(2).trim()).trim(); continue;}
-    if (l.trim()) {
-      if (cur === "table" || cur === null && !out.sections.length) introLines.push(l.trim());
-      else if (cur && cur.items && cur.items.length) cur.items[cur.items.length - 1].text += " " + l.trim();
-      else if (!out.sections.length) introLines.push(l.trim());
-      else out.footer = (out.footer + " " + l.trim()).trim();
-    }
+    if (l.startsWith("> ")) {out.footer = (out.footer + " " + l.slice(2).trim()).trim(); prevblank = false; continue;}
+    // plain text: a continuation only when it directly follows a bullet (no blank line between)
+    if (cur === "table" || (!out.sections.length && !out.table)) introLines.push(l.trim());
+    else if (!prevblank && cur && cur.items && cur.items.length) cur.items[cur.items.length - 1].text += " " + l.trim();
+    else if (!out.sections.length) introLines.push(l.trim());
+    else out.outro.push(l.trim());
+    prevblank = false;
   }
   out.intro = introLines.join(" ");
   return out;
@@ -487,10 +495,11 @@ function recreationhtml(cl, version) {
     if (sec.header) h += "<div class=\"cl-sech\">" + esc(sec.header) + "</div>";
     for (const it of sec.items) {
       const tag = it.tag ? "<span class=\"cl-tag\">[" + esc(it.tag) + "] </span>" : "";
-      h += "<div class=\"cl-item\"><span class=\"bullet\">&middot;</span><span>" + tag + esc(it.text) + "</span></div>";
+      h += "<div class=\"cl-item\"><span class=\"bullet\">&bull;</span><span>" + tag + esc(it.text) + "</span></div>";
     }
     h += "</div>";
   }
+  for (const p of (cl.outro || [])) h += "<div class=\"cl-outro\">" + esc(p) + "</div>";
   if (cl.footer) h += "<div class=\"cl-footer\">" + esc(cl.footer) + "</div>";
   h += "</div>";
   return h;

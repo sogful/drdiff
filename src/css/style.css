@@ -139,6 +139,9 @@ body {
 }
 .vchip:hover {background: var(--bar2)}
 .vchip.active {color: var(--yellow)}
+/* earliest tracked build - nothing before it to diff against */
+.vchip.baseline {opacity: 0.35; cursor: default}
+.vchip.baseline:hover {background: black}
 .vchip .vdate {
   display: block;
   --ink: var(--dim);
@@ -416,10 +419,11 @@ body {
   min-width: 0;
   padding-top: 6px;
 }
+/* fixed height (auto width) so the left/right doodles always match in size */
 .cl-dood {
   flex: none;
-  width: clamp(48px, 11vw, 116px);
-  height: auto;
+  height: clamp(56px, 9vw, 104px);
+  width: auto;
   image-rendering: pixelated;
   pointer-events: none;
 }
@@ -437,8 +441,8 @@ body {
 }
 .cl-sub {
   text-align: center;
-  color: #333;
-  font-size: 13px;
+  color: inherit;
+  font-size: inherit;
   margin: 0 auto 18px;
   max-width: 560px;
 }
@@ -479,6 +483,10 @@ body {
 }
 .cl-item .bullet {flex: none; color: #1a1a1a}
 .cl-tag {color: #1f9d2f; font-weight: 400}
+/* closing paragraphs after a horizontal rule - plain text, not bullets */
+.cl-outro {
+  margin: 16px 0;
+}
 .cl-footer {
   margin-top: 26px;
   font-weight: 700;
