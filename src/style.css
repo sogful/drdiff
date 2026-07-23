@@ -557,6 +557,7 @@ body {
 /* toby drew these at whatever size fit the page; scale by role, not by file */
 .cldood {flex: none; height: 128px; width: auto}
 .cldoodsm {flex: none; height: 46px; width: auto}
+.cldoodmd {flex: none; height: 92px; width: auto}
 .cldoodlg {flex: none; height: 190px; width: auto}
 
 .clrow {
@@ -566,6 +567,9 @@ body {
 }
 .clrow.top {align-items: flex-start}
 .clrow.wide {gap: 56px; justify-content: center}
+/* doodles that hug their heading instead of being pushed to the page edges */
+.clrow.tight {gap: 10px; justify-content: center}
+.clrow.tight .clhead {margin-bottom: 0}
 .clbody {flex: 1; min-width: 0}
 .clside {flex: 0 0 30%; text-align: center}
 

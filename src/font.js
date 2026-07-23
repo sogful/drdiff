@@ -1,4 +1,4 @@
-import {fonts} from "../../assets/fonts/fonts.js";
+import {fonts} from "../assets/fonts/fonts.js";
 
 export const colors = {
   red: "#ff0000", blue: "#0000ff", yellow: "#ffff00", green: "#00ff00",

@@ -40,8 +40,8 @@ index.html
 favicon.png
 assets/
   fonts/    deltarune (8-bit operator) + jetbrains mono
-  images/   original changelog patch-note images
-  static/   manifest.json, notes.json, changelogs.json, diffs/*.json
+  images/   changelogs/ (source patch-note images), doodles/ (trimmed toby art), chapters/
+  static/   manifest.json, doodles.json, diffs/*.diff, changelogs/*.md, steamchangelogs/*.md
   svgs/
 src/
   css/style.css
@@ -49,25 +49,26 @@ src/
   js/gml.js      gml syntax highlighter (prism has no gml grammar)
 .claude/
   tools/    the whole pipeline (see below)
+  builds_identified.json, notes.json, changelogs.json   tool data, not served
   FINDINGS.md
 ```
 
 ## pipeline (.claude/tools)
 
 - `run_all.sh` (in `H:/drdiff_work`) - steamcmd pulls each manifest, decompiles data.win -> gml with `drdump`, ids each build by `global.versionno`.
-- `identify.py` - orders builds by real per-chapter versions -> `assets/static/builds_identified.json`.
+- `identify.py` - orders builds by real per-chapter versions -> `.claude/builds_identified.json`.
 - `buildsite.py` - hash-indexes builds, diffs consecutive ones -> `manifest.json` + `diffs/`.
 - `fetchocr.py` - pulls the @UNDERTALE changelog images.
 - `reocr.py` - upscales + thresholds each image and re-OCRs (much cleaner than the raw pass).
-- `changelogparse.py` - structures the OCR into `changelogs.json` (title, version table, per-chapter items, platform tags).
+- `changelogparse.py` - structures the OCR into `.claude/changelogs.json` (title, version table, per-chapter items, platform tags).
 
 regenerate the diffs: `python .claude/tools/identify.py && python .claude/tools/buildsite.py`
 regenerate the changelogs: `python .claude/tools/reocr.py && python .claude/tools/changelogparse.py`
 
 ## notes
 
-the changelog recreations are auto-parsed from ocr; some intros/titles still carry ocr artifacts and
-the toby fox illustrations are intentionally omitted (to be re-added later). refine `changelogs.json`
-directly or improve `changelogparse.py`.
+the changelogs are per-version markdown in `assets/static/changelogs/`, hand-editable to fix ocr.
+the six ch1&2 posts are hand-drawn posters rather than patch-note lists, so those files start with
+`::raw` and lay themselves out in html using the `.clraw` helpers in `style.css`.
 
 not affiliated with toby fox. code shown for study and archival.

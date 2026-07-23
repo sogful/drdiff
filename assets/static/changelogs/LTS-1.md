@@ -3,7 +3,7 @@
   <div class="clrow">
     <div class="clside">
       <div class="clhead"><span class="clsy13">LTS Test</span></div>
-      <img class="cldoodlg" src="/assets/images/changelogs/LTS-1-0%20toby%20nerd.png" alt="">
+      <img class="cldoodlg" src="/assets/images/doodles/LTS-1-nerd.png" alt="">
       <p><span class="clsx15">Analyzing...</span></p>
     </div>
     <div class="clbody">

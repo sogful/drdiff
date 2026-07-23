@@ -8,7 +8,6 @@ const exclude = new Set();
 const staticbase = "/assets/static";
 
 let manifest = null;
-let notes = {};
 let changelogset = new Set();
 let steamset = new Set();
 let doodles = {};
@@ -25,8 +24,7 @@ async function boot() {
   try {
     manifest = await fetchjson(staticbase + "/manifest.json");
     let clindex, stindex;
-    [notes, clindex, doodles, stindex] = await Promise.all([
-      fetchjson(staticbase + "/notes.json").catch(() => ({})),
+    [clindex, doodles, stindex] = await Promise.all([
       fetchjson(staticbase + "/changelogs/index.json").catch(() => []),
       fetchjson(staticbase + "/doodles.json").catch(() => ({})),
       fetchjson(staticbase + "/steamchangelogs/index.json").catch(() => []),

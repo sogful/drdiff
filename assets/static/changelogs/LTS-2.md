@@ -2,7 +2,7 @@
 <div class="clhead">Deltarune Chapter 1&amp;2 LTS Version 2 Patch!</div>
 
 <div class="clrow">
-  <img class="cldoodlg" src="/assets/images/changelogs/LTS-2-0%20toby%202%20hat.png" alt="">
+  <img class="cldoodlg" src="/assets/images/doodles/LTS-2-hat.png" alt="">
   <div class="clbody">
     <div class="clsub">How to get it---</div>
     <p>
@@ -54,7 +54,7 @@
 </div>
 
 <div class="clrow top">
-  <img class="cldoodlg" src="/assets/images/changelogs/LTS-2-2%20toby%20STOP.png" alt="">
+  <img class="cldoodlg" src="/assets/images/doodles/LTS-2-stop.png" alt="">
   <div class="clbody">
     <div class="clhead">STOP!</div>
     <p>If you have these issues, can you tell us more about your computer in the replies?</p>
@@ -72,13 +72,13 @@
       setting related...?)
     </p>
   </div>
-  <img src="/assets/images/changelogs/LTS-2-2%20gamemaker%20error.png" alt="gamemaker error box">
+  <img src="/assets/images/doodles/LTS-2-error.png" alt="gamemaker error box">
 </div>
 
 <div class="clrow wide">
-  <img class="cldoodsm" src="/assets/images/changelogs/LTS-2-2%20devil%20toby.png" alt="">
+  <img class="cldoodsm" src="/assets/images/doodles/LTS-2-devil.png" alt="">
   <div class="clsub">Oh! Gamemaker's fault...</div>
-  <img class="cldoodsm" src="/assets/images/changelogs/LTS-2-2%20devil%20toby.png" alt="">
+  <img class="cldoodsm" src="/assets/images/doodles/LTS-2-devil.png" alt="">
 </div>
 
 <p>The following things are a problem with game_change().</p>

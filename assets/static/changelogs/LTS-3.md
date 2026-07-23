@@ -2,7 +2,7 @@
 <div class="clhead">Deltarune Chapter 1&amp;2 LTS Version&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Patch!</div>
 
 <div class="clrow">
-  <img class="cldoodlg" src="/assets/images/changelogs/LTS-3-0%20toby%20hatless.png" alt="">
+  <img class="cldood" src="/assets/images/doodles/LTS-3-hatless.png" alt="">
   <div class="clbody">
     <div class="clsub">How to get it---</div>
     <p>
@@ -20,10 +20,10 @@
 
 <div class="clhead thin">DELTARUNE LTS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Patch Notes</div>
 
-<div class="clrow">
-  <img class="cldoodsm" src="/assets/images/changelogs/LTS-3-1%20small%20toby.png" alt="">
-  <div class="clhead thin clbody">OVERALL</div>
-  <img class="cldoodsm" src="/assets/images/changelogs/LTS-3-1%20small%20toby.png" alt="">
+<div class="clrow tight">
+  <img class="cldoodsm" src="/assets/images/doodles/LTS-3-overall.png" alt="">
+  <div class="clhead thin">OVERALL</div>
+  <img class="cldoodsm" src="/assets/images/doodles/LTS-3-overall.png" alt="">
 </div>
 
 <p>
@@ -42,7 +42,7 @@
 
 <div class="clrow top">
   <div class="clhead clbody clshift"><span class="clsy125">CHAPTER SELECT SCREEN</span></div>
-  <img class="cldood" src="/assets/images/changelogs/LTS-3-2%20toby%20balancing%20stars.png" alt="">
+  <img class="cldood" src="/assets/images/doodles/LTS-3-stars.png" alt="">
 </div>
 
 <p>The Chapter Select menu is reprogrammed from scratch.</p>
@@ -57,10 +57,10 @@
   the intro screen where it asks if you want to continue from a given chapter.
 </p>
 
-<div class="clrow">
-  <img class="cldood" src="/assets/images/changelogs/LTS-3-3%20susie%20left.png" alt="">
-  <div class="clhead clbody">Chapter 1</div>
-  <img class="cldood" src="/assets/images/changelogs/LTS-3-3%20susie%20right.png" alt="">
+<div class="clrow tight">
+  <img class="cldoodmd" src="/assets/images/doodles/LTS-3-susieleft.png" alt="">
+  <div class="clhead">Chapter 1</div>
+  <img class="cldoodmd" src="/assets/images/doodles/LTS-3-susieright.png" alt="">
 </div>
 
 <ul>
@@ -70,16 +70,16 @@
   <li>Fixed a missing line of pixels on final image of the sepia intro</li>
   <li>Adjusted bottom collision for King's battle arena</li>
 </ul>
-<img class="cldoodsm clfloatright" src="/assets/images/changelogs/LTS-3-3%20starwalker.png" alt="">
+<img class="cldoodsm clfloatright" src="/assets/images/doodles/LTS-3-starwalker.png" alt="">
 <ul>
   <li>Fixed Susie flickering at the end of Susie and Lancer battle</li>
   <li>The HP bars of the characters properly go away in the Starwalker room</li>
 </ul>
 
-<div class="clrow">
-  <img class="cldood" src="/assets/images/changelogs/LTS-3-3%20susie%20left%202.png" alt="">
-  <div class="clhead clbody">Chapter 2</div>
-  <img class="cldood" src="/assets/images/changelogs/LTS-3-3%20susie%20right%202.png" alt="">
+<div class="clrow tight">
+  <img class="cldoodmd" src="/assets/images/doodles/LTS-3-susieleft2.png" alt="">
+  <div class="clhead">Chapter 2</div>
+  <img class="cldoodmd" src="/assets/images/doodles/LTS-3-susieright2.png" alt="">
 </div>
 
 <ul>
@@ -91,4 +91,4 @@
   <li>Various sound effects now play at the correct pitch.</li>
 </ul>
 
-<div class="clcorner"><img class="cldood" src="/assets/images/changelogs/LTS-3-3%20noelle.png" alt=""></div>
+<div class="clcorner"><img class="cldood" src="/assets/images/doodles/LTS-3-noelle.png" alt=""></div>
