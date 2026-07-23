@@ -493,7 +493,11 @@ async function getcl(version) {
   return parsed;
 }
 
+/* the ch1&2 posts are hand-drawn posters rather than patch-note lists - stretched
+   words, doodles mid-sentence, headings arranged in a triangle. a .md starting
+   with ::raw is laid out by hand instead, using the .clraw helpers in the css. */
 function parsemd(text) {
+  if (text.startsWith("::raw")) return {raw: text.slice(text.indexOf("\n") + 1)};
   const out = {title: "", subtitle: "", intro: "", table: null, sections: [], outro: [], footer: ""};
   let cur = null, prevblank = true;
   const introlines = [];
@@ -572,6 +576,7 @@ async function getsteamcl(version) {
 }
 
 function recreationhtml(cl, version) {
+  if (cl.raw) return "<div class=\"changelog clraw\">" + cl.raw + "</div>";
   let h = "<div class=\"changelog\">";
   h += "<div class=\"cl-head\">" + doodlehtml(version, "left") + "<div class=\"cl-headtext\">";
   h += "<div class=\"cl-title\">" + esc(cl.title) + "</div>";
@@ -613,7 +618,7 @@ async function getrawmd(src, version) {
 }
 
 function mdplain(md) {
-  return md.split("\n").map(l =>
+  return md.replace(/^::raw\n/, "").replace(/<[^>]+>/g, "").split("\n").map(l =>
     l.replace(/^#{1,6}\s*/, "").replace(/^\s*[-*]\s*/, "").replace(/^>\s*/, "")
      .replace(/^\[[^\]]+\]\s*/, "").replace(/\|/g, " ").replace(/\*\*/g, "").trim())
     .filter(x => x && !/^-+$/.test(x)).join("\n");

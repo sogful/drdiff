@@ -540,6 +540,92 @@ body {
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
+/* hand-laid-out ch1&2 posters (a .md starting with ::raw), which lean on
+   these helpers instead of the section/item structure above */
+
+.clraw {line-height: 1.45}
+.clraw p {margin: 0 0 12px}
+.clraw b {font-weight: 700}
+.clraw img {image-rendering: auto; max-width: 100%}
+.clraw ul {margin: 0 0 12px; padding-left: 22px}
+.clraw li {margin: 6px 0}
+
+/* the posts are typed almost entirely in bold, so whole blocks opt in */
+.clbold {font-weight: 700}
+.clplain {font-weight: 400}
+
+/* toby drew these at whatever size fit the page; scale by role, not by file */
+.cldood {flex: none; height: 128px; width: auto}
+.cldoodsm {flex: none; height: 46px; width: auto}
+.cldoodlg {flex: none; height: 190px; width: auto}
+
+.clrow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.clrow.top {align-items: flex-start}
+.clrow.wide {gap: 56px; justify-content: center}
+.clbody {flex: 1; min-width: 0}
+.clside {flex: 0 0 30%; text-align: center}
+
+/* words the posts stretched by hand. inline-block so the transform applies */
+.clsx15, .clsy13, .clsy125, .clsqueeze {display: inline-block}
+/* a scaled element keeps its original layout width, so widening one needs
+   matching margin or it overlaps whatever sits beside it */
+.clsx15 {transform: scaleX(1.5); margin: 0 0.8em}
+.clsy13 {transform: scaleY(1.3)}
+.clsy125 {transform: scaleY(1.25)}
+.clsqueeze {transform: scaleY(0.5)}
+
+.clhead {
+  font-size: 26px;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 14px;
+}
+.clhead.thin {font-weight: 400}
+/* the chapter select heading sits noticeably lower than its neighbours */
+.clhead.clshift {
+  font-weight: 900;
+  margin-top: 22px;
+}
+.clsub {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 18px 0 6px;
+}
+.clred {color: #c00000}
+.cltiny {font-size: 10px}
+.clsmallnote {font-size: 11px}
+
+/* chapter select menu on top, chapter 1 and 2 side by side beneath it */
+.cltri {margin-top: 10px}
+.cltritop {
+  width: 62%;
+  margin: 0 auto 26px;
+}
+.cltribottom {
+  display: flex;
+  gap: 34px;
+  align-items: flex-start;
+}
+.cltribottom > * {flex: 1; min-width: 0}
+
+.clguides {margin-top: 30px}
+.clguides img {display: block; width: 100%; margin: 14px 0}
+
+.clcorner {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 26px;
+}
+.clfloatright {
+  float: right;
+  margin: 0 0 10px 18px;
+}
+
+/*//////////////////////////////////////////////////////////////////////*/
 /* twitter vs steam wording diff - rendered inside the white changelog card */
 
 .wdbody {
