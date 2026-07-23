@@ -56,18 +56,18 @@ src/
 
 - `run_all.sh` (in `H:/drdiff_work`) - steamcmd pulls each manifest, decompiles data.win -> gml with `drdump`, ids each build by `global.versionno`.
 - `identify.py` - orders builds by real per-chapter versions -> `assets/static/builds_identified.json`.
-- `build_site.py` - hash-indexes builds, diffs consecutive ones -> `manifest.json` + `diffs/`.
-- `fetch_ocr.py` - pulls the @UNDERTALE changelog images.
+- `buildsite.py` - hash-indexes builds, diffs consecutive ones -> `manifest.json` + `diffs/`.
+- `fetchocr.py` - pulls the @UNDERTALE changelog images.
 - `reocr.py` - upscales + thresholds each image and re-OCRs (much cleaner than the raw pass).
-- `changelog_parse.py` - structures the OCR into `changelogs.json` (title, version table, per-chapter items, platform tags).
+- `changelogparse.py` - structures the OCR into `changelogs.json` (title, version table, per-chapter items, platform tags).
 
-regenerate the diffs: `python .claude/tools/identify.py && python .claude/tools/build_site.py`
-regenerate the changelogs: `python .claude/tools/reocr.py && python .claude/tools/changelog_parse.py`
+regenerate the diffs: `python .claude/tools/identify.py && python .claude/tools/buildsite.py`
+regenerate the changelogs: `python .claude/tools/reocr.py && python .claude/tools/changelogparse.py`
 
 ## notes
 
 the changelog recreations are auto-parsed from ocr; some intros/titles still carry ocr artifacts and
 the toby fox illustrations are intentionally omitted (to be re-added later). refine `changelogs.json`
-directly or improve `changelog_parse.py`.
+directly or improve `changelogparse.py`.
 
 not affiliated with toby fox. code shown for study and archival.

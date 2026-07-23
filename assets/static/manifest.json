@@ -4,6 +4,7 @@
    "label": "1.0.0",
    "date": "2021-09-17",
    "era": "demo",
+   "branch": "",
    "manifest": "demo_1237260587432546177",
    "ver": {
     "combined": null
@@ -13,6 +14,7 @@
    "label": "1.0.5",
    "date": "2021-09-21",
    "era": "demo",
+   "branch": "",
    "manifest": "demo_8068723090824935880",
    "ver": {
     "combined": null
@@ -22,6 +24,7 @@
    "label": "1.06",
    "date": "2021-09-23",
    "era": "demo",
+   "branch": "",
    "manifest": "demo_2438050533604741459",
    "ver": {
     "combined": null
@@ -31,6 +34,7 @@
    "label": "1.07",
    "date": "2021-09-30",
    "era": "demo",
+   "branch": "",
    "manifest": "demo_8311763012442684526",
    "ver": {
     "combined": null
@@ -40,6 +44,7 @@
    "label": "1.10",
    "date": "2022-02-25",
    "era": "demo",
+   "branch": "",
    "manifest": "demo_7280478300334929399",
    "ver": {
     "combined": "1.10"
@@ -49,6 +54,7 @@
    "label": "LTS-1",
    "date": "2024-11-25",
    "era": "demo",
+   "branch": "chapter1.2.lts.test",
    "manifest": "demo_2628312138164230554",
    "ver": {
     "ch1": "1.16",
@@ -59,6 +65,7 @@
    "label": "LTS-2",
    "date": "2024-11-26",
    "era": "demo",
+   "branch": "chapter1.2.lts.test",
    "manifest": "demo_2185907323585193862",
    "ver": {
     "ch1": "1.17",
@@ -69,6 +76,7 @@
    "label": "LTS-3",
    "date": "2024-12-09",
    "era": "demo",
+   "branch": "chapter1.2.lts.test",
    "manifest": "demo_986349265606924702",
    "ver": {
     "ch1": "1.19",
@@ -79,6 +87,7 @@
    "label": "1.00",
    "date": "2025-06-05",
    "era": "release",
+   "branch": "",
    "manifest": "6530852604090871226",
    "ver": {
     "root": "v2",
@@ -92,6 +101,7 @@
    "label": "1.01A",
    "date": "2025-06-06",
    "era": "release",
+   "branch": "",
    "manifest": "7360369116571903144",
    "ver": {
     "root": "v2",
@@ -105,6 +115,7 @@
    "label": "1.01B",
    "date": "2025-06-08",
    "era": "release",
+   "branch": "",
    "manifest": "7730842116999772152",
    "ver": {
     "root": "v2",
@@ -118,6 +129,7 @@
    "label": "1.01C",
    "date": "2025-06-09",
    "era": "release",
+   "branch": "",
    "manifest": "3006447521106301427",
    "ver": {
     "root": "v2",
@@ -131,6 +143,7 @@
    "label": "1.02",
    "date": "2025-07-08",
    "era": "release",
+   "branch": "",
    "manifest": "1738457575886606060",
    "ver": {
     "root": "v2",
@@ -144,6 +157,7 @@
    "label": "1.03",
    "date": "2025-07-23",
    "era": "release",
+   "branch": "",
    "manifest": "6956536201257221797",
    "ver": {
     "root": "v2",
@@ -157,6 +171,7 @@
    "label": "1.04",
    "date": "2025-08-05",
    "era": "release",
+   "branch": "",
    "manifest": "5291565625263756968",
    "ver": {
     "root": "v2",
@@ -170,6 +185,7 @@
    "label": "1.05",
    "date": "2025-08-26",
    "era": "release",
+   "branch": "deltarune105",
    "manifest": "1.05",
    "ver": {
     "root": "v2",
@@ -183,6 +199,7 @@
    "label": "0.0.240",
    "date": "2026-06-24",
    "era": "ch5",
+   "branch": "",
    "manifest": "2856471167011435804",
    "ver": {
     "root": null,
@@ -197,6 +214,7 @@
    "label": "0.0.241",
    "date": "2026-06-25",
    "era": "ch5",
+   "branch": "",
    "manifest": "4986929572195566736",
    "ver": {
     "root": null,
@@ -211,6 +229,7 @@
    "label": "0.0.242",
    "date": "2026-06-27",
    "era": "ch5",
+   "branch": "",
    "manifest": "5668370237506127426",
    "ver": {
     "root": null,
@@ -225,6 +244,7 @@
    "label": "0.0.243",
    "date": "2026-06-29",
    "era": "ch5",
+   "branch": "",
    "manifest": "1619878865915573883",
    "ver": {
     "root": null,
@@ -239,6 +259,7 @@
    "label": "0.0.244",
    "date": "2026-07-01",
    "era": "ch5",
+   "branch": "",
    "manifest": "8959018571141829552",
    "ver": {
     "root": null,
@@ -253,6 +274,7 @@
    "label": "0.0.247",
    "date": "2026-07-09",
    "era": "ch5",
+   "branch": "",
    "manifest": "7477373076840518223",
    "ver": {
     "root": null,
@@ -267,6 +289,7 @@
    "label": "0.0.250",
    "date": "2026-07-22",
    "era": "ch5",
+   "branch": "",
    "manifest": "6988415462459025370",
    "ver": {
     "root": null,
@@ -360,28 +383,28 @@
    "boundary": false,
    "parts": {
     "ch1": {
-     "a": 1263,
+     "a": 12,
      "r": 0,
-     "m": 0,
-     "p": 0,
-     "mi": 0,
-     "collapsed": true
+     "m": 924,
+     "p": 20224,
+     "mi": 20350,
+     "collapsed": false
     },
     "ch2": {
-     "a": 5803,
+     "a": 7,
      "r": 0,
-     "m": 0,
-     "p": 0,
-     "mi": 0,
-     "collapsed": true
+     "m": 463,
+     "p": 855,
+     "mi": 3317,
+     "collapsed": false
     },
     "combined": {
      "a": 0,
-     "r": 8674,
+     "r": 1662,
      "m": 0,
      "p": 0,
-     "mi": 0,
-     "collapsed": true
+     "mi": 4430,
+     "collapsed": false
     }
    }
   },

@@ -1,220 +1,256 @@
 @font-face {
-  font-family: "deltarune";
-  src: url("/assets/fonts/deltarune.woff") format("woff");
-  font-display: swap;
+		font-family: "deltarune";
+		src: url("/assets/fonts/deltarune.woff") format("woff");
+		font-display: swap;
 }
 @font-face {
-  font-family: "jetbrains";
-  src: url("/assets/fonts/jetbrainsmono.woff2") format("woff2");
-  font-weight: 400;
-  font-display: swap;
+		font-family: "jetbrains";
+		src: url("/assets/fonts/jetbrainsmono.woff2") format("woff2");
+		font-weight: 400;
+		font-display: swap;
 }
 @font-face {
-  font-family: "jetbrains";
-  src: url("/assets/fonts/jetbrainsmono-bold.woff2") format("woff2");
-  font-weight: 700;
-  font-display: swap;
+		font-family: "jetbrains";
+		src: url("/assets/fonts/jetbrainsmono-bold.woff2") format("woff2");
+		font-weight: 700;
+		font-display: swap;
 }
 
 :root {
-  --bar2: #101010;
-  --line: #333333;
-  --faint: rgba(255,255,255,0.07);
-  --text: #ffffff;
-  --dim: #808080;
-  --dimmer: #565656;
-  --yellow: #ffff00;
-  --red: #ff0000;
-  --green: #00ff00;
-  --azure: #00aeff;
-  
-  --code-bg: #1e1e1e;
-  --add: #383e2a;
-  --del: #4c1919;
-  
-  --t-com: #6a9955;
-  --t-kw: #569cd6;
-  --t-cf: #c586c0;
-  --t-fn: #dcdcaa;
-  --t-str: #ce9178;
-  --t-num: #b5cea8;
-  --t-var: #9cdcfe;
-  --t-cls: #4ec9b0;
-  --t-op: #d4d4d4;
+		--bar2: #101010;
+		--line: #333333;
+		--faint: rgba(255,255,255,0.07);
+		--text: #ffffff;
+		--dim: #808080;
+		--dimmer: #565656;
+		--yellow: #ffff00;
+		--red: #ff0000;
+		--green: #00ff00;
+		--azure: #00aeff;
+		
+		--code-bg: #1e1e1e;
+		--add: #383e2a;
+		--del: #4c1919;
+		
+		--t-com: #6a9955;
+		--t-kw: #569cd6;
+		--t-cf: #c586c0;
+		--t-fn: #dcdcaa;
+		--t-str: #ce9178;
+		--t-num: #b5cea8;
+		--t-var: #9cdcfe;
+		--t-cls: #4ec9b0;
+		--t-op: #d4d4d4;
 }
-
 * {box-sizing: border-box}
 
-/* deltarune bitmap-font glyph atlas, driven by src/js/font.js (used for fnt_small tiny text) */
+/*//////////////////////////////////////////////////////////////////////*/
+
 .font {
-  position: relative;
-  display: inline-block;
-  line-height: var(--lh, 16px);
+		position: relative;
+		display: inline-block;
+		line-height: var(--lh, 16px);
 }
 .font .word {display: inline-block; white-space: nowrap; vertical-align: top}
 .font .glyph {
-  position: relative;
-  display: inline-block;
-  vertical-align: top;
-  width: var(--gs);
-  height: var(--lh, 16px);
-  overflow: hidden;
-  color: transparent;
-  font-size: calc(var(--font-size, 16px) * 1.3);
-  line-height: var(--lh, 16px);
-  white-space: pre;
+		position: relative;
+		display: inline-block;
+		vertical-align: top;
+		width: var(--gs);
+		height: var(--lh, 16px);
+		overflow: hidden;
+		color: transparent;
+		font-size: calc(var(--font-size, 16px) * 1.3);
+		line-height: var(--lh, 16px);
+		white-space: pre;
 }
 .font .glyph::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: var(--go);
-  width: var(--gw);
-  height: var(--gh);
-  background-color: var(--ink, var(--text));
-  -webkit-mask-image: var(--atlas);
-  mask-image: var(--atlas);
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: var(--gp);
-  mask-position: var(--gp);
-  image-rendering: pixelated;
-  pointer-events: none;
+		content: "";
+		position: absolute;
+		top: 0;
+		left: var(--go);
+		width: var(--gw);
+		height: var(--gh);
+		background-color: var(--ink, var(--text));
+		-webkit-mask-image: var(--atlas);
+		mask-image: var(--atlas);
+		-webkit-mask-repeat: no-repeat;
+		mask-repeat: no-repeat;
+		-webkit-mask-position: var(--gp);
+		mask-position: var(--gp);
+		image-rendering: pixelated;
+		pointer-events: none;
 }
 .font .glyphx {display: inline-block; vertical-align: top; line-height: var(--lh, 16px); color: var(--ink, var(--text))}
 
 html, body {
-  margin: 0;
-  height: 100%;
+		margin: 0;
+		height: 100%;
 }
 
 body {
-  background: black;
-  color: var(--text);
-  font-family: "deltarune", system-ui, sans-serif;
-  font-size: 15px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
+		background: black;
+		color: var(--text);
+		font-family: "deltarune", system-ui, sans-serif;
+		font-size: 15px;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* top version rail */
 
 .topbar {
-  flex: none;
-  background: #000000;
-  border-bottom: 1px solid var(--line);
+		flex: none;
+		background: #000000;
 }
 
 .versionrail {
-  display: flex;
-  flex-direction: column;
+		display: flex;
+		flex-direction: column;
 }
 
 .erarow {
-  display: flex;
-  align-items: stretch;
-  overflow: hidden;
+		display: flex;
+		align-items: stretch;
+}
+
+.erachips {
+		flex: 1; min-width: 0;
+		display: flex;
+		flex-wrap: wrap;
+		align-content: stretch;
 }
 
 .eralabel {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  color: var(--text);
-  font-size: 11px;
-  min-width: 48px;
-  opacity: 0.5;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		color: var(--text);
+		font-size: 11px;
+		min-width: 48px;
+		opacity: 0.5;
 }
 
 .vchip {
-  flex: 1 1 0; min-width: 0;
-  border: none;
-  background: black; color: var(--text);
-  cursor: pointer;
-  font-family: "deltarune", monospace;
-  font-size: 13px;
-  text-align: center;
+		flex: 1 1 auto;
+		min-width: max-content; border: none;
+		background: black; color: var(--text);
+		cursor: pointer;
+		font-family: "deltarune", monospace;
+		font-size: 13px;
+		text-align: center;
 }
 .vchip:hover {background: var(--bar2)}
 .vchip.active {color: var(--yellow)}
-/* earliest tracked build - nothing before it to diff against */
-.vchip.baseline {opacity: 0.35; cursor: default}
+.vchip.baseline {opacity: 0.5; cursor: default} /* so ch1&2 1.0.0 */
 .vchip.baseline:hover {background: black}
 .vchip .vdate {
-  display: block;
-  --ink: var(--dim);
+		display: block;
+		--ink: var(--dim);
 }
 .vchip.active .vdate {--ink: var(--yellow); opacity: 0.85}
+.vchip .vbranch {
+		display: block;
+		--ink: var(--azure);
+		opacity: 0.5;
+}
+.vchip.active .vbranch {opacity: 1}
 
 /*//////////////////////////////////////////////////////////////////////*/
 
-/* subbar */
 .chapterbar {
-  flex: none;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  gap: 0;
-  background: black;
-  border-bottom: 1px solid var(--line);
-  padding: 0 6px;
+		flex: none;
+		display: flex;
+		align-items: stretch;
+		gap: 0;
+		background: black;
+		padding: 0 6px;
 }
 
+.chaptertabs {
+		flex: 1; min-width: 0;
+		display: flex; flex-wrap: wrap;
+		align-items: stretch;
+}
+
+.idfilter {
+		flex: none; display: flex;
+		margin-left: 10px;
+		align-items: center;
+		gap: 6px; border: 0;
+		background: none;
+		color: var(--text); cursor: pointer;
+		font-family: "deltarune", sans-serif;
+		padding: 2px 4px;
+		user-select: none;
+}
+.ifcheck {
+		flex: none;
+		width: 16px; height: 16px;
+		image-rendering: pixelated;
+}
+.iftext {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		line-height: 1.05;
+}
+.ifdesc {--ink: var(--dim)}
+
 .ctab {
-  border: 0;
-  background: none;
-  color: var(--text);
-  cursor: pointer;
-  font-family: "deltarune", sans-serif;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  gap: 4px;
+		border: 0;
+		background: none;
+		color: var(--text);
+		cursor: pointer;
+		font-family: "deltarune", sans-serif;
+		border-bottom: 2px solid transparent;
+		white-space: nowrap;
+		display: flex;
+		align-items: center;
+		gap: 4px;
 }
 .ctab:hover {color: var(--yellow)}
 .ctab.active {
-  color: var(--yellow);
-  border-bottom-color: var(--yellow);
+		color: var(--yellow);
+		border-bottom-color: var(--yellow);
 }
 .ctab.locked {cursor: default; opacity: 0.5}
 .ctab.locked:hover {color: var(--text)}
+.ctab.muted {opacity: 0.45}
+.ctab.muted:hover, .ctab.muted.active {opacity: 1}
 
-/* icons are black art on opaque white; multiply over a white/yellow backing
-   recolors the white pixels (to yellow when active) while keeping the black art */
 .cicon {
-  width: 22px;
-  height: 20px;
-  flex: none;
-  background: #ffffff;
-  isolation: isolate;
-  display: inline-block;
-  image-rendering: pixelated;
+		width: 22px;
+		height: 20px;
+		flex: none;
+		background: #ffffff;
+		isolation: isolate;
+		display: inline-block;
+		image-rendering: pixelated;
 }
 .cicon img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  mix-blend-mode: multiply;
-  image-rendering: pixelated;
+		display: block;
+		width: 100%;
+		height: 100%;
+		mix-blend-mode: multiply;
+		image-rendering: pixelated;
 }
 .ctab.active .cicon, .ctab:hover:not(.locked) .cicon {background: var(--yellow)}
 
 .ctext {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  line-height: 1.05;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		line-height: 1.05;
 }
 .cname {font-size: 14px}
 
 .cbadge {
-  font-size: 9px;
-  font-family: "jetbrains", monospace;
-  display: inline-flex;
-  gap: 5px;
+		font-size: 9px;
+		font-family: "jetbrains", monospace;
+		display: inline-flex;
+		gap: 5px;
 }
 .cbadge .ba {color: #4bff7a}
 .cbadge .bm {color: var(--azure)}
@@ -223,37 +259,41 @@ body {
 /*//////////////////////////////////////////////////////////////////////*/
 
 .workspace {
-  flex: 1;
-  display: flex;
-  min-height: 0;
+		flex: 1; display: flex;
+		min-height: 0;
 }
 
 .sidebar {
-  width: 320px;
-  flex: none;
-  position: relative;
-  border-right: 1px solid var(--line);
-  background: black;
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
+		width: 320px; flex: none;
+		position: relative;
+		background: black;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
 }
 
 .filelist {
-  flex: 1;
-  overflow-y: auto;
-  padding: 4px 0 8px;
-  scrollbar-width: none;
+		flex: 1;
+		overflow-y: auto;
+		padding: 4px 0 8px;
+		scrollbar-width: none;
 }
 .filelist::-webkit-scrollbar {display: none}
 
+.sidebar.nocode {width: auto}
+.sidebar.nocode .filelist {display: none}
+.sidebar.nocode .changelogswitch {
+		position: static;
+		margin-top: auto; background: none;
+		padding: 10px 14px;
+}
+.sidebar.empty {display: none}
+
 .content {
-  flex: 1;
-  min-width: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: var(--code-bg);
-  scrollbar-width: none;
+		flex: 1; min-width: 0;
+		overflow-y: auto; overflow-x: hidden;
+		background: var(--code-bg);
+		scrollbar-width: none;
 }
 .content::-webkit-scrollbar {display: none}
 
@@ -262,94 +302,91 @@ body {
 /*//////////////////////////////////////////////////////////////////////*/
 
 .frow {
-  display: flex;
-  align-items: flex-start;
-  padding: 1px 12px;
-  cursor: pointer;
-  line-height: 1.25;
+		display: flex;
+		align-items: flex-start;
+		padding: 1px 12px;
+		cursor: pointer;
+		line-height: 1.25;
 }
 .frow:hover {background: var(--faint)}
 .frow.active {background: var(--bar2)}
 
 .fname {
-  flex: 1; min-width: 0;
-  font-family: "jetbrains", monospace;
-  font-size: 11.5px;
-  color: var(--text);
-  overflow-wrap: anywhere;
-  word-break: break-word;
+		flex: 1; min-width: 0;
+		font-family: "jetbrains", monospace;
+		font-size: 11.5px;
+		color: var(--text);
+		overflow-wrap: anywhere;
+		word-break: break-word;
 }
 .frow.active .fname {color: var(--yellow)}
 .frow.add .fname {color: #4bff7a}
 .frow.del .fname {color: #ff5b5b}
 .frow.add.active .fname, .frow.del.active .fname {color: var(--yellow)}
 .fstat {
-  flex: none;
-  margin-top: 2px;
+		flex: none;
+		margin-top: 2px;
 }
 
 .fgroup {
-  color: var(--dimmer);
-  font-size: 11px;
-  padding: 8px 10px 2px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+		color: var(--dimmer);
+		font-size: 11px;
+		padding: 8px 10px 2px;
+		text-transform: uppercase;
+		letter-spacing: 1px;
 }
-.fempty {color: var(--dimmer); padding: 16px; font-size: 12px; text-align: center}
+.fempty {
+		color: var(--dimmer); padding: 16px;
+		font-size: 12px; text-align: center
+}
 
-/* two pixel toggle buttons overlaying the bottom-left of the file list
-   (twitter / steam; both = wording diff). file entries show behind them. */
 .changelogswitch {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 4;
-  pointer-events: none;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 8px 0 10px;
-  background: rgba(0,0,0,0.72);
+		position: absolute;
+		left: 0; right: 0; bottom: 0;
+		z-index: 4;
+		pointer-events: none;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		background: rgba(0,0,0,0.72);
 }
 .cswlabel {
-  color: var(--text);
-  font-family: "deltarune", sans-serif;
-  font-size: 11px;
-  margin-bottom: 5px;
+		color: var(--text);
+		font-family: "deltarune", sans-serif;
+		font-size: 11px;
+		margin-bottom: 5px;
 }
 .cswbtns {display: flex; gap: 8px; pointer-events: auto}
 .cswbtn {
-  border: 0;
-  background: none;
-  padding: 0;
-  line-height: 0;
-  cursor: pointer;
-  opacity: 0.45;
+		border: 0;
+		background: none;
+		padding: 0;
+		line-height: 0;
+		cursor: pointer;
+		opacity: 0.45;
 }
 .cswbtn:hover {opacity: 0.8}
 .cswbtn.on {opacity: 1}
 .cswbtn img {
-  width: 40px;
-  height: 40px;
-  display: block;
-  image-rendering: pixelated;
+		width: 40px;
+		height: 40px;
+		display: block;
+		image-rendering: pixelated;
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
 
 .difftop {
-  position: sticky;
-  top: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 9px 16px;
-  background: #252526;
-  border-bottom: 1px solid #333;
-  font-family: "jetbrains", monospace;
-  font-size: 12px;
+		position: sticky;
+		top: 0;
+		z-index: 2;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		padding: 9px 16px;
+		background: #252526;
+		font-family: "jetbrains", monospace;
+		font-size: 12px;
 }
 .difftop .dfile {color: #cfcfe0}
 .difftop .dfile.add {color: #4bff7a}
@@ -358,26 +395,26 @@ body {
 .difftop .dstat .m {color: #ff5b5b}
 
 .code {
-  font-family: "jetbrains", monospace;
-  font-size: 12.5px;
-  line-height: 1.55;
-  padding: 0 0 120px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  tab-size: 4;
+		font-family: "jetbrains", monospace;
+		font-size: 12.5px;
+		line-height: 1.55;
+		padding: 0 0 120px;
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+		tab-size: 4;
 }
 .cline {
-  display: block;
-  padding: 0 16px;
-  text-indent: -1.5em;
-  padding-left: 2.5em;
+		display: block;
+		padding: 0 16px;
+		text-indent: -1.5em;
+		padding-left: 2.5em;
 }
 .cline.add {background: var(--add)}
 .cline.del {background: var(--del)}
 .cline.hunk {
-  color: #569cd6;
-  background: #1a2430;
-  margin: 4px 0;
+		color: #569cd6;
+		background: #1a2430;
+		margin: 4px 0;
 }
 
 .notecode {color: var(--dim); padding: 26px; font-family: "deltarune", sans-serif; font-size: 15px}
@@ -397,133 +434,135 @@ body {
 /*//////////////////////////////////////////////////////////////////////*/
 
 .changelog {
-  position: relative;
-  max-width: 860px; margin: 0 auto;
-  background: white;
-  color: black;
-  font-family: Verdana, Geneva, sans-serif;
-  font-size: 14px;
-  line-height: 1.5;
-  padding: 40px 54px 60px;
+		position: relative;
+		max-width: 860px; margin: 0 auto;
+		min-height: 100%;																 /* short notes still fill the pane with white */
+		box-sizing: border-box;
+		background: white;
+		color: black;
+		font-family: Verdana, Geneva, sans-serif;
+		font-size: 14px;
+		line-height: 1.5;
+		padding: 40px 54px 60px;
 }
 
 .cl-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 18px;
+		display: flex;
+		align-items: flex-start;
+		justify-content: center;
+		gap: 16px;
+		margin-bottom: 18px;
 }
 .cl-headtext {
-  flex: 0 1 560px;
-  min-width: 0;
-  padding-top: 6px;
+		flex: 0 1 560px;
+		min-width: 0;
+		padding-top: 6px;
 }
 /* fixed height (auto width) so the left/right doodles always match in size */
 .cl-dood {
-  flex: none;
-  height: clamp(56px, 9vw, 104px);
-  width: auto;
-  image-rendering: pixelated;
-  pointer-events: none;
+		flex: none;
+		height: clamp(56px, 9vw, 104px);
+		width: auto;
+		image-rendering: pixelated;
+		pointer-events: none;
 }
 .cl-dood.flip {transform: scaleX(-1)}
 .cl-dood-spacer {
-  flex: none;
-  width: clamp(48px, 11vw, 116px);
+		flex: none;
+		width: clamp(48px, 11vw, 116px);
 }
 .cl-title {
-  text-align: center;
-  font-weight: 700;
-  font-size: 21px;
-  margin: 4px auto 6px;
-  max-width: 560px;
+		text-align: center;
+		font-weight: 700;
+		font-size: 21px;
+		margin: 4px auto 6px;
+		max-width: 560px;
 }
 .cl-sub {
-  text-align: center;
-  color: inherit;
-  font-size: inherit;
-  margin: 0 auto 18px;
-  max-width: 560px;
+		text-align: center;
+		color: inherit;
+		font-size: inherit;
+		margin: 0 auto 18px;
+		max-width: 560px;
 }
 .cl-intro {
-  text-align: center;
-  margin: 0 auto 22px;
-  max-width: 560px;
+		text-align: center;
+		margin: 0 auto 22px;
+		max-width: 560px;
 }
 .cl-h {
-  text-align: center;
-  font-weight: 700;
-  font-size: 18px;
-  margin: 24px 0 12px;
+		text-align: center;
+		font-weight: 700;
+		font-size: 18px;
+		margin: 24px 0 12px;
 }
 .cl-table {
-  margin: 0 auto 6px;
-  border-collapse: collapse;
+		margin: 0 auto 6px;
+		border-collapse: collapse;
 }
 .cl-table td, .cl-table th {
-  padding: 2px 26px 2px 0;
-  text-align: left;
-  font-size: 14px;
+		padding: 2px 26px 2px 0;
+		text-align: left;
+		font-size: 14px;
 }
 .cl-table th {font-weight: 700}
 .cl-table td.rowh {font-weight: 400}
 
 .cl-section {margin: 18px 0 0}
 .cl-sech {
-  font-weight: 700;
-  font-size: 15px;
-  margin-bottom: 4px;
+		font-weight: 700;
+		font-size: 15px;
+		margin-bottom: 4px;
 }
 .cl-item {
-  display: flex;
-  gap: 8px;
-  margin: 5px 0;
-  padding-left: 4px;
+		display: flex;
+		gap: 8px;
+		margin: 5px 0;
+		padding-left: 4px;
 }
 .cl-item .bullet {flex: none; color: #1a1a1a}
 .cl-tag {color: #1f9d2f; font-weight: 400}
 /* closing paragraphs after a horizontal rule - plain text, not bullets */
 .cl-outro {
-  margin: 16px 0;
+		margin: 16px 0;
 }
 .cl-footer {
-  margin-top: 26px;
-  font-weight: 700;
-  font-size: 15px;
+		margin-top: 26px;
+		font-weight: 700;
+		font-size: 15px;
 }
 .cl-note {
-  text-align: center;
-  color: #888;
-  font-size: 11px;
-  margin-top: 34px;
-  font-style: italic;
+		text-align: center;
+		color: #888;
+		font-size: 11px;
+		margin-top: 34px;
+		font-style: italic;
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
 /* twitter vs steam wording diff - rendered inside the white changelog card */
 
 .wdbody {
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-  line-height: 1.9;
-  margin-top: 8px;
+		white-space: pre-wrap;
+		overflow-wrap: anywhere;
+		line-height: 1.9;
+		margin-top: 8px;
 }
 .wdel {
-  background: #ffdada;
-  color: #b00000;
-  text-decoration: line-through;
-  border-radius: 2px;
-  padding: 0 1px;
+		background: #ffdada;
+		color: #b00000;
+		text-decoration: line-through;
+		border-radius: 2px;
+		padding: 0 1px;
 }
 .wadd {
-  background: #d8f0cf;
-  color: #1c7a1c;
-  border-radius: 2px;
-  padding: 0 1px;
+		background: #d8f0cf;
+		color: #1c7a1c;
+		border-radius: 2px;
+		padding: 0 1px;
 }
 
 @media (max-width: 900px) {
-  .sidebar {width: 240px}
-  .changelog {padding: 28px 22px 50px}
+		.sidebar {width: 240px}
+		.changelog {padding: 28px 22px 50px}
 }
