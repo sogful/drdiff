@@ -15,7 +15,7 @@ let doodles = {};
 const diffcache = {};
 const clcache = {};             // parsed twitter changelog markdown, by version
 const clraw = {};               // raw markdown text (twitter + steam) by "src/version"
-const sel = {version: null, chapter: null, file: null, mode: "changelog", clshow: {twitter: true, steam: false}};
+const sel = {version: null, chapter: null, file: null, mode: "changelog", clview: "twitter"};
 
 /*//////////////////////////////////////////////////////////////////////*/
 /* boot */
@@ -40,8 +40,9 @@ async function boot() {
   buildrail();
   for (const b of document.querySelectorAll(".cswbtn")) {
     b.addEventListener("click", () => {
-      sel.clshow[b.dataset.src] = !sel.clshow[b.dataset.src];
-      sel.mode = (sel.clshow.twitter || sel.clshow.steam) ? "changelog" : "diff";
+      const v = b.dataset.view;
+      sel.clview = (sel.mode === "changelog" && sel.clview === v) ? null : v;   // click again to close
+      sel.mode = sel.clview ? "changelog" : "diff";
       rendercontent();
     });
   }
@@ -51,7 +52,7 @@ async function boot() {
   const q = new URLSearchParams(location.search);
   const cl = q.get("cl") || (q.has("changelog") ? "twitter" : "");
   if (cl) {
-    sel.clshow = {twitter: cl === "twitter" || cl === "diff", steam: cl === "steam" || cl === "diff"};
+    sel.clview = cl;
     sel.mode = "changelog";
     rendercontent();
   }
@@ -187,11 +188,14 @@ async function selectversion(label) {
   sel.chapter = (diffable.length ? diffable : changed).slice(-1)[0] || null;
   sel.file = null;
   // keep the changelog open across version switches, clamped to sources this version has
-  sel.clshow.twitter = sel.clshow.twitter && changelogSet.has(label);
-  sel.clshow.steam = sel.clshow.steam && steamSet.has(label);
-  if (wasChangelog && !sel.clshow.twitter && !sel.clshow.steam && changelogSet.has(label))
-    sel.clshow.twitter = true;
-  sel.mode = (sel.clshow.twitter || sel.clshow.steam) ? "changelog" : "diff";
+  const hasTw = changelogSet.has(label), hasSt = steamSet.has(label);
+  const ok = {twitter: hasTw, steam: hasSt, diff: hasTw && hasSt};
+  if (wasChangelog) {
+    if (!sel.clview || !ok[sel.clview]) sel.clview = hasTw ? "twitter" : (hasSt ? "steam" : null);
+  } else {
+    sel.clview = null;
+  }
+  sel.mode = sel.clview ? "changelog" : "diff";
   updatechangelogbtn();
   rendercontent();
   markchaptertab();
@@ -242,7 +246,7 @@ function markchaptertab() {
   for (const t of document.querySelectorAll(".ctab"))
     t.classList.toggle("active", sel.mode === "diff" && t.dataset.part === sel.chapter);
   for (const b of document.querySelectorAll(".cswbtn"))
-    b.classList.toggle("on", sel.mode === "changelog" && !!sel.clshow[b.dataset.src]);
+    b.classList.toggle("on", sel.mode === "changelog" && sel.clview === b.dataset.view);
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
@@ -266,8 +270,9 @@ function updatechangelogbtn() {
   const sw = document.querySelector(".changelogswitch");
   const hasTw = changelogSet.has(sel.version), hasSt = steamSet.has(sel.version);
   sw.style.display = (hasTw || hasSt) ? "" : "none";
-  sw.querySelector("[data-src=twitter]").style.display = hasTw ? "" : "none";
-  sw.querySelector("[data-src=steam]").style.display = hasSt ? "" : "none";
+  sw.querySelector("[data-view=twitter]").style.display = hasTw ? "" : "none";
+  sw.querySelector("[data-view=steam]").style.display = hasSt ? "" : "none";
+  sw.querySelector("[data-view=diff]").style.display = (hasTw && hasSt) ? "" : "none";
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
@@ -301,7 +306,7 @@ function renderfilelist() {
     else if (r.kind === "del") stat = "<span class=\"fstat\" fnt_small><span class=\"m\" red>-" + r.lines + "</span></span>";
     else stat = "<span class=\"fstat\" fnt_small><span class=\"p\" green>+" + r.mod.plus + "</span> <span class=\"m\" red>-" + r.mod.minus + "</span></span>";
     row.innerHTML = "<span class=\"fname\" title=\"" + esc(r.file) + "\">" + esc(shortname(r.file)) + "</span>" + stat;
-    row.addEventListener("click", () => {sel.file = r.file; sel.mode = "diff"; sel.clshow.twitter = sel.clshow.steam = false; renderdiffpane(); highlightrow(); markchaptertab();});
+    row.addEventListener("click", () => {sel.file = r.file; sel.mode = "diff"; sel.clview = null; renderdiffpane(); highlightrow(); markchaptertab();});
     list.appendChild(row);
   }
   if (!sel.file || !rows.some(r => r.file === sel.file)) sel.file = rows[0].file;
@@ -431,9 +436,9 @@ async function renderchangelog() {
   const c = document.querySelector(".content");
   const version = sel.version;
   let body;
-  if (sel.clshow.twitter && sel.clshow.steam) {
-    body = await renderwordingdiff(version);                 // both toggled -> wording diff
-  } else if (sel.clshow.steam) {
+  if (sel.clview === "diff") {
+    body = await renderwordingdiff(version);                 // split button -> wording diff
+  } else if (sel.clview === "steam") {
     const st = await getsteamcl(version);
     body = st ? recreationhtml(st, version) : nochangeloghtml(version);
   } else {
