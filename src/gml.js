@@ -1,10 +1,5 @@
 "use strict";
 
-/* lightweight gml tokenizer -> html spans (vs code dark+ token classes).
-   prism has no gml grammar, so this is a hand-rolled line-safe highlighter:
-   block comments and strings are matched to end-of-line if unterminated,
-   which is fine for line-based diffs. */
-
 const gmlcf = new Set(["if", "else", "while", "for", "do", "until", "repeat", "with",
   "switch", "case", "default", "break", "continue", "return", "exit", "then"]);
 const gmlkw = new Set(["var", "globalvar", "enum", "function", "constructor", "new", "delete",

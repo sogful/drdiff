@@ -423,7 +423,6 @@ function highlightrow() {
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* diff pane */
 
 function renderdiffpane() {
   const c = document.querySelector(".content");
@@ -491,9 +490,6 @@ async function getcl(version) {
   return parsed;
 }
 
-/* the ch1&2 posts are hand-drawn posters rather than patch-note lists - stretched
-   words, doodles mid-sentence, headings arranged in a triangle. a .md starting
-   with ::raw is laid out by hand instead, using the .clraw helpers in the css. */
 function parsemd(text) {
   if (text.startsWith("::raw")) return {raw: text.slice(text.indexOf("\n") + 1)};
   const out = {title: "", subtitle: "", intro: "", table: null, sections: [], outro: [], footer: ""};
@@ -521,10 +517,24 @@ function parsemd(text) {
       else out.table.rows.push(cells);
       continue;
     }
+
+    if (cur === "table" && /^\s*\S[^:]{0,23}:\s*\S/.test(l)) {
+      const i = l.indexOf(":");
+      out.table.rows.push([l.slice(0, i).trim(), l.slice(i + 1).trim()]);
+      prevblank = false;
+      continue;
+    }
+    if (/^!\[[^\]]*\]\([^)]+\)$/.test(l.trim())) { // standalone image
+      const m = l.trim().match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+      out.outro.push({img: m[2], alt: m[1]});
+      cur = null;
+      prevblank = true;
+      continue;
+    }
     if (l.startsWith("- ")) {
       let txt = l.slice(2).trim();
       let tag = null;
-      const m = txt.match(/^\[([^\]]+)\]\s*/);
+      const m = txt.match(/^\[([^\]]+)\]\s*(?!\()/); // platform tag
       if (m) {tag = m[1]; txt = txt.slice(m[0].length);}
       if (!cur || !cur.items) {cur = {header: "", items: []}; out.sections.push(cur);}
       cur.items.push({text: txt, tag});
@@ -579,7 +589,7 @@ function recreationhtml(cl, version) {
   h += "<div class=\"cl-head\">" + doodlehtml(version, "left") + "<div class=\"cl-headtext\">";
   h += "<div class=\"cl-title\">" + esc(cl.title) + "</div>";
   if (cl.subtitle) h += "<div class=\"cl-sub\">" + esc(cl.subtitle) + "</div>";
-  if (cl.intro) h += "<div class=\"cl-intro\">" + esc(cl.intro) + "</div>";
+  if (cl.intro) h += "<div class=\"cl-intro\">" + inline(cl.intro) + "</div>";
   h += "</div>" + doodlehtml(version, "right") + "</div>";
   if (cl.table && cl.table.rows.length) {
     h += "<div class=\"cl-h\">Version Numbers</div><table class=\"cl-table\"><tr><th></th>";
@@ -592,18 +602,23 @@ function recreationhtml(cl, version) {
     }
     h += "</table>";
   }
-  if (cl.sections.length) h += "<div class=\"cl-h\">Changelist</div>";
+
+  if (cl.sections.some(s => s.items.length)) h += "<div class=\"cl-h\">Changelist</div>";
   for (const sec of cl.sections) {
     h += "<div class=\"cl-section\">";
     if (sec.header) h += "<div class=\"cl-sech\">" + esc(sec.header) + "</div>";
     for (const it of sec.items) {
       const tag = it.tag ? "<span class=\"cl-tag\">[" + esc(it.tag) + "] </span>" : "";
-      h += "<div class=\"cl-item\"><span class=\"bullet\">&bull;</span><span>" + tag + esc(it.text) + "</span></div>";
+      h += "<div class=\"cl-item\"><span class=\"bullet\">&bull;</span><span>" + tag + inline(it.text) + "</span></div>";
     }
     h += "</div>";
   }
-  for (const p of (cl.outro || [])) h += "<div class=\"cl-outro\">" + esc(p) + "</div>";
-  if (cl.footer) h += "<div class=\"cl-footer\">" + esc(cl.footer) + "</div>";
+  for (const p of (cl.outro || [])) {
+    h += p.img
+      ? "<div class=\"cl-media\"><img src=\"" + esc(p.img) + "\" alt=\"" + esc(p.alt) + "\"></div>"
+      : "<div class=\"cl-outro\">" + inline(p) + "</div>";
+  }
+  if (cl.footer) h += "<div class=\"cl-footer\">" + inline(cl.footer) + "</div>";
   h += "</div>";
   return h;
 }
@@ -665,5 +680,9 @@ function el(tag, cls, text) {
 }
 function esc(s) {
   return String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;"}[c]));
+}
+function inline(s) {
+  return esc(s).replace(/\[([^\]]+)\]\(([^)\s]+)\)/g,
+    (m, t, u) => "<a href=\"" + u + "\" target=\"_blank\" rel=\"noopener\">" + t + "</a>");
 }
 boot();
