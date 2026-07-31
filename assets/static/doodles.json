@@ -108,5 +108,15 @@
    "src": "doodles/0.0.250-right.png",
    "flip": false
   }
+ },
+ "0.0.253": {
+  "left": {
+   "src": "doodles/0.0.253-left.png",
+   "flip": false
+  },
+  "right": {
+   "src": "doodles/0.0.253-right.png",
+   "flip": false
+  }
  }
 }

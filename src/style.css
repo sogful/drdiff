@@ -509,10 +509,20 @@ body {
 .cl-table td.rowh {font-weight: 400}
 
 .cl-section {margin: 18px 0 0}
+.cl-section.sub {margin: 10px 0 0 16px}
 .cl-sech {
 	font-weight: 700;
 	font-size: 15px;
 	margin-bottom: 4px;
+}
+.cl-sech.sub {font-size: 14px}
+/* a small italic aside/footnote inside a section (e.g. the "* Note:" line) */
+.cl-inote {
+	text-align: right;
+	font-style: italic;
+	font-size: 12px;
+	color: #555;
+	margin: 2px 0 8px;
 }
 .cl-item {
 	display: flex;

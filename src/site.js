@@ -509,10 +509,16 @@ function parsemd(text) {
       out.sections.push(cur);
       continue;
     }
+    if (l.startsWith("#### ")) {
+      cur = {header: l.slice(5).trim(), items: [], sub: true};
+      out.sections.push(cur);
+      prevblank = false;
+      continue;
+    }
     if (l.trim().startsWith("|") && cur === "table") {
       const cells = l.split("|").slice(1, -1).map(x => x.trim());
       prevblank = false;
-      if (cells.every(x => /^-*$/.test(x))) continue; // separator row
+      if (cells.every(x => /^-*$/.test(x))) continue;
       if (!out.table.cols.length && cells[0] === "") out.table.cols = cells.slice(1);
       else out.table.rows.push(cells);
       continue;
@@ -529,6 +535,13 @@ function parsemd(text) {
       out.outro.push({img: m[2], alt: m[1]});
       cur = null;
       prevblank = true;
+      continue;
+    }
+    if (/^_[^_].*_$/.test(l.trim())) {
+      const note = l.trim().slice(1, -1);
+      if (cur && cur.items) cur.items.push({note});
+      else out.outro.push({note});
+      prevblank = false;
       continue;
     }
     if (l.startsWith("- ")) {
@@ -605,18 +618,19 @@ function recreationhtml(cl, version) {
 
   if (cl.sections.some(s => s.items.length)) h += "<div class=\"cl-h\">Changelist</div>";
   for (const sec of cl.sections) {
-    h += "<div class=\"cl-section\">";
-    if (sec.header) h += "<div class=\"cl-sech\">" + esc(sec.header) + "</div>";
+    h += "<div class=\"cl-section" + (sec.sub ? " sub" : "") + "\">";
+    if (sec.header) h += "<div class=\"cl-sech" + (sec.sub ? " sub" : "") + "\">" + esc(sec.header) + "</div>";
     for (const it of sec.items) {
+      if (it.note) {h += "<div class=\"cl-inote\">" + inline(it.note) + "</div>"; continue;}
       const tag = it.tag ? "<span class=\"cl-tag\">[" + esc(it.tag) + "] </span>" : "";
       h += "<div class=\"cl-item\"><span class=\"bullet\">&bull;</span><span>" + tag + inline(it.text) + "</span></div>";
     }
     h += "</div>";
   }
   for (const p of (cl.outro || [])) {
-    h += p.img
-      ? "<div class=\"cl-media\"><img src=\"" + esc(p.img) + "\" alt=\"" + esc(p.alt) + "\"></div>"
-      : "<div class=\"cl-outro\">" + inline(p) + "</div>";
+    if (p.img) h += "<div class=\"cl-media\"><img src=\"" + esc(p.img) + "\" alt=\"" + esc(p.alt) + "\"></div>";
+    else if (p.note) h += "<div class=\"cl-outro\"><em>" + inline(p.note) + "</em></div>";
+    else h += "<div class=\"cl-outro\">" + inline(p) + "</div>";
   }
   if (cl.footer) h += "<div class=\"cl-footer\">" + inline(cl.footer) + "</div>";
   h += "</div>";
@@ -633,7 +647,8 @@ async function getrawmd(src, version) {
 function mdplain(md) {
   return md.replace(/^::raw\n/, "").replace(/<[^>]+>/g, "").split("\n").map(l =>
     l.replace(/^#{1,6}\s*/, "").replace(/^\s*[-*]\s*/, "").replace(/^>\s*/, "")
-     .replace(/^\[[^\]]+\]\s*/, "").replace(/\|/g, " ").replace(/\*\*/g, "").trim())
+     .replace(/^\[[^\]]+\]\s*/, "").replace(/\|/g, " ").replace(/\*\*/g, "")
+     .replace(/^_(.+)_$/, "$1").trim())
     .filter(x => x && !/^-+$/.test(x)).join("\n");
 }
 
