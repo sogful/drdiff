@@ -1,0 +1,91 @@
+{
+ "0.0.253": [
+  "strings",
+  "sprites",
+  "sounds",
+  "objects",
+  "rooms"
+ ],
+ "0.0.241": [
+  "strings"
+ ],
+ "0.0.242": [
+  "strings",
+  "rooms"
+ ],
+ "0.0.243": [
+  "strings"
+ ],
+ "0.0.244": [
+  "strings"
+ ],
+ "0.0.247": [
+  "strings",
+  "sprites",
+  "rooms",
+  "fonts"
+ ],
+ "0.0.250": [
+  "strings",
+  "sprites",
+  "rooms",
+  "fonts"
+ ],
+ "1.01A": [
+  "strings",
+  "sprites"
+ ],
+ "1.01B": [
+  "strings"
+ ],
+ "1.01C": [
+  "strings",
+  "sprites"
+ ],
+ "1.02": [
+  "strings",
+  "rooms"
+ ],
+ "1.03": [
+  "strings",
+  "sprites",
+  "objects",
+  "rooms"
+ ],
+ "1.04": [
+  "strings",
+  "rooms",
+  "fonts"
+ ],
+ "1.0.5": [
+  "strings",
+  "sprites",
+  "sounds",
+  "rooms"
+ ],
+ "1.06": [
+  "strings",
+  "sprites",
+  "objects"
+ ],
+ "1.07": [
+  "strings",
+  "sprites",
+  "objects"
+ ],
+ "1.10": [
+  "strings",
+  "sprites",
+  "sounds",
+  "objects",
+  "rooms"
+ ],
+ "LTS-2": [
+  "strings"
+ ],
+ "LTS-3": [
+  "strings",
+  "sprites",
+  "fonts"
+ ]
+}

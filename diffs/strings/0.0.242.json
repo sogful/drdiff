@@ -1,0 +1,1 @@
+{"root": {"added": ["gmrt-android", "gmrt-linux", "gmrt-macos", "lts-upgrade"], "removed": [], "changed": []}, "ch5": {"added": ["_s_actstring", "gmrt-android", "gmrt-linux", "gmrt-macos", "lts-upgrade", "msgset_clear", "no_early_jump", "v0.0.242"], "removed": ["pink_battle_dialogue61", "v0.0.241"], "changed": []}}
