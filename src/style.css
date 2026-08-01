@@ -1,8 +1,6 @@
-@font-face {
-	font-family: "deltarune";
-	src: url("/assets/fonts/deltarune.woff") format("woff");
-	font-display: swap;
-}
+/* the deltarune chrome font is the pixel spritesheet atlas (fnt_main.png via
+   font.js), applied by marking elements fnt_main and pixelizing them - there is
+   no webfont. unpixelized "deltarune" text falls back to the monospace below. */
 @font-face {
 	font-family: "jetbrains";
 	src: url("/assets/fonts/jetbrainsmono.woff2") format("woff2");
@@ -31,7 +29,8 @@
 	--code-bg: #1e1e1e;
 	--add: #383e2a;
 	--del: #4c1919;
-	
+	--chg: #16323f;      /* changed = dark azure, sibling of --add/--del */
+
 	--t-com: #6a9955;
 	--t-kw: #569cd6;
 	--t-cf: #c586c0;
@@ -141,8 +140,9 @@ body {
 	font-size: 13px;
 	text-align: center;
 }
+.vchip .vlabel {--ink: var(--text)}      /* pixel glyphs take colour from --ink, not color */
 .vchip:hover {background: var(--bar2)}
-.vchip.active {color: var(--yellow)}
+.vchip.active .vlabel, .vchip.active .vdate {--ink: var(--yellow)}
 .vchip.baseline {opacity: 0.5; cursor: default} /* so ch1&2 1.0.0 */
 .vchip.baseline:hover {background: black}
 .vchip .vdate {
@@ -173,27 +173,6 @@ body {
 	display: flex; flex-wrap: wrap;
 	align-items: stretch;
 }
-
-/* code | assets segmented toggle, shown only when the version has an asset diff */
-.modeswitch {
-	flex: none;
-	display: none;
-	align-items: center;
-	margin-right: 10px;
-	align-self: center;
-}
-.mbtn {
-	border: 1px solid var(--line);
-	background: black;
-	color: var(--dim);
-	cursor: pointer;
-	font-family: "deltarune", sans-serif;
-	font-size: 12px;
-	padding: 2px 9px;
-}
-.mbtn:first-child {border-right: 0}
-.mbtn:hover {color: var(--text)}
-.mbtn.on {color: var(--yellow); background: var(--bar2)}
 
 .idfilter {
 	flex: none; display: flex;
@@ -231,13 +210,12 @@ body {
 	align-items: center;
 	gap: 4px;
 }
-.ctab:hover {color: var(--yellow)}
-.ctab.active {
-	color: var(--yellow);
-	border-bottom-color: var(--yellow);
-}
+.cname {--ink: var(--text)}
+.ctab:hover .cname {--ink: var(--yellow)}
+.ctab.active {border-bottom-color: var(--yellow)}
+.ctab.active .cname {--ink: var(--yellow)}
 .ctab.locked {cursor: default; opacity: 0.5}
-.ctab.locked:hover {color: var(--text)}
+.ctab.locked:hover .cname {--ink: var(--text)}
 .ctab.muted {opacity: 0.45}
 .ctab.muted:hover, .ctab.muted.active {opacity: 1}
 
@@ -267,15 +245,31 @@ body {
 }
 .cname {font-size: 14px}
 
-.cbadge {
-	font-size: 9px;
-	font-family: "jetbrains", monospace;
-	display: inline-flex;
-	gap: 5px;
+.cbadge {display: inline-flex; gap: 5px}
+
+/* sidebar kind grid: code + each changed asset kind, compact, wraps to rows.
+   name (pixel font) over its +/~/- counts, like a chapter tab */
+.kindswitch {
+	flex: none;
+	display: flex; flex-wrap: wrap;
+	border-bottom: 1px solid var(--line);
+	padding: 2px 2px 3px;
 }
-.cbadge .ba {color: #4bff7a}
-.cbadge .bm {color: var(--azure)}
-.cbadge .bd {color: #ff5b5b}
+.kcell {
+	flex: 0 0 auto;           /* stay compact + uniform; wrap instead of stretching */
+	width: 76px;
+	border: 0; background: none;
+	cursor: pointer;
+	display: flex; flex-direction: column;
+	align-items: flex-start;
+	gap: 1px;
+	padding: 4px 6px;
+	line-height: 1.05;
+}
+.kname {--ink: var(--dim); font-size: 13px}
+.kcell:hover .kname {--ink: var(--text)}
+.kcell.on {background: var(--bar2)}
+.kcell.on .kname {--ink: var(--yellow)}
 
 /*//////////////////////////////////////////////////////////////////////*/
 
@@ -301,14 +295,6 @@ body {
 }
 .filelist::-webkit-scrollbar {display: none}
 
-.sidebar.nocode {width: auto}
-.sidebar.nocode .filelist {display: none}
-.sidebar.nocode .changelogswitch {
-	position: static;
-	margin-top: auto; background: none;
-	padding: 10px 14px;
-}
-.sidebar.empty {display: none}
 
 .content {
 	flex: 1; min-width: 0;
@@ -676,81 +662,54 @@ body {
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* asset diffs */
-
-/* sidebar category rows (strings / sprites / sounds / ...) */
-.arow {
-	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 8px;
-	padding: 5px 12px;
-	cursor: pointer;
-	font-family: "deltarune", sans-serif;
-	font-size: 14px;
-}
-.arow:hover {background: var(--faint)}
-.arow.active {background: var(--bar2)}
-.arow.active .aname {color: var(--yellow)}
-.astat {display: inline-flex; gap: 6px; font-family: "jetbrains", monospace; font-size: 11px}
-.astat .p {color: #4bff7a}
-.astat .c {color: var(--azure)}
-.astat .m {color: #ff5b5b}
+/* asset diffs - styled to match the code diff (dark, monospace, no title) */
 
 .assetview {
-	padding: 18px 22px 60px;
+	padding: 8px 0 60px;
 	color: var(--text);
 	font-family: "jetbrains", monospace;
 	font-size: 12.5px;
 }
-.ahead {
-	font-family: "deltarune", sans-serif;
-	font-size: 18px;
-	margin-bottom: 14px;
-}
-.ahead .sub {color: var(--dim); font-size: 12px; font-family: "jetbrains", monospace; margin-left: 8px}
 
-/* strings - removed then added, like a text diff */
-.stringdiff {display: flex; flex-direction: column; gap: 1px}
+/* strings - removed then added, styled like the code diff lines */
+.stringdiff {display: flex; flex-direction: column}
 .sline {
 	white-space: pre-wrap;
 	overflow-wrap: anywhere;
-	padding: 1px 6px;
-	border-left: 2px solid transparent;
+	padding: 0 16px;
+	line-height: 1.55;
 }
-.sline.add {background: var(--add); border-left-color: #4bff7a}
-.sline.del {background: var(--del); border-left-color: #ff5b5b}
+.sline.add {background: var(--add)}
+.sline.del {background: var(--del)}
 
-/* sprites - card grid, each frame-strip on a checkerboard, scaled up + pixelated */
+/* sprites - card grid; each frame-strip fits inside a checkerboard box, click to zoom */
 .agrid {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-	gap: 14px;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 12px;
+	padding: 10px 14px 0;
 }
 .acard {
 	background: #252525;
 	border: 1px solid var(--line);
 	border-radius: 3px;
-	padding: 8px;
-	border-top: 2px solid var(--line);
+	padding: 7px;
 }
-.acard.added {border-top-color: #4bff7a}
-.acard.changed {border-top-color: var(--azure)}
-.acard.removed {border-top-color: #ff5b5b}
-.acardtop {display: flex; flex-direction: column; gap: 2px; margin-bottom: 7px}
-.acardname {
-	overflow-wrap: anywhere;
-	font-size: 11.5px;
-	color: var(--text);
-}
-.acardmeta {--ink: var(--dim); color: var(--dim)}
-.aimgs {display: flex; align-items: center; gap: 8px}
+.acard.sprite {cursor: zoom-in}
+/* single-colour highlight like the code diff (green add / red del / blue changed) */
+.acard.added {background: var(--add)}
+.acard.changed {background: var(--chg)}
+.acard.removed {background: var(--del)}
+.acardtop {display: flex; flex-direction: column; gap: 1px; margin-bottom: 6px}
+.acardname {overflow-wrap: anywhere; font-size: 11px; color: var(--text)}
+.acardmeta {--ink: var(--dim)}
+.aimgs {display: flex; align-items: center; justify-content: center; gap: 6px}
 .aarrow {color: var(--azure); flex: none}
 .achk {
-	flex: 1; min-width: 0;
+	flex: 1 1 0; min-width: 0;
 	display: flex; align-items: center; justify-content: center;
-	min-height: 64px;
-	padding: 6px;
+	height: 84px;
+	padding: 5px;
 	background-color: #2b2b2b;
 	background-image:
 		linear-gradient(45deg, #202020 25%, transparent 25%, transparent 75%, #202020 75%),
@@ -758,38 +717,71 @@ body {
 	background-size: 12px 12px;
 	background-position: 0 0, 6px 6px;
 	border-radius: 2px;
+	overflow: hidden;
 }
+/* fit the whole frame-strip inside the box, crisp */
 .aspr {
 	image-rendering: pixelated;
 	max-width: 100%;
-	max-height: 180px;
-	transform: scale(2);
-	transform-origin: center;
+	max-height: 100%;
+	object-fit: contain;
 }
 
-/* sounds - name + audio player(s) */
-.asndlist {display: flex; flex-direction: column; gap: 8px}
-.acard.snd {display: flex; flex-direction: column; gap: 6px; border-top-width: 1px; border-left: 2px solid var(--line)}
-.acard.snd.added {border-left-color: #4bff7a}
-.acard.snd.changed {border-left-color: var(--azure)}
-.acard.snd.removed {border-left-color: #ff5b5b}
+/* click-to-zoom overlay */
+.zoomoverlay {
+	position: fixed; inset: 0;
+	z-index: 40;
+	display: none;
+	align-items: center; justify-content: center;
+	background: rgba(0,0,0,0.82);
+	cursor: zoom-out;
+	padding: 30px;
+}
+.zoomoverlay.show {display: flex}
+.zoombox {max-width: 96vw; max-height: 92vh; text-align: center}
+.zname {
+	font-family: "jetbrains", monospace;
+	font-size: 13px; color: var(--text);
+	margin-bottom: 14px;
+	overflow-wrap: anywhere;
+}
+.zrow {display: flex; gap: 26px; align-items: center; justify-content: center; flex-wrap: wrap}
+.zfig {margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px}
+.zimg {
+	image-rendering: pixelated;
+	box-sizing: content-box;   /* JS sets width = natW * integer, so the image stays crisp */
+	display: block;
+	max-width: 86vw; max-height: 80vh;
+	background-color: #2b2b2b;
+	background-image:
+		linear-gradient(45deg, #1c1c1c 25%, transparent 25%, transparent 75%, #1c1c1c 75%),
+		linear-gradient(45deg, #1c1c1c 25%, transparent 25%, transparent 75%, #1c1c1c 75%);
+	background-size: 16px 16px;
+	background-position: 0 0, 8px 8px;
+	padding: 10px;
+}
+.zfig figcaption {font-family: "jetbrains", monospace; font-size: 11px; color: var(--dim)}
+
+/* sounds - name + audio player(s), same single-colour highlight as sprites */
+.asndlist {display: flex; flex-direction: column; gap: 8px; padding: 10px 14px 0}
+.acard.snd {display: flex; flex-direction: column; gap: 6px}
 .asnd {display: flex; align-items: center; gap: 8px}
 .aside {color: var(--dim); flex: none; width: 26px; font-size: 11px}
 .asnd audio {height: 30px; flex: 1}
 
 /* objects / rooms / fonts - labelled field diffs */
-.metadiff {display: flex; flex-direction: column; gap: 3px}
+.metadiff {display: flex; flex-direction: column}
 .mline {
 	display: flex;
 	flex-wrap: wrap;
 	align-items: baseline;
 	gap: 4px 10px;
-	padding: 3px 6px;
-	border-left: 2px solid transparent;
+	padding: 0 12px;
+	line-height: 1.55;
 }
-.mline.add {background: var(--add); border-left-color: #4bff7a}
-.mline.del {background: var(--del); border-left-color: #ff5b5b}
-.mline.chg {background: rgba(0,174,255,0.08); border-left-color: var(--azure)}
+.mline.add {background: var(--add)}
+.mline.del {background: var(--del)}
+.mline.chg {background: var(--chg)}
 .msign {color: var(--dim); flex: none; width: 8px}
 .mname {color: var(--text)}
 .mfields {display: inline-flex; flex-wrap: wrap; gap: 4px 14px; color: var(--dim)}

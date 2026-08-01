@@ -18,16 +18,19 @@ const diffcache = {};
 const clcache = {};
 const clraw = {};
 const assetcache = {};           // parsed asset-diff data.json, by version
-// the asset kinds in sidebar order, with how to pull a display name out of a row
+// the diff kinds shown as the sidebar grid: "code" first, then the asset kinds
+// (order requested by the user). the grid only shows kinds that actually changed.
 const assetkinds = [
-  {key: "strings", label: "strings"},
-  {key: "sprites", label: "sprites"},
   {key: "sounds", label: "sounds"},
+  {key: "sprites", label: "sprites"},
   {key: "objects", label: "objects"},
+  {key: "strings", label: "strings"},
   {key: "rooms", label: "rooms"},
   {key: "fonts", label: "fonts"},
 ];
-const sel = {version: null, chapter: null, file: null, mode: "changelog", clview: "twitter", hideids: false, assetcat: "sprites"};
+const kindorder = ["code", ...assetkinds.map(k => k.key)];
+// sel.kind: "code" | an asset kind. sel.mode: "diff" (show sel.kind) | "changelog".
+const sel = {version: null, chapter: null, file: null, kind: "code", mode: "changelog", clview: "twitter", hideids: false};
 const idkey = "drdiff-hideids";
 
 /*//////////////////////////////////////////////////////////////////////*/
@@ -54,16 +57,7 @@ async function boot() {
   manifest.versions = manifest.versions.filter(v => !exclude.has(v.label));
   buildrail();
   initidfilter();
-  for (const b of document.querySelectorAll(".mbtn")) {
-    b.addEventListener("click", () => {
-      if (b.dataset.mode === "assets" && !assetset.has(sel.version)) return;
-      sel.mode = b.dataset.mode;
-      sel.file = null;
-      buildchapters(sel.diff);
-      rendercontent();
-      markchaptertab();
-    });
-  }
+  pixify(document.querySelector(".cswlabel"));
   for (const b of document.querySelectorAll(".cswbtn")) {
     b.addEventListener("click", () => {
       const v = b.dataset.view;
@@ -87,17 +81,19 @@ async function boot() {
     const i = selp.indexOf("/");
     sel.chapter = selp.slice(0, i);
     sel.file = selp.slice(i + 1);
+    sel.kind = "code";
     sel.mode = "diff";
     rendercontent();
-    markchaptertab();
   }
-  if (q.get("mode") === "assets" && assetset.has(sel.version)) {
-    sel.mode = "assets";
+  // deep-link an asset kind: ?kind=sprites&ch=ch5  (mode=assets kept as an alias)
+  const kind = q.get("kind") || (q.get("mode") === "assets" ? (q.get("cat") || "sprites") : "");
+  if (kind && kind !== "code" && (assetindex[sel.version] || []).includes(kind)) {
+    sel.kind = kind;
+    sel.mode = "diff";
     if (q.get("ch")) sel.chapter = q.get("ch");
-    if (q.get("cat")) sel.assetcat = q.get("cat");
+    buildkindswitch();
     buildchapters(sel.diff);
     rendercontent();
-    markchaptertab();
   }
 }
 
@@ -261,6 +257,7 @@ function buildrail() {
   for (const g of eras) {
     const row = el("div", "erarow");
     const lab = el("div", "eralabel");
+    lab.setAttribute("fnt_main", "");
     lab.textContent = eralabels[g.era] || g.era;
     row.appendChild(lab);
 
@@ -269,7 +266,7 @@ function buildrail() {
       const baseline = !transitionto(v.label); // nothing before it to diff against
       const chip = el("button", "vchip" + (baseline ? " baseline" : ""));
       chip.dataset.v = v.label;
-      chip.innerHTML = esc(v.label) + "<span class=\"vdate\" fnt_small>" + esc(v.date || "") + "</span>" +
+      chip.innerHTML = "<span class=\"vlabel\" fnt_main>" + esc(v.label) + "</span><span class=\"vdate\" fnt_small>" + esc(v.date || "") + "</span>" +
         (v.branch ? "<span class=\"vbranch\" fnt_small azure>" + esc(v.branch) + "</span>" : "");
       if (!baseline) chip.addEventListener("click", () => selectversion(v.label));
       chips.appendChild(chip);
@@ -285,7 +282,6 @@ function transitionto(label) {
 }
 
 async function selectversion(label) {
-  const waschangelog = sel.mode === "changelog";
   sel.version = label;
   location.hash = encodeURIComponent(label);
   for (const c of document.querySelectorAll(".vchip")) c.classList.toggle("active", c.dataset.v === label);
@@ -306,27 +302,35 @@ async function selectversion(label) {
   sel.diff = diff;
   sel.trans = t;
   await loadassets(label);
-  const wasassets = sel.mode === "assets";
+  // keep the selected kind if the new version still has it, else fall back to code
+  if (sel.kind !== "code" && !(assetindex[label] || []).includes(sel.kind)) sel.kind = "code";
+  buildkindswitch();
   buildchapters(diff);
-  // always focus the first chapter that actually changed
-  const changed = diff ? partkeys.filter(p => diff.parts[p] && changedcount(diff.parts[p])) : [];
-  const diffable = changed.filter(p => !diff.parts[p].collapsed);
-  sel.chapter = (diffable.length ? diffable : changed).slice(-1)[0] || null;
+  // focus the latest chapter that actually changed for the current kind
+  const changed = partkeys.filter(p => partchanged(p));
+  sel.chapter = changed.slice(-1)[0] || null;
   sel.file = null;
   const hastwitter = changelogset.has(label), hassteam = steamset.has(label);
   const ok = {twitter: hastwitter, steam: hassteam, diff: hastwitter && hassteam};
+  const waschangelog = sel.mode === "changelog";
   if (waschangelog) {
     if (!sel.clview || !ok[sel.clview]) sel.clview = hastwitter ? "twitter" : (hassteam ? "steam" : null);
+    if (!sel.clview) sel.mode = "diff";
   } else {
     sel.clview = null;
   }
-  // stay in assets mode across versions that also have assets; else fall to code/changelog
-  if (wasassets && assetset.has(label)) sel.mode = "assets";
-  else sel.mode = sel.clview ? "changelog" : "diff";
   updatechangelogbtn();
-  updatemodeswitch();
   rendercontent();
-  markchaptertab();
+}
+
+// does this part have any change for the currently-selected kind?
+function partchanged(p) {
+  if (sel.kind === "code") {
+    const d = sel.diff && sel.diff.parts[p];
+    return !!d && !d.collapsed && changedcount(d) > 0;
+  }
+  const c = kindcounts(p, sel.kind);
+  return c.a + c.r + c.c > 0;
 }
 
 // each asset type lives in its own /diffs/<type>/<version>.json ({part: diff}).
@@ -343,68 +347,83 @@ async function loadassets(label) {
   assetcache[label] = byPart;
 }
 
-function updatemodeswitch() {
-  const has = assetset.has(sel.version);
-  document.querySelector(".modeswitch").style.display = has ? "flex" : "none";
-  for (const b of document.querySelectorAll(".mbtn"))
-    b.classList.toggle("on", b.dataset.mode === (sel.mode === "assets" ? "assets" : "diff"));
-}
-
-/*//////////////////////////////////////////////////////////////////////*/
-
 function changedcount(p) {
   const c = partcounts(p);
   return (c.a || 0) + (c.r || 0) + (c.m || 0);
 }
 
-// asset-diff counts (added / removed / changed) for a part, summed over all kinds
 function assetdata() {
   return assetcache[sel.version] || null;
 }
-function assetcounts(part) {
-  const pd = assetdata() && assetdata()[part];
-  let a = 0, r = 0, c = 0;
-  if (pd) for (const k of assetkinds) {
-    const t = pd[k.key];
-    if (!t) continue;
-    a += (t.added || []).length; r += (t.removed || []).length; c += (t.changed || []).length;
+
+// {added, removed, changed} counts for one part + one diff kind
+function kindcounts(part, kind) {
+  if (kind === "code") {
+    const d = sel.diff && sel.diff.parts[part];
+    if (!d || d.collapsed) return {a: 0, r: 0, c: 0};
+    return {a: partcounts(d).a, r: partcounts(d).r, c: partcounts(d).m};
   }
+  const t = assetdata() && assetdata()[part] && assetdata()[part][kind];
+  return t ? {a: (t.added || []).length, r: (t.removed || []).length, c: (t.changed || []).length} : {a: 0, r: 0, c: 0};
+}
+function kindtotal(kind) {          // summed over every part
+  let a = 0, r = 0, c = 0;
+  for (const p of partkeys) {const k = kindcounts(p, kind); a += k.a; r += k.r; c += k.c;}
   return {a, r, c};
+}
+
+function countbadge(c, locked) {
+  const bits = [];
+  if (c.a) bits.push("<span green>+" + c.a + "</span>");
+  if (!locked && c.c) bits.push("<span azure>~" + c.c + "</span>");
+  if (c.r) bits.push("<span red>-" + c.r + "</span>");
+  return "<span class=\"cbadge\" fnt_small>" + bits.join("") + "</span>";
+}
+
+// sidebar grid of diff kinds: code first, then each asset kind that changed.
+// each cell shows its total +/~/- like a chapter tab; multi-row, never one line.
+function buildkindswitch() {
+  const grid = document.querySelector(".kindswitch");
+  grid.innerHTML = "";
+  const codetotal = partkeys.reduce((n, p) => n + changedcount(sel.diff ? sel.diff.parts[p] || {} : {}), 0);
+  const kinds = kindorder.filter(k => k === "code" ? (sel.diff && codetotal) : (assetindex[sel.version] || []).includes(k));
+  for (const k of kinds) {
+    const cell = el("button", "kcell");
+    cell.dataset.kind = k;
+    cell.innerHTML = "<span class=\"kname\" fnt_main>" + k + "</span>" + countbadge(kindtotal(k), false);
+    cell.addEventListener("click", () => {
+      sel.kind = k; sel.mode = "diff"; sel.clview = null; sel.file = null;
+      buildchapters(sel.diff);
+      const changed = partkeys.filter(p => partchanged(p));
+      if (!changed.includes(sel.chapter)) sel.chapter = changed.slice(-1)[0] || sel.chapter;
+      rendercontent();
+    });
+    grid.appendChild(cell);
+  }
+  pixify(grid);
 }
 
 function buildchapters(diff) {
   const bar = document.querySelector(".chaptertabs");
   bar.innerHTML = "";
-  const assets = sel.mode === "assets";
-  document.querySelector(".idfilter").style.display = (diff && !assets) ? "" : "none";
-  if (assets ? !assetdata() : !diff) return;
+  const code = sel.kind === "code";
+  document.querySelector(".idfilter").style.display = (diff && code) ? "" : "none";
+  if (code ? !diff : !assetdata()) return;
   for (const p of partkeys) {
-    let c, locked = false, muted = false;
-    if (assets) {
-      c = assetcounts(p);
-      if (!c.a && !c.r && !c.c) continue;
-    } else {
-      const d = diff.parts[p];
-      if (!d) continue;
-      c = {a: partcounts(d).a, r: partcounts(d).r, c: partcounts(d).m};
-      if (!changedcount(d) && !d.collapsed) continue;
-      locked = !!d.collapsed;
-      muted = !locked && !c.a && !c.c && c.r;
-    }
+    const d = code ? (diff.parts[p] || null) : null;
+    if (code && !d) continue;
+    const locked = code && !!d.collapsed;
+    const c = kindcounts(p, sel.kind);
+    if (!locked && !c.a && !c.r && !c.c) continue;   // unchanged for this kind
+    const muted = !locked && !c.a && !c.c && c.r;
     const tab = el("button", "ctab" + (locked ? " locked" : "") + (muted ? " muted" : ""));
     tab.dataset.part = p;
-    const bits = [];
-    if (c.a) bits.push("<span class=\"ba\" green>+" + c.a + "</span>");
-    if (!locked && c.c) bits.push("<span class=\"bm\" azure>~" + c.c + "</span>");
-    if (c.r) bits.push("<span class=\"bd\" red>-" + c.r + "</span>");
-    const badge = "<span class=\"cbadge\" fnt_small>" + bits.join("") + "</span>";
     const iurl = particon[p] ? "/assets/images/chapters/" + particon[p] : "";
     const icon = iurl ? "<span class=\"cicon\"><img src=\"" + iurl + "\" alt=\"\"></span>" : "";
-    tab.innerHTML = icon + "<span class=\"ctext\"><span class=\"cname\">" + esc(partlabel[p]) + "</span>" + badge + "</span>";
-    if (!locked) tab.addEventListener("click", () => {sel.chapter = p; sel.file = null; rendercontent(); markchaptertab();});
+    tab.innerHTML = icon + "<span class=\"ctext\"><span class=\"cname\" fnt_main>" + esc(partlabel[p]) + "</span>" + countbadge(c, locked) + "</span>";
+    if (!locked) tab.addEventListener("click", () => {sel.chapter = p; sel.file = null; rendercontent();});
     bar.appendChild(tab);
   }
-  // the selected chapter may not exist in the other mode's tab set
   if (!bar.querySelector(`.ctab[data-part="${sel.chapter}"]`)) {
     const first = bar.querySelector(".ctab:not(.locked)");
     if (first) sel.chapter = first.dataset.part;
@@ -415,10 +434,10 @@ function buildchapters(diff) {
 function markchaptertab() {
   for (const t of document.querySelectorAll(".ctab"))
     t.classList.toggle("active", t.dataset.part === sel.chapter);
+  for (const b of document.querySelectorAll(".kcell"))
+    b.classList.toggle("on", sel.mode === "diff" && b.dataset.kind === sel.kind);
   for (const b of document.querySelectorAll(".cswbtn"))
     b.classList.toggle("on", sel.mode === "changelog" && sel.clview === b.dataset.view);
-  for (const b of document.querySelectorAll(".mbtn"))
-    b.classList.toggle("on", b.dataset.mode === (sel.mode === "assets" ? "assets" : "diff"));
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
@@ -426,24 +445,19 @@ function markchaptertab() {
 function rendercontent() {
   markchaptertab();
   marksidebar();
-  if (sel.mode === "assets") return renderassets();
+  const asset = sel.mode === "diff" && sel.kind !== "code";
+  // the code file list lives in the sidebar; asset kinds render straight to main
+  document.querySelector(".filelist").style.display = asset ? "none" : "";
+  if (sel.mode === "changelog") {renderchangelog(); return;}
+  if (asset) return renderassetmain();
   if (!sel.trans) return renderbaseline();
   renderfilelist();
-  if (sel.mode === "changelog") renderchangelog();
-  else renderdiffpane();
+  renderdiffpane();
 }
 
 function marksidebar() {
-  const bar = document.querySelector(".sidebar");
-  if (sel.mode === "assets") {          // asset mode always fills the sidebar with categories
-    bar.classList.remove("nocode", "empty");
-    return;
-  }
-  const parts = sel.diff ? sel.diff.parts : null;
-  const code = !!parts && partkeys.some(p => parts[p] && !parts[p].collapsed && changedcount(parts[p]));
-  const cl = changelogset.has(sel.version) || steamset.has(sel.version);
-  bar.classList.toggle("nocode", !code && cl);
-  bar.classList.toggle("empty", !code && !cl);
+  // the kind grid always fills the sidebar top, so it is never fully empty now
+  document.querySelector(".sidebar").classList.remove("nocode", "empty");
 }
 
 function renderbaseline() {
@@ -569,85 +583,96 @@ function renderdiff(txt) {
 /*//////////////////////////////////////////////////////////////////////*/
 /* asset diffs - strings / sprites / sounds / objects / rooms / fonts */
 
-function assetkindcounts(pd, key) {
-  const t = pd && pd[key];
-  return t ? {a: (t.added || []).length, r: (t.removed || []).length, c: (t.changed || []).length} : {a: 0, r: 0, c: 0};
-}
-
-function renderassets() {
-  const pd = assetdata() ? assetdata()[sel.chapter] : null;
-  const list = document.querySelector(".filelist");
-  list.innerHTML = "";
-  if (!pd) {
-    list.innerHTML = "<div class=\"fempty\">no asset changes in this chapter.</div>";
-    document.querySelector(".content").innerHTML = "<div class=\"notecode\">nothing here.</div>";
-    return;
-  }
-  const avail = assetkinds.filter(k => {const c = assetkindcounts(pd, k.key); return c.a || c.r || c.c;});
-  if (!avail.some(k => k.key === sel.assetcat)) sel.assetcat = (avail[0] || {}).key;
-  for (const k of avail) {
-    const c = assetkindcounts(pd, k.key);
-    const row = el("div", "arow" + (k.key === sel.assetcat ? " active" : ""));
-    row.dataset.cat = k.key;
-    const bits = [];
-    if (c.a) bits.push("<span class=\"p\" green>+" + c.a + "</span>");
-    if (c.c) bits.push("<span class=\"c\" azure>~" + c.c + "</span>");
-    if (c.r) bits.push("<span class=\"m\" red>-" + c.r + "</span>");
-    row.innerHTML = "<span class=\"aname\">" + k.label + "</span><span class=\"astat\" fnt_small>" + bits.join(" ") + "</span>";
-    row.addEventListener("click", () => {sel.assetcat = k.key; renderassets();});
-    list.appendChild(row);
-  }
-  pixify(list);
-  renderassetmain(pd);
-}
-
 // binaries live at /diffs/<type>/<version>/<part>/<side>/<name>.<ext>
 function typebase(type) {
   return diffbase + "/" + type + "/" + encodeURIComponent(sel.version) + "/" + sel.chapter;
 }
 
-function renderassetmain(pd) {
+// main pane for the selected asset kind + chapter. no title/subtitle - the kind
+// grid already names it; styling mirrors the code diff (dark, monospace, compact).
+function renderassetmain() {
   const c = document.querySelector(".content");
-  const cat = sel.assetcat, t = pd[cat];
-  let h = "";
-  if (cat === "strings") h = stringsdiffhtml(t);
-  else if (cat === "sprites") h = spritesdiffhtml(t);
-  else if (cat === "sounds") h = soundsdiffhtml(t);
-  else h = metadiffhtml(cat, t);
-  c.innerHTML = "<div class=\"assetview\">" + h + "</div>";
+  const pd = assetdata() ? assetdata()[sel.chapter] : null;
+  const t = pd && pd[sel.kind];
+  if (!t) {c.innerHTML = "<div class=\"notecode\">no " + esc(sel.kind) + " changes in this chapter.</div>"; return;}
+  let h;
+  if (sel.kind === "strings") h = stringsdiffhtml(t);
+  else if (sel.kind === "sprites") h = spritesdiffhtml(t);
+  else if (sel.kind === "sounds") h = soundsdiffhtml(t);
+  else h = metadiffhtml(sel.kind, t);
+  c.innerHTML = "<div class=\"assetview " + sel.kind + "\">" + h + "</div>";
   c.scrollTop = 0;
+  if (sel.kind === "sprites") wirespritezoom(c);
 }
 
 function stringsdiffhtml(t) {
   const rows = [];
   for (const s of (t.removed || [])) rows.push("<div class=\"sline del\">- " + esc(s) + "</div>");
   for (const s of (t.added || [])) rows.push("<div class=\"sline add\">+ " + esc(s) + "</div>");
-  return "<div class=\"ahead\">strings <span class=\"sub\">removed then added; a text edit shows as both</span></div>" +
-    "<div class=\"stringdiff\">" + rows.join("") + "</div>";
+  return "<div class=\"stringdiff\">" + rows.join("") + "</div>";
 }
 
-// small sprites are hard to see, so every frame-strip sits on a checkerboard and
-// is scaled up by css (pixelated); the natural size is shown in the caption
+function spriteurl(side, name) {
+  return typebase("sprites") + "/" + side + "/" + encodeURIComponent(name) + ".png";
+}
 function spriteimg(side, name) {
-  return "<img class=\"aspr\" loading=\"lazy\" src=\"" + typebase("sprites") + "/" + side + "/" + encodeURIComponent(name) + ".png\" alt=\"\">";
+  return "<img class=\"aspr\" loading=\"lazy\" src=\"" + spriteurl(side, name) + "\" alt=\"\">";
 }
 function spritesdiffhtml(t) {
   const cards = [];
   for (const r of (t.added || []))
-    cards.push(spritecard("added", r[0], meta(r), "<div class=\"achk\">" + spriteimg("new", r[0]) + "</div>"));
+    cards.push(spritecard("added", r[0], meta(r), "new", null, "<div class=\"achk\">" + spriteimg("new", r[0]) + "</div>"));
   for (const ch of (t.changed || [])) {
     const r = ch.new;
-    cards.push(spritecard("changed", r[0], meta(r),
+    cards.push(spritecard("changed", r[0], meta(r), "new", "old",
       "<div class=\"achk\">" + spriteimg("old", r[0]) + "</div><span class=\"aarrow\">&rarr;</span><div class=\"achk\">" + spriteimg("new", r[0]) + "</div>"));
   }
   for (const r of (t.removed || []))
-    cards.push(spritecard("removed", r[0], meta(r), "<div class=\"achk\">" + spriteimg("old", r[0]) + "</div>"));
-  return "<div class=\"ahead\">sprites</div><div class=\"agrid\">" + cards.join("") + "</div>";
+    cards.push(spritecard("removed", r[0], meta(r), "old", null, "<div class=\"achk\">" + spriteimg("old", r[0]) + "</div>"));
+  return "<div class=\"agrid\">" + cards.join("") + "</div>";
   function meta(r) {return r[1] + "&times;" + r[2] + (r[5] && r[5] !== "1" ? ", " + r[5] + "f" : "");}
 }
-function spritecard(cls, name, metaText, body) {
-  return "<div class=\"acard " + cls + "\"><div class=\"acardtop\"><span class=\"acardname\" title=\"" + esc(name) + "\">" +
-    esc(name) + "</span><span class=\"acardmeta\" fnt_small>" + metaText + "</span></div><div class=\"aimgs\">" + body + "</div></div>";
+// data-* carry which sides exist so a click can open the zoom overlay
+function spritecard(cls, name, metaText, side, side2, body) {
+  return "<div class=\"acard sprite " + cls + "\" data-name=\"" + esc(name) + "\" data-side=\"" + side + "\"" +
+    (side2 ? " data-side2=\"" + side2 + "\"" : "") + ">" +
+    "<div class=\"acardtop\"><span class=\"acardname\" title=\"" + esc(name) + "\">" + esc(name) +
+    "</span><span class=\"acardmeta\" fnt_small>" + metaText + "</span></div><div class=\"aimgs\">" + body + "</div></div>";
+}
+
+// click a sprite card -> full-screen zoomed view (side-by-side old/new for changed)
+function wirespritezoom(root) {
+  for (const card of root.querySelectorAll(".acard.sprite")) {
+    card.addEventListener("click", () => {
+      const name = card.dataset.name;
+      const one = s => "<figure class=\"zfig\"><img class=\"zimg\" src=\"" + spriteurl(s, name) + "\" alt=\"\">" +
+        "<figcaption>" + (card.dataset.side2 ? s : "") + "</figcaption></figure>";
+      const body = card.dataset.side2 ? one("old") + one("new") : one(card.dataset.side);
+      openzoom("<div class=\"zname\">" + esc(name) + "</div><div class=\"zrow\">" + body + "</div>");
+    });
+  }
+}
+function openzoom(inner) {
+  let ov = document.querySelector(".zoomoverlay");
+  if (!ov) {
+    ov = el("div", "zoomoverlay");
+    ov.addEventListener("click", () => ov.classList.remove("show"));
+    document.body.appendChild(ov);
+  }
+  ov.innerHTML = "<div class=\"zoombox\">" + inner + "</div>";
+  ov.classList.add("show");
+  // pixel art has no intrinsic large size, so scale each frame-strip up by the
+  // largest integer factor that still fits (both sides share one factor to compare)
+  const imgs = [...ov.querySelectorAll(".zimg")];
+  const single = imgs.length === 1;
+  const fit = img => {
+    if (!img.naturalWidth) return;
+    const availw = window.innerWidth * (single ? 0.82 : 0.42) - 24;
+    const availh = window.innerHeight * 0.72 - 24;
+    const s = Math.max(1, Math.min(Math.floor(availw / img.naturalWidth), Math.floor(availh / img.naturalHeight), 16));
+    img.style.width = (img.naturalWidth * s) + "px";
+  };
+  for (const img of imgs) img.complete ? fit(img) : (img.onload = () => fit(img));
 }
 
 function soundsdiffhtml(t) {
@@ -664,7 +689,7 @@ function soundsdiffhtml(t) {
       "<div class=\"asnd\"><span class=\"aside\">old</span>" + audio("old", ch.new[0]) + "</div><div class=\"asnd\"><span class=\"aside\">new</span>" + audio("new", ch.new[0]) + "</div>"));
   for (const r of (t.removed || []))
     cards.push(soundcard("removed", r[0], r, "<div class=\"asnd\">" + audio("old", r[0]) + "</div>"));
-  return "<div class=\"ahead\">sounds</div><div class=\"asndlist\">" + cards.join("") + "</div>";
+  return "<div class=\"asndlist\">" + cards.join("") + "</div>";
 }
 function soundcard(cls, name, r, body) {
   const kb = r[3] ? (r[3] / 1024).toFixed(1) + " KB" : "";
@@ -693,7 +718,7 @@ function metadiffhtml(cat, t) {
     rows.push(line("chg", "~", ch.new, "<span class=\"mfields\">" + diffs.join("") + "</span>"));
   }
   for (const r of (t.removed || [])) rows.push(line("del", "-", r, fieldspan(cols, r)));
-  return "<div class=\"ahead\">" + cat + "</div><div class=\"metadiff\">" + rows.join("") + "</div>";
+  return "<div class=\"metadiff\">" + rows.join("") + "</div>";
   function fieldspan(cols, r) {
     const bits = [];
     for (let i = 1; i < cols.length && i < r.length; i++)
