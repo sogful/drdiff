@@ -35,11 +35,13 @@ function ensurefontstyle(name) {
   st.textContent = css;
   document.head.appendChild(st);
 }
+const PUA = 0xE000, PUAMAX = 0x18ff;
+const encodechar = ch => {const c = ch.codePointAt(0); return c <= PUAMAX ? String.fromCharCode(PUA + c) : ch};
 
 function glyph(ch, map, name) {
   const g = document.createElement("span");
-  g.textContent = ch;
   const code = ch.codePointAt(0);
+  g.textContent = encodechar(ch);
   g.className = map[code] ? "glyph g-" + name + "-" + code : "glyphx";
   return g;
 }
@@ -146,6 +148,7 @@ function pixelizeel(el) {
 export function pixelize(root = document) {
   const sel = "[data-pf]" + fontnames.map(n => ",[" + n + "]").join("");
   const marked = [...root.querySelectorAll(sel)];
+  if (root.nodeType === Node.ELEMENT_NODE && root.matches(sel)) marked.unshift(root);
   for (const el of marked) {
     if (marked.some(other => other !== el && other.contains(el))) continue;
     pixelizeel(el);

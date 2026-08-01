@@ -6,20 +6,19 @@ const particon = {ch1: "ch1.png", ch2: "ch2.png", ch3: "ch3tv.png", ch4: "ch4.pn
 const eralabels = {demo: "ch1&2", release: "ch3&4", ch5: "ch5"};
 const exclude = new Set();
 const staticbase = "/assets/static";
-const diffbase = "/diffs";        // code + per-type asset diffs live at the repo root
+const diffbase = "/diffs"; 
 
 let manifest = null;
 let changelogset = new Set();
 let steamset = new Set();
-let assetset = new Set();        // versions with a non-code asset diff
-let assetindex = {};             // version -> [asset types present]
+let assetset = new Set();
+let assetindex = {};
 let doodles = {};
 const diffcache = {};
 const clcache = {};
 const clraw = {};
-const assetcache = {};           // parsed asset-diff data.json, by version
-// the diff kinds shown as the sidebar grid: "code" first, then the asset kinds
-// (order requested by the user). the grid only shows kinds that actually changed.
+const assetcache = {};
+
 const assetkinds = [
   {key: "sounds", label: "sounds"},
   {key: "sprites", label: "sprites"},
@@ -29,7 +28,6 @@ const assetkinds = [
   {key: "fonts", label: "fonts"},
 ];
 const kindorder = ["code", ...assetkinds.map(k => k.key)];
-// sel.kind: "code" | an asset kind. sel.mode: "diff" (show sel.kind) | "changelog".
 const sel = {version: null, chapter: null, file: null, kind: "code", mode: "changelog", clview: "twitter", hideids: false};
 const idkey = "drdiff-hideids";
 
@@ -85,7 +83,7 @@ async function boot() {
     sel.mode = "diff";
     rendercontent();
   }
-  // deep-link an asset kind: ?kind=sprites&ch=ch5  (mode=assets kept as an alias)
+  // deep link
   const kind = q.get("kind") || (q.get("mode") === "assets" ? (q.get("cat") || "sprites") : "");
   if (kind && kind !== "code" && (assetindex[sel.version] || []).includes(kind)) {
     sel.kind = kind;
@@ -302,11 +300,11 @@ async function selectversion(label) {
   sel.diff = diff;
   sel.trans = t;
   await loadassets(label);
-  // keep the selected kind if the new version still has it, else fall back to code
+
   if (sel.kind !== "code" && !(assetindex[label] || []).includes(sel.kind)) sel.kind = "code";
   buildkindswitch();
   buildchapters(diff);
-  // focus the latest chapter that actually changed for the current kind
+
   const changed = partkeys.filter(p => partchanged(p));
   sel.chapter = changed.slice(-1)[0] || null;
   sel.file = null;
@@ -323,7 +321,7 @@ async function selectversion(label) {
   rendercontent();
 }
 
-// does this part have any change for the currently-selected kind?
+// does this part have any change for the currently selected kind?
 function partchanged(p) {
   if (sel.kind === "code") {
     const d = sel.diff && sel.diff.parts[p];
@@ -333,9 +331,6 @@ function partchanged(p) {
   return c.a + c.r + c.c > 0;
 }
 
-// each asset type lives in its own /diffs/<type>/<version>.json ({part: diff}).
-// fetch the ones this version has and pivot them into {part: {type: diff}} so the
-// renderers can read one part's worth of every kind at once.
 async function loadassets(label) {
   if (!assetset.has(label) || assetcache[label]) return;
   const types = assetindex[label] || [];
@@ -356,7 +351,6 @@ function assetdata() {
   return assetcache[sel.version] || null;
 }
 
-// {added, removed, changed} counts for one part + one diff kind
 function kindcounts(part, kind) {
   if (kind === "code") {
     const d = sel.diff && sel.diff.parts[part];
@@ -366,7 +360,7 @@ function kindcounts(part, kind) {
   const t = assetdata() && assetdata()[part] && assetdata()[part][kind];
   return t ? {a: (t.added || []).length, r: (t.removed || []).length, c: (t.changed || []).length} : {a: 0, r: 0, c: 0};
 }
-function kindtotal(kind) {          // summed over every part
+function kindtotal(kind) {
   let a = 0, r = 0, c = 0;
   for (const p of partkeys) {const k = kindcounts(p, kind); a += k.a; r += k.r; c += k.c;}
   return {a, r, c};
@@ -380,8 +374,6 @@ function countbadge(c, locked) {
   return "<span class=\"cbadge\" fnt_small>" + bits.join("") + "</span>";
 }
 
-// sidebar grid of diff kinds: code first, then each asset kind that changed.
-// each cell shows its total +/~/- like a chapter tab; multi-row, never one line.
 function buildkindswitch() {
   const grid = document.querySelector(".kindswitch");
   grid.innerHTML = "";
@@ -414,18 +406,18 @@ function buildchapters(diff) {
     if (code && !d) continue;
     const locked = code && !!d.collapsed;
     const c = kindcounts(p, sel.kind);
-    if (!locked && !c.a && !c.r && !c.c) continue;   // unchanged for this kind
+    if (!locked && !c.a && !c.r && !c.c) continue;
     const muted = !locked && !c.a && !c.c && c.r;
     const tab = el("button", "ctab" + (locked ? " locked" : "") + (muted ? " muted" : ""));
     tab.dataset.part = p;
     const iurl = particon[p] ? "/assets/images/chapters/" + particon[p] : "";
     const icon = iurl ? "<span class=\"cicon\"><img src=\"" + iurl + "\" alt=\"\"></span>" : "";
     tab.innerHTML = icon + "<span class=\"ctext\"><span class=\"cname\" fnt_main>" + esc(partlabel[p]) + "</span>" + countbadge(c, locked) + "</span>";
-    if (!locked) tab.addEventListener("click", () => {sel.chapter = p; sel.file = null; rendercontent();});
+    if (!locked && !muted) tab.addEventListener("click", () => {sel.chapter = p; sel.file = null; rendercontent();});
     bar.appendChild(tab);
   }
   if (!bar.querySelector(`.ctab[data-part="${sel.chapter}"]`)) {
-    const first = bar.querySelector(".ctab:not(.locked)");
+    const first = bar.querySelector(".ctab:not(.locked):not(.muted)");
     if (first) sel.chapter = first.dataset.part;
   }
   pixify(bar);
@@ -446,7 +438,6 @@ function rendercontent() {
   markchaptertab();
   marksidebar();
   const asset = sel.mode === "diff" && sel.kind !== "code";
-  // the code file list lives in the sidebar; asset kinds render straight to main
   document.querySelector(".filelist").style.display = asset ? "none" : "";
   if (sel.mode === "changelog") {renderchangelog(); return;}
   if (asset) return renderassetmain();
@@ -456,14 +447,13 @@ function rendercontent() {
 }
 
 function marksidebar() {
-  // the kind grid always fills the sidebar top, so it is never fully empty now
   document.querySelector(".sidebar").classList.remove("nocode", "empty");
 }
 
 function renderbaseline() {
-  document.querySelector(".filelist").innerHTML = "<div class=\"fempty\">baseline build - nothing prior to diff against.</div>";
+  document.querySelector(".filelist").innerHTML = "<div class=\"fempty\">nothing prior to diff against..</div>";
   document.querySelector(".content").innerHTML = "<div class=\"notecode\">" + esc(sel.version) +
-    " is the earliest tracked build. there's no earlier version here to diff against - pick a later version above.</div>";
+    " is the earliest build, there's no earlier version here to diff against..</div>";
 }
 
 function updatechangelogbtn() {
@@ -581,15 +571,11 @@ function renderdiff(txt) {
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* asset diffs - strings / sprites / sounds / objects / rooms / fonts */
 
-// binaries live at /diffs/<type>/<version>/<part>/<side>/<name>.<ext>
 function typebase(type) {
   return diffbase + "/" + type + "/" + encodeURIComponent(sel.version) + "/" + sel.chapter;
 }
 
-// main pane for the selected asset kind + chapter. no title/subtitle - the kind
-// grid already names it; styling mirrors the code diff (dark, monospace, compact).
 function renderassetmain() {
   const c = document.querySelector(".content");
   const pd = assetdata() ? assetdata()[sel.chapter] : null;
@@ -607,8 +593,8 @@ function renderassetmain() {
 
 function stringsdiffhtml(t) {
   const rows = [];
-  for (const s of (t.removed || [])) rows.push("<div class=\"sline del\">- " + esc(s) + "</div>");
-  for (const s of (t.added || [])) rows.push("<div class=\"sline add\">+ " + esc(s) + "</div>");
+  for (const s of (t.removed || [])) rows.push("<div class=\"sline del\">" + esc(s) + "</div>");
+  for (const s of (t.added || [])) rows.push("<div class=\"sline add\">" + esc(s) + "</div>");
   return "<div class=\"stringdiff\">" + rows.join("") + "</div>";
 }
 
@@ -624,15 +610,13 @@ function spritesdiffhtml(t) {
     cards.push(spritecard("added", r[0], meta(r), "new", null, "<div class=\"achk\">" + spriteimg("new", r[0]) + "</div>"));
   for (const ch of (t.changed || [])) {
     const r = ch.new;
-    cards.push(spritecard("changed", r[0], meta(r), "new", "old",
-      "<div class=\"achk\">" + spriteimg("old", r[0]) + "</div><span class=\"aarrow\">&rarr;</span><div class=\"achk\">" + spriteimg("new", r[0]) + "</div>"));
+    cards.push(spritecard("changed", r[0], meta(r), "new", "old", "<div class=\"achk\">" + spriteimg("new", r[0]) + "</div>"));
   }
   for (const r of (t.removed || []))
     cards.push(spritecard("removed", r[0], meta(r), "old", null, "<div class=\"achk\">" + spriteimg("old", r[0]) + "</div>"));
   return "<div class=\"agrid\">" + cards.join("") + "</div>";
   function meta(r) {return r[1] + "&times;" + r[2] + (r[5] && r[5] !== "1" ? ", " + r[5] + "f" : "");}
 }
-// data-* carry which sides exist so a click can open the zoom overlay
 function spritecard(cls, name, metaText, side, side2, body) {
   return "<div class=\"acard sprite " + cls + "\" data-name=\"" + esc(name) + "\" data-side=\"" + side + "\"" +
     (side2 ? " data-side2=\"" + side2 + "\"" : "") + ">" +
@@ -640,39 +624,83 @@ function spritecard(cls, name, metaText, side, side2, body) {
     "</span><span class=\"acardmeta\" fnt_small>" + metaText + "</span></div><div class=\"aimgs\">" + body + "</div></div>";
 }
 
-// click a sprite card -> full-screen zoomed view (side-by-side old/new for changed)
 function wirespritezoom(root) {
   for (const card of root.querySelectorAll(".acard.sprite")) {
-    card.addEventListener("click", () => {
-      const name = card.dataset.name;
-      const one = s => "<figure class=\"zfig\"><img class=\"zimg\" src=\"" + spriteurl(s, name) + "\" alt=\"\">" +
-        "<figcaption>" + (card.dataset.side2 ? s : "") + "</figcaption></figure>";
-      const body = card.dataset.side2 ? one("old") + one("new") : one(card.dataset.side);
-      openzoom("<div class=\"zname\">" + esc(name) + "</div><div class=\"zrow\">" + body + "</div>");
-    });
+    card.addEventListener("click", () => openzoom(card.dataset.name, !!card.dataset.side2, card.dataset.side));
   }
 }
-function openzoom(inner) {
+
+// not sure if it's the best idea to make this a separate function, but, like, why would i repeat it dosens of times
+function arrowimg(dir) {
+  return "<img class=\"uarrow" + (dir === "right" ? " flip" : "") + "\" src=\"/assets/images/arrowleft.png\" alt=\"" + (dir === "right" ? "->" : "<-") + "\">";
+}
+
+function bestscale(natw, nath, availfrac) {
+  const availw = window.innerWidth * availfrac - 24;
+  const availh = window.innerHeight * 0.86 - 96;
+  return Math.max(1, Math.min(Math.floor(availw / natw), Math.floor(availh / nath), 40));
+}
+
+function openzoom(name, compare, side) {
   let ov = document.querySelector(".zoomoverlay");
   if (!ov) {
     ov = el("div", "zoomoverlay");
     ov.addEventListener("click", () => ov.classList.remove("show"));
     document.body.appendChild(ov);
   }
-  ov.innerHTML = "<div class=\"zoombox\">" + inner + "</div>";
+  const inner = compare
+    ? "<div class=\"zcompare\"><img class=\"zc-img zc-new\" src=\"" + spriteurl("new", name) + "\">" +
+        "<div class=\"zc-clip\"><img class=\"zc-img zc-old\" src=\"" + spriteurl("old", name) + "\"></div>" +
+        "<div class=\"zc-line\"></div><div class=\"zc-handle\"><img class=\"zc-knob\" src=\"/assets/images/circle.png\"></div>" +
+      "</div><div class=\"zc-legend\"><span class=\"del\" fnt_main>old</span> " + arrowimg("left") +
+        " <span fnt_main>drag to compare</span> " + arrowimg("right") + " <span class=\"add\" fnt_main>new</span></div>"
+    : "<figure class=\"zfig\"><img class=\"zimg\" src=\"" + spriteurl(side, name) + "\"></figure>";
+  ov.innerHTML = "<div class=\"zoombox\"><div class=\"zname\">" + esc(name) + "</div>" + inner + "</div>";
   ov.classList.add("show");
-  // pixel art has no intrinsic large size, so scale each frame-strip up by the
-  // largest integer factor that still fits (both sides share one factor to compare)
-  const imgs = [...ov.querySelectorAll(".zimg")];
-  const single = imgs.length === 1;
-  const fit = img => {
-    if (!img.naturalWidth) return;
-    const availw = window.innerWidth * (single ? 0.82 : 0.42) - 24;
-    const availh = window.innerHeight * 0.72 - 24;
-    const s = Math.max(1, Math.min(Math.floor(availw / img.naturalWidth), Math.floor(availh / img.naturalHeight), 16));
-    img.style.width = (img.naturalWidth * s) + "px";
+  ov.querySelector(".zoombox").onclick = e => e.stopPropagation();
+  if (window.pixelize) window.pixelize(ov);
+  if (compare) setupcompare(ov); else {
+    const img = ov.querySelector(".zimg");
+    const fit = () => {if (img.naturalWidth) img.style.width = (img.naturalWidth * bestscale(img.naturalWidth, img.naturalHeight, 0.88)) + "px";};
+    img.complete ? fit() : (img.onload = fit);
+  }
+}
+
+function setupcompare(ov) {
+  const box = ov.querySelector(".zcompare");
+  const nw = box.querySelector(".zc-new"), old = box.querySelector(".zc-old");
+  const clip = box.querySelector(".zc-clip"), knob = box.querySelector(".zc-knob");
+  const setsplit = f => {
+    f = Math.max(0, Math.min(1, f));
+    clip.style.width = (f * 100) + "%";
+    box.style.setProperty("--split", (f * 100) + "%");
   };
-  for (const img of imgs) img.complete ? fit(img) : (img.onload = () => fit(img));
+  const layout = () => {
+    if (!nw.naturalWidth) return;
+    const s = bestscale(nw.naturalWidth, nw.naturalHeight, 0.88);
+    const w = nw.naturalWidth * s, h = nw.naturalHeight * s;
+    box.style.width = w + "px"; box.style.height = h + "px";
+    for (const im of [nw, old]) {im.style.width = w + "px"; im.style.height = h + "px";}
+    setsplit(0.5);
+  };
+  let lastx = null;
+  const move = e => {
+    const r = box.getBoundingClientRect();
+    const x = e.clientX;
+    setsplit((x - r.left) / r.width);
+    if (lastx != null && x !== lastx) knob.className = "zc-knob " + (x < lastx ? "left" : "right");
+    lastx = x;
+  };
+  const up = () => {
+    knob.src = "/assets/images/circle.png"; knob.className = "zc-knob"; lastx = null;
+    window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up);
+  };
+  box.addEventListener("pointerdown", e => {
+    e.preventDefault();
+    knob.src = "/assets/images/arrowleft.png"; lastx = null; move(e);
+    window.addEventListener("pointermove", move); window.addEventListener("pointerup", up);
+  });
+  nw.complete ? layout() : (nw.onload = layout);
 }
 
 function soundsdiffhtml(t) {
@@ -697,7 +725,6 @@ function soundcard(cls, name, r, body) {
     "</span><span class=\"acardmeta\" fnt_small>" + esc(r[1] || "") + " " + kb + "</span></div>" + body + "</div>";
 }
 
-// objects / rooms / fonts - the columns each tsv row carries, for a labelled diff
 const metacols = {
   objects: ["name", "sprite", "parent", "visible", "solid", "persistent", "depth", "physics"],
   rooms: ["name", "width", "height", "objects", "tiles", "layers", "backgrounds"],
@@ -706,18 +733,18 @@ const metacols = {
 function metadiffhtml(cat, t) {
   const cols = metacols[cat] || [];
   const rows = [];
-  const line = (cls, sign, r, extra) =>
-    "<div class=\"mline " + cls + "\"><span class=\"msign\">" + sign + "</span><span class=\"mname\">" +
-    esc(r[0]) + "</span>" + (extra || "") + "</div>";
-  for (const r of (t.added || [])) rows.push(line("add", "+", r, fieldspan(cols, r)));
+
+  const line = (cls, r, extra) =>
+    "<div class=\"mline " + cls + "\"><span class=\"mname\">" + esc(r[0]) + "</span>" + (extra || "") + "</div>";
+  for (const r of (t.added || [])) rows.push(line("add", r, fieldspan(cols, r)));
   for (const ch of (t.changed || [])) {
     const diffs = [];
     for (let i = 1; i < cols.length; i++)
       if (ch.old[i] !== ch.new[i])
-        diffs.push("<span class=\"mfield\">" + cols[i] + ": <span class=\"del\">" + esc(ch.old[i]) + "</span> &rarr; <span class=\"add\">" + esc(ch.new[i]) + "</span></span>");
-    rows.push(line("chg", "~", ch.new, "<span class=\"mfields\">" + diffs.join("") + "</span>"));
+        diffs.push("<span class=\"mfield\">" + cols[i] + ": <span class=\"del\">" + esc(ch.old[i]) + "</span> " + arrowimg("right") + " <span class=\"add\">" + esc(ch.new[i]) + "</span></span>");
+    rows.push(line("chg", ch.new, "<span class=\"mfields\">" + diffs.join("") + "</span>"));
   }
-  for (const r of (t.removed || [])) rows.push(line("del", "-", r, fieldspan(cols, r)));
+  for (const r of (t.removed || [])) rows.push(line("del", r, fieldspan(cols, r)));
   return "<div class=\"metadiff\">" + rows.join("") + "</div>";
   function fieldspan(cols, r) {
     const bits = [];
@@ -751,7 +778,7 @@ function parsemd(text) {
   for (const raw of text.split("\n")) {
     const l = raw.replace(/\s+$/, "");
     if (!l.trim()) {prevblank = true; continue;}
-    if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(l)) {cur = null; prevblank = true; continue;} // horizontal rule
+    if (/^\s*([-*_])(\s*\1){2,}\s*$/.test(l)) {cur = null; prevblank = true; continue;}
     if (l.startsWith("# ")) {out.title = l.slice(2).trim(); prevblank = false; continue;}
     if (l.startsWith("## ")) {out.subtitle = l.slice(3).trim(); prevblank = false; continue;}
     if (l.startsWith("### ")) {

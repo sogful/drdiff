@@ -1,6 +1,3 @@
-/* the deltarune chrome font is the pixel spritesheet atlas (fnt_main.png via
-   font.js), applied by marking elements fnt_main and pixelizing them - there is
-   no webfont. unpixelized "deltarune" text falls back to the monospace below. */
 @font-face {
 	font-family: "jetbrains";
 	src: url("/assets/fonts/jetbrainsmono.woff2") format("woff2");
@@ -15,21 +12,14 @@
 }
 
 :root {
-	--bar2: #101010;
-	--line: #333333;
+	--bar2: #101010; --line: #333333;
 	--faint: rgba(255,255,255,0.07);
-	--text: #ffffff;
-	--dim: #808080;
-	--dimmer: #565656;
+	--text: #ffffff; --dim: #808080; --dimmer: #565656;
 	--yellow: #ffff00;
-	--red: #ff0000;
-	--green: #00ff00;
-	--azure: #00aeff;
+	--red: #ff0000; --green: #00ff00; --azure: #00aeff;
 	
-	--code-bg: #1e1e1e;
-	--add: #383e2a;
-	--del: #4c1919;
-	--chg: #16323f;      /* changed = dark azure, sibling of --add/--del */
+	--code-bg: #1e1e1e; --add: #383e2a;
+	--del: #4c1919; --chg: #16323f;
 
 	--t-com: #6a9955;
 	--t-kw: #569cd6;
@@ -49,7 +39,11 @@
 	position: relative;
 	display: inline-block;
 	line-height: var(--lh, 16px);
+	user-select: none;
 }
+
+.font ::selection {background: transparent; color: transparent}
+.font ::-moz-selection {background: transparent; color: transparent}
 .font .word {display: inline-block; white-space: nowrap; vertical-align: top}
 .font .glyph {
 	position: relative;
@@ -140,7 +134,7 @@ body {
 	font-size: 13px;
 	text-align: center;
 }
-.vchip .vlabel {--ink: var(--text)}      /* pixel glyphs take colour from --ink, not color */
+.vchip .vlabel {--ink: var(--text)}
 .vchip:hover {background: var(--bar2)}
 .vchip.active .vlabel, .vchip.active .vdate {--ink: var(--yellow)}
 .vchip.baseline {opacity: 0.5; cursor: default} /* so ch1&2 1.0.0 */
@@ -216,8 +210,7 @@ body {
 .ctab.active .cname {--ink: var(--yellow)}
 .ctab.locked {cursor: default; opacity: 0.5}
 .ctab.locked:hover .cname {--ink: var(--text)}
-.ctab.muted {opacity: 0.45}
-.ctab.muted:hover, .ctab.muted.active {opacity: 1}
+.ctab.muted {opacity: 0.45; cursor: default}
 
 .cicon {
 	width: 22px;
@@ -244,11 +237,8 @@ body {
 	line-height: 1.05;
 }
 .cname {font-size: 14px}
-
 .cbadge {display: inline-flex; gap: 5px}
 
-/* sidebar kind grid: code + each changed asset kind, compact, wraps to rows.
-   name (pixel font) over its +/~/- counts, like a chapter tab */
 .kindswitch {
 	flex: none;
 	display: flex; flex-wrap: wrap;
@@ -256,14 +246,12 @@ body {
 	padding: 2px 2px 3px;
 }
 .kcell {
-	flex: 0 0 auto;           /* stay compact + uniform; wrap instead of stretching */
-	width: 76px;
+	flex: 0 0 auto; width: 76px;
 	border: 0; background: none;
 	cursor: pointer;
 	display: flex; flex-direction: column;
 	align-items: flex-start;
-	gap: 1px;
-	padding: 4px 6px;
+	gap: 1px; padding: 4px 6px;
 	line-height: 1.05;
 }
 .kname {--ink: var(--dim); font-size: 13px}
@@ -303,7 +291,6 @@ body {
 	scrollbar-width: none;
 }
 .content::-webkit-scrollbar {display: none}
-
 .hint {color: var(--dimmer); padding: 30px; text-align: center}
 
 /*//////////////////////////////////////////////////////////////////////*/
@@ -523,7 +510,7 @@ body {
 	margin-bottom: 4px;
 }
 .cl-sech.sub {font-size: 14px}
-/* a small italic aside/footnote inside a section (e.g. the "* Note:" line) */
+
 .cl-inote {
 	text-align: right;
 	font-style: italic;
@@ -542,7 +529,7 @@ body {
 .cl-outro {margin: 16px 0}
 .cl-outro a, .cl-item a, .cl-intro a {color: #1a5fb4}
 
-/* art posted alongside steam announcements */
+/* art posted alongside steam announcements, so far this only happened once  */
 .cl-media {margin: 22px 0}
 .cl-media img {display: block; width: 100%; height: auto}
 .cl-footer {
@@ -662,7 +649,6 @@ body {
 }
 
 /*//////////////////////////////////////////////////////////////////////*/
-/* asset diffs - styled to match the code diff (dark, monospace, no title) */
 
 .assetview {
 	padding: 8px 0 60px;
@@ -671,7 +657,6 @@ body {
 	font-size: 12.5px;
 }
 
-/* strings - removed then added, styled like the code diff lines */
 .stringdiff {display: flex; flex-direction: column}
 .sline {
 	white-space: pre-wrap;
@@ -682,7 +667,6 @@ body {
 .sline.add {background: var(--add)}
 .sline.del {background: var(--del)}
 
-/* sprites - card grid; each frame-strip fits inside a checkerboard box, click to zoom */
 .agrid {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -696,13 +680,12 @@ body {
 	padding: 7px;
 }
 .acard.sprite {cursor: zoom-in}
-/* single-colour highlight like the code diff (green add / red del / blue changed) */
 .acard.added {background: var(--add)}
 .acard.changed {background: var(--chg)}
 .acard.removed {background: var(--del)}
 .acardtop {display: flex; flex-direction: column; gap: 1px; margin-bottom: 6px}
 .acardname {overflow-wrap: anywhere; font-size: 11px; color: var(--text)}
-.acardmeta {--ink: var(--dim)}
+.acardmeta {--ink: var(--dimmer)}
 .aimgs {display: flex; align-items: center; justify-content: center; gap: 6px}
 .aarrow {color: var(--azure); flex: none}
 .achk {
@@ -719,7 +702,6 @@ body {
 	border-radius: 2px;
 	overflow: hidden;
 }
-/* fit the whole frame-strip inside the box, crisp */
 .aspr {
 	image-rendering: pixelated;
 	max-width: 100%;
@@ -727,7 +709,6 @@ body {
 	object-fit: contain;
 }
 
-/* click-to-zoom overlay */
 .zoomoverlay {
 	position: fixed; inset: 0;
 	z-index: 40;
@@ -745,31 +726,72 @@ body {
 	margin-bottom: 14px;
 	overflow-wrap: anywhere;
 }
-.zrow {display: flex; gap: 26px; align-items: center; justify-content: center; flex-wrap: wrap}
-.zfig {margin: 0; display: flex; flex-direction: column; align-items: center; gap: 6px}
-.zimg {
-	image-rendering: pixelated;
-	box-sizing: content-box;   /* JS sets width = natW * integer, so the image stays crisp */
-	display: block;
-	max-width: 86vw; max-height: 80vh;
+.zfig {margin: 0 auto; display: inline-block}
+
+.zimg, .zcompare {
 	background-color: #2b2b2b;
 	background-image:
 		linear-gradient(45deg, #1c1c1c 25%, transparent 25%, transparent 75%, #1c1c1c 75%),
 		linear-gradient(45deg, #1c1c1c 25%, transparent 25%, transparent 75%, #1c1c1c 75%);
 	background-size: 16px 16px;
 	background-position: 0 0, 8px 8px;
+}
+.zimg {
+	image-rendering: pixelated;
+	box-sizing: content-box;
+	display: block;
+	max-width: 90vw; max-height: 88vh;
 	padding: 10px;
 }
-.zfig figcaption {font-family: "jetbrains", monospace; font-size: 11px; color: var(--dim)}
 
-/* sounds - name + audio player(s), same single-colour highlight as sprites */
-.asndlist {display: flex; flex-direction: column; gap: 8px; padding: 10px 14px 0}
+.zcompare {
+	position: relative;
+	margin: 0 auto;
+	--split: 50%;
+	cursor: ew-resize;
+	touch-action: none;
+	user-select: none;
+	overflow: hidden;
+}
+.zc-img {position: absolute; top: 0; left: 0; image-rendering: pixelated; display: block}
+.zc-clip {position: absolute; top: 0; left: 0; height: 100%; width: 50%; overflow: hidden}
+.zc-line {
+	position: absolute; top: 0; bottom: 0;
+	left: var(--split); width: 2px; margin-left: -1px;
+	background: #fff;
+	pointer-events: none;
+	box-shadow: 0 0 3px rgba(0,0,0,0.6);
+}
+.zc-handle {
+	position: absolute; top: 50%; left: var(--split);
+	transform: translate(-50%, -50%);
+	pointer-events: none;
+}
+.zc-knob {display: block; width: 30px; height: 30px; image-rendering: pixelated; filter: drop-shadow(0 0 2px rgba(0,0,0,0.6))}
+.zc-knob.right {transform: scaleX(-1)}
+.zc-legend {
+	margin-top: 14px; font-size: 16px;
+	display: flex; align-items: center; justify-content: center; gap: 8px;
+	--ink: var(--dim);
+}
+.zc-legend .del {--ink: #ff8f8f}
+.zc-legend .add {--ink: #7ee08a}
+.uarrow {
+	height: 0.8em; width: auto; 
+	vertical-align: -0.05em; image-rendering: pixelated; 
+	filter: brightness(0) invert(0.75)
+}
+.uarrow.flip {transform: scaleX(-1)}
+
+.asndlist {
+	display: flex; flex-direction: column; 
+	gap: 8px; padding: 10px 14px 0
+}
 .acard.snd {display: flex; flex-direction: column; gap: 6px}
 .asnd {display: flex; align-items: center; gap: 8px}
 .aside {color: var(--dim); flex: none; width: 26px; font-size: 11px}
 .asnd audio {height: 30px; flex: 1}
 
-/* objects / rooms / fonts - labelled field diffs */
 .metadiff {display: flex; flex-direction: column}
 .mline {
 	display: flex;
@@ -782,7 +804,6 @@ body {
 .mline.add {background: var(--add)}
 .mline.del {background: var(--del)}
 .mline.chg {background: var(--chg)}
-.msign {color: var(--dim); flex: none; width: 8px}
 .mname {color: var(--text)}
 .mfields {display: inline-flex; flex-wrap: wrap; gap: 4px 14px; color: var(--dim)}
 .mfield .del {color: #ff8f8f; text-decoration: line-through}
