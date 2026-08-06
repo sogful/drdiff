@@ -61,6 +61,9 @@ async function boot() {
       const v = b.dataset.view;
       sel.clview = (sel.mode === "changelog" && sel.clview === v) ? null : v;
       sel.mode = sel.clview ? "changelog" : "diff";
+      if (sel.mode === "diff") ensurekind();
+      buildkindswitch();
+      buildchapters();
       rendercontent();
     });
   }
@@ -81,6 +84,8 @@ async function boot() {
     sel.file = selp.slice(i + 1);
     sel.kind = "code";
     sel.mode = "diff";
+    buildkindswitch();
+    buildchapters();
     rendercontent();
   }
   // deep link
@@ -90,7 +95,7 @@ async function boot() {
     sel.mode = "diff";
     if (q.get("ch")) sel.chapter = q.get("ch");
     buildkindswitch();
-    buildchapters(sel.diff);
+    buildchapters();
     rendercontent();
   }
 }
@@ -155,20 +160,53 @@ function parsediff(text, t) {
 const numrx = /(?<![\w.])\d+(?![\w.])/g;
 const strrx = /"(?:[^"\\]|\\.)*"/g;
 
-function isidswap(a, b) {
+function numpairs(a, b) {
   const ma = a.replace(strrx, m => " ".repeat(m.length));
   const mb = b.replace(strrx, m => " ".repeat(m.length));
   const na = ma.match(numrx), nb = mb.match(numrx);
-  if (!na || !nb || na.length !== nb.length) return false;
-  if (ma.replace(numrx, "#") !== mb.replace(numrx, "#")) return false;
+  if (!na || !nb || na.length !== nb.length) return null;
+  if (ma.replace(numrx, "#") !== mb.replace(numrx, "#")) return null;
+  return na.map((x, i) => [+x, +nb[i]]);
+}
+function isidswap(a, b, idset) {
+  const pairs = numpairs(a, b);
+  if (!pairs) return false;
   let moved = false;
-  for (let i = 0; i < na.length; i++) {
-    if (na[i] === nb[i]) continue;
+  for (const [x, y] of pairs) {
+    if (x === y) continue;
     moved = true;
-    const x = +na[i], y = +nb[i];
-    if (Math.min(x, y) < 100 || Math.abs(x - y) / Math.max(x, y) >= 0.02) return false;
+    const d = y - x, lo = Math.min(x, y);
+    const relok = lo >= 100 && Math.abs(d) / Math.max(x, y) < 0.02;
+    const setok = lo >= 100 && idset && idset.has(d);
+    if (!relok && !setok) return false;
   }
   return moved;
+}
+function partiddeltas(d) {
+  const freq = new Map();
+  for (const m of (d.modified || [])) {
+    const lines = m.diff.split("\n");
+    let i = 0;
+    while (i < lines.length) {
+      if (!lines[i].startsWith("-")) {i++; continue;}
+      let j = i; while (j < lines.length && lines[j].startsWith("-")) j++;
+      let k = j; while (k < lines.length && lines[k].startsWith("+")) k++;
+      const n = j - i;
+      if (k - j === n) for (let t = 0; t < n; t++) {
+        const pairs = numpairs(lines[i + t].slice(1), lines[j + t].slice(1));
+        if (pairs) for (const [x, y] of pairs)
+          if (x !== y && Math.min(x, y) >= 100) freq.set(y - x, (freq.get(y - x) || 0) + 1);
+      }
+      i = k;
+    }
+  }
+  const set = new Set();
+  for (const [d2, c] of freq) if (c >= 3) set.add(d2);
+  return set;
+}
+function idsetof(d) {
+  if (!d) return null;
+  return d.idset || (d.idset = partiddeltas(d));
 }
 function dropemptyhunks(lines) {
   const out = [];
@@ -183,29 +221,38 @@ function dropemptyhunks(lines) {
   flush();
   return out;
 }
-function filterdiff(txt) {
-  const lines = txt.split("\n"), out = [];
-  let i = 0;
-  while (i < lines.length) {
-    if (!lines[i].startsWith("-")) {out.push(lines[i]); i++; continue;}
-    let j = i;
-    while (j < lines.length && lines[j].startsWith("-")) j++;
-    let k = j;
-    while (k < lines.length && lines[k].startsWith("+")) k++;
-    const n = j - i;
-    let swapped = k - j === n;
-    for (let t = 0; swapped && t < n; t++)
-      swapped = isidswap(lines[i + t].slice(1), lines[j + t].slice(1));
-    if (swapped) for (let t = 0; t < n; t++) out.push(" " + lines[j + t].slice(1));
-    else for (let t = i; t < k; t++) out.push(lines[t]);
-    i = k;
+function cancelhunk(lines, idset) {
+  const rem = [], add = [];
+  lines.forEach((l, i) => {if (l[0] === "-") rem.push(i); else if (l[0] === "+") add.push(i);});
+  const used = new Set(), cancel = new Set();
+  for (const ri of rem) for (const ai of add) {
+    if (used.has(ai)) continue;
+    const a = lines[ri].slice(1), b = lines[ai].slice(1);
+    if (a === b || isidswap(a, b, idset)) {used.add(ai); cancel.add(ri); cancel.add(ai); break;}
   }
+  const out = [];
+  lines.forEach((l, i) => {
+    if (!cancel.has(i)) out.push(l);
+    else if (l[0] === "+") out.push(" " + l.slice(1));
+  });
+  return out;
+}
+
+function filterdiff(txt, idset) {
+  const lines = txt.split("\n"), out = [];
+  let hunk = [];
+  const flush = () => {if (hunk.length) {out.push(...cancelhunk(hunk, idset)); hunk = [];}};
+  for (const l of lines) {
+    if (l.startsWith("@@")) {flush(); out.push(l); continue;}
+    hunk.push(l);
+  }
+  flush();
   return dropemptyhunks(out);
 }
 
-function filtered(mod) {
+function filtered(mod, idset) {
   if (!mod.flines) {
-    mod.flines = filterdiff(mod.diff);
+    mod.flines = filterdiff(mod.diff, idset);
     mod.fplus = mod.flines.filter(l => l.startsWith("+")).length;
     mod.fminus = mod.flines.filter(l => l.startsWith("-")).length;
   }
@@ -214,7 +261,8 @@ function filtered(mod) {
 
 function realmods(d) {
   if (!sel.hideids || !d.modified) return d.modified || [];
-  return d.modified.filter(m => filtered(m).fplus || m.fminus);
+  const idset = idsetof(d);
+  return d.modified.filter(m => filtered(m, idset).fplus || m.fminus);
 }
 
 function partcounts(d) {
@@ -225,7 +273,7 @@ function partcounts(d) {
 
 function initidfilter() {
   const box = document.querySelector(".idfilter");
-  sel.hideids = localStorage.getItem(idkey) === "1";
+  sel.hideids = localStorage.getItem(idkey) !== "0";   // on by default, only an explicit off sticks
   const paint = () => {
     box.classList.toggle("on", sel.hideids);
     box.querySelector(".ifcheck").src = "/assets/images/check" + (sel.hideids ? "on" : "off") + ".png";
@@ -234,7 +282,8 @@ function initidfilter() {
     sel.hideids = !sel.hideids;
     localStorage.setItem(idkey, sel.hideids ? "1" : "0");
     paint();
-    buildchapters(sel.diff);
+    buildkindswitch();
+    buildchapters();
     rendercontent();
   });
   paint();
@@ -301,13 +350,15 @@ async function selectversion(label) {
   sel.trans = t;
   await loadassets(label);
 
-  if (sel.kind !== "code" && !(assetindex[label] || []).includes(sel.kind)) sel.kind = "code";
-  buildkindswitch();
-  buildchapters(diff);
+  if (!presentkinds().includes(sel.kind)) sel.kind = presentkinds().includes("code") ? "code" : (presentkinds()[0] || "code");
 
-  const changed = partkeys.filter(p => partchanged(p));
-  sel.chapter = changed.slice(-1)[0] || null;
+  const codeparts = partkeys.filter(p => {const cd = diff && diff.parts[p]; return cd && !cd.collapsed && changedcount(cd) > 0;});
+  const anyparts = partkeys.filter(partanychange);
+  sel.chapter = codeparts.slice(-1)[0] || anyparts.slice(-1)[0] || null;
   sel.file = null;
+  ensurekind();
+  buildkindswitch();
+  buildchapters();
   const hastwitter = changelogset.has(label), hassteam = steamset.has(label);
   const ok = {twitter: hastwitter, steam: hassteam, diff: hastwitter && hassteam};
   const waschangelog = sel.mode === "changelog";
@@ -321,14 +372,41 @@ async function selectversion(label) {
   rendercontent();
 }
 
-// does this part have any change for the currently selected kind?
-function partchanged(p) {
-  if (sel.kind === "code") {
-    const d = sel.diff && sel.diff.parts[p];
-    return !!d && !d.collapsed && changedcount(d) > 0;
-  }
-  const c = kindcounts(p, sel.kind);
+function presentkinds() {
+  return kindorder.filter(k => k === "code" ? (sel.diff && anycodechange()) : (assetindex[sel.version] || []).includes(k));
+}
+function anycodechange() {
+  return partkeys.some(p => {const d = sel.diff && sel.diff.parts[p]; return d && (d.collapsed || changedcount(d) > 0);});
+}
+function hasassetchange(p) {
+  const ad = assetdata() && assetdata()[p];
+  if (!ad) return false;
+  for (const k in ad) {const t = ad[k]; if ((t.added || []).length + (t.removed || []).length + (t.changed || []).length) return true;}
+  return false;
+}
+
+function partanychange(p) {
+  const d = sel.diff && sel.diff.parts[p];
+  if (d && (d.collapsed || changedcount(d) > 0)) return true;
+  return hasassetchange(p);
+}
+function kindavailable(part, kind) {
+  if (kind === "code") {const d = sel.diff && sel.diff.parts[part]; if (d && d.collapsed) return true;}
+  const c = kindcounts(part, kind);
   return c.a + c.r + c.c > 0;
+}
+function ensurekind() {
+  if (!sel.chapter || kindavailable(sel.chapter, sel.kind)) return;
+  const ks = presentkinds();
+  sel.kind = (kindavailable(sel.chapter, "code") && "code") || ks.find(k => kindavailable(sel.chapter, k)) || sel.kind;
+}
+function selectchapter(p) {
+  sel.chapter = p;
+  sel.file = null;
+  if (sel.mode === "diff") ensurekind();
+  buildkindswitch();
+  buildchapters();
+  rendercontent();
 }
 
 async function loadassets(label) {
@@ -360,12 +438,6 @@ function kindcounts(part, kind) {
   const t = assetdata() && assetdata()[part] && assetdata()[part][kind];
   return t ? {a: (t.added || []).length, r: (t.removed || []).length, c: (t.changed || []).length} : {a: 0, r: 0, c: 0};
 }
-function kindtotal(kind) {
-  let a = 0, r = 0, c = 0;
-  for (const p of partkeys) {const k = kindcounts(p, kind); a += k.a; r += k.r; c += k.c;}
-  return {a, r, c};
-}
-
 function countbadge(c, locked) {
   const bits = [];
   if (c.a) bits.push("<span green>+" + c.a + "</span>");
@@ -377,17 +449,14 @@ function countbadge(c, locked) {
 function buildkindswitch() {
   const grid = document.querySelector(".kindswitch");
   grid.innerHTML = "";
-  const codetotal = partkeys.reduce((n, p) => n + changedcount(sel.diff ? sel.diff.parts[p] || {} : {}), 0);
-  const kinds = kindorder.filter(k => k === "code" ? (sel.diff && codetotal) : (assetindex[sel.version] || []).includes(k));
-  for (const k of kinds) {
-    const cell = el("button", "kcell");
+  for (const k of presentkinds()) {
+    const avail = kindavailable(sel.chapter, k);
+    const cell = el("button", "kcell" + (avail ? "" : " dim"));
     cell.dataset.kind = k;
-    cell.innerHTML = "<span class=\"kname\" fnt_main>" + k + "</span>" + countbadge(kindtotal(k), false);
-    cell.addEventListener("click", () => {
+    cell.innerHTML = "<span class=\"kname\" fnt_main>" + k + "</span>" + countbadge(kindcounts(sel.chapter, k), false);
+    if (avail) cell.addEventListener("click", () => {
       sel.kind = k; sel.mode = "diff"; sel.clview = null; sel.file = null;
-      buildchapters(sel.diff);
-      const changed = partkeys.filter(p => partchanged(p));
-      if (!changed.includes(sel.chapter)) sel.chapter = changed.slice(-1)[0] || sel.chapter;
+      buildchapters();
       rendercontent();
     });
     grid.appendChild(cell);
@@ -395,29 +464,27 @@ function buildkindswitch() {
   pixify(grid);
 }
 
-function buildchapters(diff) {
+function buildchapters() {
   const bar = document.querySelector(".chaptertabs");
   bar.innerHTML = "";
   const code = sel.kind === "code";
-  document.querySelector(".idfilter").style.display = (diff && code) ? "" : "none";
-  if (code ? !diff : !assetdata()) return;
+  document.querySelector(".idfilter").style.display = (sel.diff && code && sel.mode === "diff") ? "" : "none";
   for (const p of partkeys) {
-    const d = code ? (diff.parts[p] || null) : null;
-    if (code && !d) continue;
-    const locked = code && !!d.collapsed;
+    if (!partanychange(p)) continue;
+    const d = sel.diff && sel.diff.parts[p];
     const c = kindcounts(p, sel.kind);
-    if (!locked && !c.a && !c.r && !c.c) continue;
-    const muted = !locked && !c.a && !c.c && c.r;
+    const locked = code && d && !!d.collapsed;
+    const muted = !locked && code && !c.a && !c.c && c.r;
     const tab = el("button", "ctab" + (locked ? " locked" : "") + (muted ? " muted" : ""));
     tab.dataset.part = p;
     const iurl = particon[p] ? "/assets/images/chapters/" + particon[p] : "";
     const icon = iurl ? "<span class=\"cicon\"><img src=\"" + iurl + "\" alt=\"\"></span>" : "";
     tab.innerHTML = icon + "<span class=\"ctext\"><span class=\"cname\" fnt_main>" + esc(partlabel[p]) + "</span>" + countbadge(c, locked) + "</span>";
-    if (!locked && !muted) tab.addEventListener("click", () => {sel.chapter = p; sel.file = null; rendercontent();});
+    if (!locked && !muted) tab.addEventListener("click", () => selectchapter(p));
     bar.appendChild(tab);
   }
   if (!bar.querySelector(`.ctab[data-part="${sel.chapter}"]`)) {
-    const first = bar.querySelector(".ctab:not(.locked):not(.muted)");
+    const first = bar.querySelector(".ctab:not(.locked):not(.muted)") || bar.querySelector(".ctab");
     if (first) sel.chapter = first.dataset.part;
   }
   pixify(bar);
@@ -439,10 +506,10 @@ function rendercontent() {
   marksidebar();
   const asset = sel.mode === "diff" && sel.kind !== "code";
   document.querySelector(".filelist").style.display = asset ? "none" : "";
+  if (!asset) {sel.trans ? renderfilelist() : renderbaselinelist();}
   if (sel.mode === "changelog") {renderchangelog(); return;}
   if (asset) return renderassetmain();
-  if (!sel.trans) return renderbaseline();
-  renderfilelist();
+  if (!sel.trans) return renderbaselinepane();
   renderdiffpane();
 }
 
@@ -450,8 +517,10 @@ function marksidebar() {
   document.querySelector(".sidebar").classList.remove("nocode", "empty");
 }
 
-function renderbaseline() {
+function renderbaselinelist() {
   document.querySelector(".filelist").innerHTML = "<div class=\"fempty\">nothing prior to diff against..</div>";
+}
+function renderbaselinepane() {
   document.querySelector(".content").innerHTML = "<div class=\"notecode\">" + esc(sel.version) +
     " is the earliest build, there's no earlier version here to diff against..</div>";
 }

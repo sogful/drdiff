@@ -154,10 +154,8 @@ body {
 /*//////////////////////////////////////////////////////////////////////*/
 
 .chapterbar {
-	flex: none;
-	display: flex;
-	align-items: stretch;
-	gap: 0;
+	flex: none; display: flex;
+	align-items: stretch; gap: 0;
 	background: black;
 	padding: 0 6px;
 }
@@ -213,8 +211,7 @@ body {
 .ctab.muted {opacity: 0.45; cursor: default}
 
 .cicon {
-	width: 22px;
-	height: 20px;
+	width: 22px; height: 20px;
 	flex: none;
 	background: #ffffff;
 	isolation: isolate;
@@ -223,8 +220,7 @@ body {
 }
 .cicon img {
 	display: block;
-	width: 100%;
-	height: 100%;
+	width: 100%; height: 100%;
 	mix-blend-mode: multiply;
 	image-rendering: pixelated;
 }
@@ -258,6 +254,8 @@ body {
 .kcell:hover .kname {--ink: var(--text)}
 .kcell.on {background: var(--bar2)}
 .kcell.on .kname {--ink: var(--yellow)}
+.kcell.dim {cursor: default; opacity: 0.32}
+.kcell.dim:hover .kname {--ink: var(--dim)}
 
 /*//////////////////////////////////////////////////////////////////////*/
 
