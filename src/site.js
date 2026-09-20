@@ -25,7 +25,6 @@ const assetkinds = [
   {key: "objects", label: "objects"},
   {key: "strings", label: "strings"},
   {key: "rooms", label: "rooms"},
-  {key: "fonts", label: "fonts"},
 ];
 const kindorder = ["code", ...assetkinds.map(k => k.key)];
 const sel = {version: null, chapter: null, file: null, kind: "code", mode: "changelog", clview: "twitter", hideids: false};
